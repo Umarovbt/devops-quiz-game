@@ -475,23 +475,21 @@ function startMode(id) {
   document.getElementById('menu').style.display = 'none';
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  const cls = id.split('-')[0];
-  const color = {c4:'var(--c4)',c5:'var(--c5)',c6:'var(--c6)',c7:'var(--c7)',c8:'var(--c8)'}[cls];
   if (id === 'c4-quiz')      buildQuiz('c4-quiz', C4_QUIZ, 'c4', 'Linux Text Tools');
   if (id === 'c4-type')      buildType('c4-type', C4_TYPE, 'c4', 'Linux Text Tools');
-  if (id === 'c4-pipe')      buildPipe('c4-pipe', color);
+  if (id === 'c4-pipe')      buildPipe('c4-pipe');
   if (id === 'c5-quiz')      buildQuiz('c5-quiz', C5_QUIZ, 'c5', 'Linux Permissions');
   if (id === 'c5-type')      buildType('c5-type', C5_TYPE, 'c5', 'Linux Permissions');
-  if (id === 'c5-chmod')     buildChmod('c5-chmod', color);
+  if (id === 'c5-chmod')     buildChmod('c5-chmod');
   if (id === 'c6-quiz')      buildQuiz('c6-quiz', C6_QUIZ, 'c6', 'Git & GitHub');
   if (id === 'c6-type')      buildType('c6-type', C6_TYPE, 'c6', 'Git & GitHub');
-  if (id === 'c6-workflow')  buildWorkflow('c6-workflow', color);
+  if (id === 'c6-workflow')  buildWorkflow('c6-workflow');
   if (id === 'c7-quiz')      buildQuiz('c7-quiz', C7_QUIZ, 'c7', 'AWS Fundamentals');
   if (id === 'c7-flash')     buildFlash('c7-flash', C7_FLASH, 'c7');
   if (id === 'c7-type')      buildType('c7-type', C7_TYPE, 'c7', 'AWS Fundamentals');
   if (id === 'c8-quiz')      buildQuiz('c8-quiz', C8_QUIZ, 'c8', 'EC2 Networking & SSH');
   if (id === 'c8-type')      buildType('c8-type', C8_TYPE, 'c8', 'EC2 Networking');
-  if (id === 'c8-scenario')  buildScenario('c8-scenario', color);
+  if (id === 'c8-scenario')  buildScenario('c8-scenario');
 }
 function goMenu() {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -617,7 +615,6 @@ function buildType(containerId, questions, cls, title) {
 function buildFlash(containerId, cards, cls) {
   const qs = shuffle(cards);
   let idx = 0, flipped = false;
-  const color = {c7:'var(--c7)'}[cls] || 'var(--c7)';
   function render() {
     const c = qs[idx];
     document.getElementById(containerId).innerHTML = `
@@ -682,13 +679,15 @@ const EC2_SCENARIOS = [
   { scenario: "Download a log file /var/log/app.log from a remote EC2 (IP: 3.14.15.9, key: web.pem) to your current local directory.", tokens: ['scp -i web.pem ec2-user@3.14.15.9:/var/log/app.log .'], answer: ['scp -i web.pem ec2-user@3.14.15.9:/var/log/app.log .'] },
 ];
 
-function buildPipe(containerId, color) { buildDragDrop(containerId, color, PIPE_SCENARIOS, 'Linux Text Tools — Pipe Builder', 'Build the correct pipeline for this task:'); }
-function buildChmod(containerId, color) { buildDragDrop(containerId, color, CHMOD_SCENARIOS, 'Linux Permissions — chmod Builder', 'Build the correct command sequence:'); }
-function buildWorkflow(containerId, color) { buildDragDrop(containerId, color, WORKFLOW_SCENARIOS, 'Git — Workflow Builder', 'Arrange the steps in the correct order:'); }
-function buildScenario(containerId, color) { buildDragDrop(containerId, color, EC2_SCENARIOS, 'EC2 Networking — Scenario Builder', 'Put the commands in the right order:'); }
+function buildPipe(containerId) { buildDragDrop(containerId, PIPE_SCENARIOS, 'Linux Text Tools — Pipe Builder', 'Build the correct pipeline for this task:'); }
+function buildChmod(containerId) { buildDragDrop(containerId, CHMOD_SCENARIOS, 'Linux Permissions — chmod Builder', 'Build the correct command sequence:'); }
+function buildWorkflow(containerId) { buildDragDrop(containerId, WORKFLOW_SCENARIOS, 'Git — Workflow Builder', 'Arrange the steps in the correct order:'); }
+function buildScenario(containerId) { buildDragDrop(containerId, EC2_SCENARIOS, 'EC2 Networking — Scenario Builder', 'Put the commands in the right order:'); }
 
-function buildDragDrop(containerId, color, scenarios, title, label) {
-  const sc = scenarios[Math.floor(Math.random() * scenarios.length)];
+function buildDragDrop(containerId, scenarios, title, label, excludeIdx) {
+  let scIdx;
+  do { scIdx = Math.floor(Math.random() * scenarios.length); } while (scenarios.length > 1 && scIdx === excludeIdx);
+  const sc = scenarios[scIdx];
   const avail = shuffle([...sc.tokens]);
   let placed = [], available = [...avail];
   let dragging = null;
@@ -707,7 +706,7 @@ function buildDragDrop(containerId, color, scenarios, title, label) {
         ${available.map((t,i) => `<div class="drag-token" draggable="true" data-src="avail" data-idx="${i}" ondragstart="dragStart(event,'avail',${i})" ondragend="dragEnd(event)">${t}</div>`).join('')}
       </div>
       <button class="check-btn" onclick="checkDrop()">✓ Check Answer</button>
-      <button class="check-btn" onclick="buildDragDrop('${containerId}','${color}',${containerId.includes('c4')?'PIPE_SCENARIOS':containerId.includes('c5')?'CHMOD_SCENARIOS':containerId.includes('c6')?'WORKFLOW_SCENARIOS':'EC2_SCENARIOS'},'${title}','${label}')">↺ New Scenario</button>
+      <button class="check-btn" onclick="buildDragDrop('${containerId}',${containerId.includes('c4')?'PIPE_SCENARIOS':containerId.includes('c5')?'CHMOD_SCENARIOS':containerId.includes('c6')?'WORKFLOW_SCENARIOS':'EC2_SCENARIOS'},'${title}','${label}',${scIdx})">↺ New Scenario</button>
       <div class="builder-feedback" id="bfeed"></div>`;
 
     window.dragStart = (e, src, i) => { dragging = {src, i}; e.target.classList.add('dragging'); };
