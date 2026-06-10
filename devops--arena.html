@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>312 School — DevOps Challenge Arena</title>
+<style>
+  :root {
+    --bg: #0a0c10;
+    --surface: #111318;
+    --surface2: #1a1d26;
+    --border: #252836;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --c4: #38bdf8;
+    --c5: #a78bfa;
+    --c6: #fb923c;
+    --c7: #34d399;
+    --c8: #f472b6;
+    --green: #22c55e;
+    --red: #ef4444;
+    --yellow: #eab308;
+    --font: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font); min-height: 100vh; }
+
+  /* ── HEADER ── */
+  .header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .logo { font-size: 11px; color: var(--muted); letter-spacing: 3px; text-transform: uppercase; }
+  .logo span { color: var(--c4); }
+  .xp-bar { margin-left: auto; display: flex; align-items: center; gap: 10px; font-size: 12px; }
+  .xp-val { color: var(--yellow); font-weight: bold; }
+  .xp-track { width: 120px; height: 4px; background: var(--border); border-radius: 2px; }
+  .xp-fill { height: 100%; background: var(--yellow); border-radius: 2px; transition: width 0.4s; }
+  .streak { color: var(--c8); font-size: 13px; }
+
+  /* ── MENU ── */
+  #menu {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 24px;
+  }
+  .menu-title {
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 32px;
+  }
+  .class-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 16px;
+    overflow: hidden;
+  }
+  .class-header {
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    cursor: pointer;
+    border-bottom: 1px solid var(--border);
+  }
+  .class-badge {
+    font-size: 10px;
+    letter-spacing: 2px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    font-weight: bold;
+  }
+  .c4 { background: rgba(56,189,248,.15); color: var(--c4); }
+  .c5 { background: rgba(167,139,250,.15); color: var(--c5); }
+  .c6 { background: rgba(251,146,60,.15); color: var(--c6); }
+  .c7 { background: rgba(52,211,153,.15); color: var(--c7); }
+  .c8 { background: rgba(244,114,182,.15); color: var(--c8); }
+  .class-name { font-size: 14px; font-weight: bold; }
+  .class-topics { font-size: 11px; color: var(--muted); margin-left: auto; }
+  .class-modes { padding: 12px 20px 16px; display: flex; flex-wrap: wrap; gap: 10px; }
+  .mode-btn {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-family: var(--font);
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .mode-btn:hover { border-color: var(--muted); transform: translateY(-1px); }
+  .mode-btn.c4:hover { border-color: var(--c4); color: var(--c4); }
+  .mode-btn.c5:hover { border-color: var(--c5); color: var(--c5); }
+  .mode-btn.c6:hover { border-color: var(--c6); color: var(--c6); }
+  .mode-btn.c7:hover { border-color: var(--c7); color: var(--c7); }
+  .mode-btn.c8:hover { border-color: var(--c8); color: var(--c8); }
+  .mode-icon { margin-right: 6px; }
+
+  /* ── SCREEN ── */
+  .screen { display: none; max-width: 750px; margin: 0 auto; padding: 32px 24px; }
+  .screen.active { display: block; }
+  .screen-header { display: flex; align-items: center; gap: 14px; margin-bottom: 28px; }
+  .back-btn {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-family: var(--font);
+    font-size: 12px;
+    cursor: pointer;
+  }
+  .back-btn:hover { color: var(--text); border-color: var(--muted); }
+  .screen-title { font-size: 15px; font-weight: bold; }
+  .progress-bar { width: 100%; height: 3px; background: var(--border); border-radius: 2px; margin-bottom: 24px; }
+  .progress-fill { height: 100%; border-radius: 2px; transition: width 0.3s; }
+
+  /* ── QUIZ CARD ── */
+  .q-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+  .q-num { font-size: 10px; color: var(--muted); letter-spacing: 2px; margin-bottom: 12px; }
+  .q-text { font-size: 15px; line-height: 1.6; margin-bottom: 20px; }
+  .q-code {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 10px 14px;
+    font-size: 13px;
+    color: var(--c4);
+    margin: 12px 0;
+    white-space: pre;
+    overflow-x: auto;
+  }
+  .options { display: flex; flex-direction: column; gap: 8px; }
+  .opt {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 11px 16px;
+    border-radius: 6px;
+    text-align: left;
+    font-family: var(--font);
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.15s;
+    line-height: 1.4;
+  }
+  .opt:hover:not(:disabled) { border-color: var(--muted); background: #1e2130; }
+  .opt.correct { border-color: var(--green) !important; background: rgba(34,197,94,.12) !important; color: var(--green); }
+  .opt.wrong { border-color: var(--red) !important; background: rgba(239,68,68,.1) !important; color: var(--red); }
+  .opt:disabled { cursor: default; }
+  .explanation {
+    background: var(--bg);
+    border-left: 3px solid var(--muted);
+    padding: 12px 16px;
+    margin-top: 14px;
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.6;
+    border-radius: 0 4px 4px 0;
+    display: none;
+  }
+  .explanation.show { display: block; }
+  .next-btn {
+    margin-top: 16px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 10px 24px;
+    border-radius: 6px;
+    font-family: var(--font);
+    font-size: 13px;
+    cursor: pointer;
+    display: none;
+    transition: all 0.15s;
+  }
+  .next-btn:hover { border-color: var(--muted); }
+  .next-btn.show { display: inline-block; }
+
+  /* ── TYPE-IN ── */
+  .type-prompt {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px 18px;
+    font-size: 13px;
+    color: var(--c7);
+    margin: 14px 0;
+    line-height: 1.6;
+  }
+  .type-input {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--c4);
+    padding: 11px 14px;
+    font-family: var(--font);
+    font-size: 13px;
+    border-radius: 6px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .type-input:focus { border-color: var(--c4); }
+  .type-input.correct-input { border-color: var(--green); color: var(--green); }
+  .type-input.wrong-input { border-color: var(--red); color: var(--red); }
+  .submit-btn {
+    margin-top: 10px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 9px 22px;
+    border-radius: 6px;
+    font-family: var(--font);
+    font-size: 12px;
+    cursor: pointer;
+  }
+  .submit-btn:hover { border-color: var(--muted); }
+
+  /* ── DRAG/DROP BUILDER ── */
+  .builder-scenario {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px 18px;
+    font-size: 13px;
+    color: var(--c7);
+    margin-bottom: 16px;
+    line-height: 1.6;
+  }
+  .drag-zone {
+    min-height: 52px;
+    background: var(--bg);
+    border: 1px dashed var(--border);
+    border-radius: 6px;
+    padding: 8px;
+    margin-bottom: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+  }
+  .drag-zone-label { font-size: 10px; color: var(--muted); letter-spacing: 2px; margin-bottom: 4px; }
+  .drag-token {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--c4);
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    cursor: grab;
+    user-select: none;
+    transition: opacity 0.15s, transform 0.1s;
+  }
+  .drag-token:active { cursor: grabbing; transform: scale(1.04); }
+  .drag-token.dragging { opacity: 0.4; }
+  .drag-zone.dragover { border-color: var(--muted); background: var(--surface); }
+  .check-btn {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 9px 22px;
+    border-radius: 6px;
+    font-family: var(--font);
+    font-size: 12px;
+    cursor: pointer;
+    margin-right: 8px;
+  }
+  .check-btn:hover { border-color: var(--muted); }
+  .builder-feedback {
+    margin-top: 12px;
+    font-size: 12px;
+    padding: 10px 14px;
+    border-radius: 6px;
+    display: none;
+  }
+  .builder-feedback.correct { background: rgba(34,197,94,.1); border: 1px solid var(--green); color: var(--green); display: block; }
+  .builder-feedback.wrong { background: rgba(239,68,68,.08); border: 1px solid var(--red); color: var(--red); display: block; }
+
+  /* ── RESULT CARD ── */
+  .result-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 32px;
+    text-align: center;
+  }
+  .result-card h2 { font-size: 22px; margin-bottom: 8px; }
+  .result-card p { color: var(--muted); font-size: 13px; margin-bottom: 24px; }
+  .result-stats { display: flex; justify-content: center; gap: 32px; margin-bottom: 28px; }
+  .rs .n { font-size: 28px; font-weight: bold; }
+  .rs .l { font-size: 11px; color: var(--muted); letter-spacing: 1px; }
+  .btn { padding: 10px 24px; border-radius: 6px; font-family: var(--font); font-size: 13px; cursor: pointer; border: 1px solid; margin: 4px; }
+  .btn-green { background: rgba(34,197,94,.1); border-color: var(--green); color: var(--green); }
+  .btn-green:hover { background: rgba(34,197,94,.2); }
+  .btn-ghost { background: var(--surface2); border-color: var(--border); color: var(--text); }
+  .btn-ghost:hover { border-color: var(--muted); }
+
+  /* ── FLASHCARD ── */
+  .flashcard {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 36px 28px;
+    min-height: 180px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: border-color 0.2s;
+    text-align: center;
+    margin-bottom: 16px;
+    position: relative;
+  }
+  .flashcard:hover { border-color: var(--muted); }
+  .flashcard-label { font-size: 10px; color: var(--muted); letter-spacing: 3px; position: absolute; top: 14px; left: 18px; }
+  .flashcard-text { font-size: 15px; line-height: 1.65; }
+  .flashcard-hint { font-size: 11px; color: var(--muted); margin-top: 16px; }
+  .fc-answer { color: var(--c7); }
+  .fc-nav { display: flex; justify-content: center; gap: 10px; margin-top: 12px; }
+
+  /* ── MISC ── */
+  .diff-badge {
+    font-size: 10px;
+    padding: 2px 7px;
+    border-radius: 3px;
+    margin-left: 6px;
+    background: rgba(239,68,68,.15);
+    color: var(--red);
+    letter-spacing: 1px;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo"><span>312</span> SCHOOL · DEVOPS</div>
+  <div class="xp-bar">
+    <span class="streak" id="streakDisplay">🔥 0</span>
+    <span class="xp-val">⚡ <span id="xpDisplay">0</span> XP</span>
+    <div class="xp-track"><div class="xp-fill" id="xpFill" style="width:0%"></div></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ MENU ═══════════════════════ -->
+<div id="menu">
+  <p class="menu-title">// challenge arena — pick a class &amp; mode</p>
+
+  <!-- CLASS 4 -->
+  <div class="class-card">
+    <div class="class-header">
+      <span class="class-badge c4">Class 4</span>
+      <span class="class-name">Linux Text Tools</span>
+      <span class="class-topics">grep · pipe · find · echo · less</span>
+    </div>
+    <div class="class-modes">
+      <button class="mode-btn c4" onclick="startMode('c4-quiz')"><span class="mode-icon">⚡</span>Hard Quiz (20q)</button>
+      <button class="mode-btn c4" onclick="startMode('c4-type')"><span class="mode-icon">⌨️</span>Type the Command</button>
+      <button class="mode-btn c4" onclick="startMode('c4-pipe')"><span class="mode-icon">🔗</span>Pipe Builder</button>
+    </div>
+  </div>
+
+  <!-- CLASS 5 -->
+  <div class="class-card">
+    <div class="class-header">
+      <span class="class-badge c5">Class 5</span>
+      <span class="class-name">Linux Permissions</span>
+      <span class="class-topics">chmod · chown · sudo · users · vi</span>
+    </div>
+    <div class="class-modes">
+      <button class="mode-btn c5" onclick="startMode('c5-quiz')"><span class="mode-icon">⚡</span>Hard Quiz (20q)</button>
+      <button class="mode-btn c5" onclick="startMode('c5-type')"><span class="mode-icon">⌨️</span>Type the Command</button>
+      <button class="mode-btn c5" onclick="startMode('c5-chmod')"><span class="mode-icon">🔒</span>chmod Builder</button>
+    </div>
+  </div>
+
+  <!-- CLASS 6 -->
+  <div class="class-card">
+    <div class="class-header">
+      <span class="class-badge c6">Class 6</span>
+      <span class="class-name">Git &amp; GitHub</span>
+      <span class="class-topics">init · add · commit · push · branch · merge</span>
+    </div>
+    <div class="class-modes">
+      <button class="mode-btn c6" onclick="startMode('c6-quiz')"><span class="mode-icon">⚡</span>Hard Quiz (20q)</button>
+      <button class="mode-btn c6" onclick="startMode('c6-type')"><span class="mode-icon">⌨️</span>Type the Command</button>
+      <button class="mode-btn c6" onclick="startMode('c6-workflow')"><span class="mode-icon">🔀</span>Workflow Builder</button>
+    </div>
+  </div>
+
+  <!-- CLASS 7 -->
+  <div class="class-card">
+    <div class="class-header">
+      <span class="class-badge c7">Class 7</span>
+      <span class="class-name">AWS &amp; Cloud Fundamentals</span>
+      <span class="class-topics">EC2 · regions · AZs · pricing · GovCloud</span>
+    </div>
+    <div class="class-modes">
+      <button class="mode-btn c7" onclick="startMode('c7-quiz')"><span class="mode-icon">⚡</span>Hard Quiz (20q)</button>
+      <button class="mode-btn c7" onclick="startMode('c7-flash')"><span class="mode-icon">🃏</span>Flashcards</button>
+      <button class="mode-btn c7" onclick="startMode('c7-type')"><span class="mode-icon">⌨️</span>Type the Command</button>
+    </div>
+  </div>
+
+  <!-- CLASS 8 -->
+  <div class="class-card">
+    <div class="class-header">
+      <span class="class-badge c8">Class 8</span>
+      <span class="class-name">EC2 Networking &amp; SSH</span>
+      <span class="class-topics">IPv4/IPv6 · ports · TCP/UDP · SSH · SCP · Security Groups</span>
+    </div>
+    <div class="class-modes">
+      <button class="mode-btn c8" onclick="startMode('c8-quiz')"><span class="mode-icon">⚡</span>Hard Quiz (22q)</button>
+      <button class="mode-btn c8" onclick="startMode('c8-type')"><span class="mode-icon">⌨️</span>Type the Command</button>
+      <button class="mode-btn c8" onclick="startMode('c8-scenario')"><span class="mode-icon">🔐</span>Scenario Builder</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ SCREENS ═══════════════════════ -->
+<div id="c4-quiz" class="screen"></div>
+<div id="c4-type" class="screen"></div>
+<div id="c4-pipe" class="screen"></div>
+<div id="c5-quiz" class="screen"></div>
+<div id="c5-type" class="screen"></div>
+<div id="c5-chmod" class="screen"></div>
+<div id="c6-quiz" class="screen"></div>
+<div id="c6-type" class="screen"></div>
+<div id="c6-workflow" class="screen"></div>
+<div id="c7-quiz" class="screen"></div>
+<div id="c7-flash" class="screen"></div>
+<div id="c7-type" class="screen"></div>
+<div id="c8-quiz" class="screen"></div>
+<div id="c8-type" class="screen"></div>
+<div id="c8-scenario" class="screen"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+// XP / STREAK SYSTEM
+// ═══════════════════════════════════════════════════════
+let xp = 0, streak = 0;
+function addXP(pts) {
+  xp += pts;
+  document.getElementById('xpDisplay').textContent = xp;
+  const pct = (xp % 500) / 500 * 100;
+  document.getElementById('xpFill').style.width = pct + '%';
+}
+function addStreak() {
+  streak++;
+  document.getElementById('streakDisplay').textContent = '🔥 ' + streak;
+}
+function resetStreak() {
+  streak = 0;
+  document.getElementById('streakDisplay').textContent = '🔥 0';
+}
+
+// ═══════════════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════════════
+function startMode(id) {
+  document.getElementById('menu').style.display = 'none';
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  const cls = id.split('-')[0];
+  const color = {c4:'var(--c4)',c5:'var(--c5)',c6:'var(--c6)',c7:'var(--c7)',c8:'var(--c8)'}[cls];
+  if (id === 'c4-quiz')      buildQuiz('c4-quiz', C4_QUIZ, 'c4', 'Linux Text Tools');
+  if (id === 'c4-type')      buildType('c4-type', C4_TYPE, 'c4', 'Linux Text Tools');
+  if (id === 'c4-pipe')      buildPipe('c4-pipe', color);
+  if (id === 'c5-quiz')      buildQuiz('c5-quiz', C5_QUIZ, 'c5', 'Linux Permissions');
+  if (id === 'c5-type')      buildType('c5-type', C5_TYPE, 'c5', 'Linux Permissions');
+  if (id === 'c5-chmod')     buildChmod('c5-chmod', color);
+  if (id === 'c6-quiz')      buildQuiz('c6-quiz', C6_QUIZ, 'c6', 'Git & GitHub');
+  if (id === 'c6-type')      buildType('c6-type', C6_TYPE, 'c6', 'Git & GitHub');
+  if (id === 'c6-workflow')  buildWorkflow('c6-workflow', color);
+  if (id === 'c7-quiz')      buildQuiz('c7-quiz', C7_QUIZ, 'c7', 'AWS Fundamentals');
+  if (id === 'c7-flash')     buildFlash('c7-flash', C7_FLASH, 'c7');
+  if (id === 'c7-type')      buildType('c7-type', C7_TYPE, 'c7', 'AWS Fundamentals');
+  if (id === 'c8-quiz')      buildQuiz('c8-quiz', C8_QUIZ, 'c8', 'EC2 Networking & SSH');
+  if (id === 'c8-type')      buildType('c8-type', C8_TYPE, 'c8', 'EC2 Networking');
+  if (id === 'c8-scenario')  buildScenario('c8-scenario', color);
+}
+function goMenu() {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('menu').style.display = 'block';
+}
+
+// ═══════════════════════════════════════════════════════
+// QUIZ ENGINE
+// ═══════════════════════════════════════════════════════
+function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
+
+function buildQuiz(containerId, questions, cls, title) {
+  const qs = shuffle(questions);
+  let idx = 0, score = 0;
+  const color = {c4:'var(--c4)',c5:'var(--c5)',c6:'var(--c6)',c7:'var(--c7)',c8:'var(--c8)'}[cls];
+  function render() {
+    if (idx >= qs.length) { showResult(containerId, score, qs.length, cls, title, () => buildQuiz(containerId, questions, cls, title)); return; }
+    const q = qs[idx];
+    const opts = shuffle(q.options);
+    const pct = (idx / qs.length * 100).toFixed(0);
+    document.getElementById(containerId).innerHTML = `
+      <div class="screen-header">
+        <button class="back-btn" onclick="goMenu()">← Menu</button>
+        <span class="screen-title">${title} — Hard Quiz</span>
+        <span style="font-size:12px;color:var(--muted);margin-left:auto">${idx+1}/${qs.length}</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:${color}"></div></div>
+      <div class="q-card">
+        <div class="q-num">QUESTION ${idx+1} <span class="diff-badge">HARD</span></div>
+        ${q.code ? `<div class="q-text">${q.q}</div><div class="q-code">${q.code}</div>` : `<div class="q-text">${q.q}</div>`}
+        <div class="options" id="opts-${idx}">
+          ${opts.map((o,i) => `<button class="opt" id="opt-${i}" onclick="pickOpt(${i},'${o.replace(/'/g,"\\'")}','${q.a.replace(/'/g,"\\'")}','${containerId}',${idx})">${o}</button>`).join('')}
+        </div>
+        <div class="explanation" id="exp-${idx}">${q.exp}</div>
+        <button class="next-btn" id="nxt-${idx}" onclick="nextQ()">Next →</button>
+      </div>`;
+    window._nextQ = () => { idx++; render(); };
+    window._pickOpt = (chosen, correct) => {
+      if (chosen === correct) { score++; addXP(15); addStreak(); } else { resetStreak(); }
+    };
+  }
+  window.nextQ = () => window._nextQ();
+  window.pickOpt = (i, chosen, correct, cid, qidx) => {
+    window._pickOpt(chosen, correct);
+    document.querySelectorAll(`#opts-${qidx} .opt`).forEach(b => {
+      b.disabled = true;
+      if (b.textContent.trim() === correct) b.classList.add('correct');
+    });
+    const btn = document.getElementById(`opt-${i}`);
+    if (chosen !== correct) btn.classList.add('wrong');
+    document.getElementById(`exp-${qidx}`).classList.add('show');
+    document.getElementById(`nxt-${qidx}`).classList.add('show');
+  };
+  render();
+}
+
+function showResult(containerId, score, total, cls, title, replay) {
+  const pct = Math.round(score/total*100);
+  const color = {c4:'var(--c4)',c5:'var(--c5)',c6:'var(--c6)',c7:'var(--c7)',c8:'var(--c8)'}[cls];
+  const emoji = pct >= 85 ? '🏆' : pct >= 65 ? '💪' : '📚';
+  const msg = pct >= 85 ? 'Elite. You know this cold.' : pct >= 65 ? 'Solid — keep drilling the misses.' : 'Review the notes and try again.';
+  document.getElementById(containerId).innerHTML = `
+    <div class="screen-header"><button class="back-btn" onclick="goMenu()">← Menu</button><span class="screen-title">${title}</span></div>
+    <div class="result-card">
+      <h2>${emoji} ${pct}%</h2>
+      <p>${msg}</p>
+      <div class="result-stats">
+        <div class="rs"><div class="n" style="color:var(--green)">${score}</div><div class="l">CORRECT</div></div>
+        <div class="rs"><div class="n" style="color:var(--red)">${total-score}</div><div class="l">MISSED</div></div>
+        <div class="rs"><div class="n" style="color:${color}">${total}</div><div class="l">TOTAL</div></div>
+      </div>
+      <button class="btn btn-green" onclick="(${replay.toString()})()">↺ Try Again</button>
+      <button class="btn btn-ghost" onclick="goMenu()">← Menu</button>
+    </div>`;
+}
+
+// ═══════════════════════════════════════════════════════
+// TYPE-IN ENGINE
+// ═══════════════════════════════════════════════════════
+function buildType(containerId, questions, cls, title) {
+  const qs = shuffle(questions);
+  let idx = 0, score = 0;
+  const color = {c4:'var(--c4)',c5:'var(--c5)',c6:'var(--c6)',c7:'var(--c7)',c8:'var(--c8)'}[cls];
+  function render() {
+    if (idx >= qs.length) { showResult(containerId, score, qs.length, cls, title, () => buildType(containerId, questions, cls, title)); return; }
+    const q = qs[idx];
+    const pct = (idx / qs.length * 100).toFixed(0);
+    document.getElementById(containerId).innerHTML = `
+      <div class="screen-header">
+        <button class="back-btn" onclick="goMenu()">← Menu</button>
+        <span class="screen-title">${title} — Type-In</span>
+        <span style="font-size:12px;color:var(--muted);margin-left:auto">${idx+1}/${qs.length}</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:${color}"></div></div>
+      <div class="q-card">
+        <div class="q-num">TYPE THE COMMAND <span class="diff-badge">HARD</span></div>
+        <div class="q-text">${q.prompt}</div>
+        ${q.hint ? `<div class="type-prompt">💡 ${q.hint}</div>` : ''}
+        <input class="type-input" id="type-inp" placeholder="Type exact command..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+        <br><button class="submit-btn" onclick="checkType()">Check ↵</button>
+        <div class="explanation" id="type-exp">${q.exp}</div>
+        <button class="next-btn" id="type-nxt" onclick="nextTypeQ()">Next →</button>
+      </div>`;
+    document.getElementById('type-inp').addEventListener('keydown', e => { if (e.key === 'Enter') checkType(); });
+    window.checkType = () => {
+      const val = document.getElementById('type-inp').value.trim();
+      const correct = q.answers.some(a => val.toLowerCase() === a.toLowerCase());
+      const inp = document.getElementById('type-inp');
+      inp.disabled = true;
+      if (correct) { inp.classList.add('correct-input'); score++; addXP(20); addStreak(); }
+      else { inp.classList.add('wrong-input'); inp.value = q.answers[0]; resetStreak(); }
+      document.getElementById('type-exp').classList.add('show');
+      document.getElementById('type-nxt').classList.add('show');
+    };
+    window.nextTypeQ = () => { idx++; render(); };
+  }
+  render();
+}
+
+// ═══════════════════════════════════════════════════════
+// FLASHCARD ENGINE
+// ═══════════════════════════════════════════════════════
+function buildFlash(containerId, cards, cls) {
+  const qs = shuffle(cards);
+  let idx = 0, flipped = false;
+  const color = {c7:'var(--c7)'}[cls] || 'var(--c7)';
+  function render() {
+    const c = qs[idx];
+    document.getElementById(containerId).innerHTML = `
+      <div class="screen-header"><button class="back-btn" onclick="goMenu()">← Menu</button><span class="screen-title">AWS Flashcards</span><span style="font-size:12px;color:var(--muted);margin-left:auto">${idx+1}/${qs.length}</span></div>
+      <div class="flashcard" id="fc" onclick="flipCard()">
+        <div class="flashcard-label">${flipped ? 'ANSWER' : 'CONCEPT'}</div>
+        <div class="flashcard-text ${flipped ? 'fc-answer' : ''}">${flipped ? c.a : c.q}</div>
+        <div class="flashcard-hint">${flipped ? '' : 'click to reveal →'}</div>
+      </div>
+      <div class="fc-nav">
+        <button class="btn btn-ghost" onclick="prevCard()" ${idx===0?'disabled':''}>← Prev</button>
+        <button class="btn btn-ghost" onclick="nextCard()">Next →</button>
+        <button class="btn btn-ghost" onclick="goMenu()">Done</button>
+      </div>`;
+    window.flipCard = () => { flipped = !flipped; render(); };
+    window.prevCard = () => { idx = Math.max(0, idx-1); flipped = false; render(); };
+    window.nextCard = () => { if (idx < qs.length-1) { idx++; flipped = false; render(); } else goMenu(); };
+  }
+  render();
+}
+
+// ═══════════════════════════════════════════════════════
+// PIPE BUILDER (C4)
+// ═══════════════════════════════════════════════════════
+const PIPE_SCENARIOS = [
+  { scenario: "Find all lines containing 'ERROR' in /var/log/syslog, then count how many there are.", tokens: ['grep', '"ERROR"', '/var/log/syslog', '|', 'wc', '-l'], answer: ['grep', '"ERROR"', '/var/log/syslog', '|', 'wc', '-l'] },
+  { scenario: "List all files recursively in /etc, filter only .conf files, then show just the first 10 results.", tokens: ['find', '/etc', '-name', '"*.conf"', '|', 'head', '-10'], answer: ['find', '/etc', '-name', '"*.conf"', '|', 'head', '-10'] },
+  { scenario: "Search for 'password' (case-insensitive) in all .txt files in current directory, show line numbers.", tokens: ['grep', '-ri', '"password"', '*.txt'], answer: ['grep', '-ri', '"password"', '*.txt'] },
+  { scenario: "List files in /var/log sorted by size, show only names (not full details), pipe to less for scrolling.", tokens: ['ls', '-lS', '/var/log', '|', 'awk', "'{print $9}'", '|', 'less'], answer: ['ls', '-lS', '/var/log', '|', 'awk', "'{print $9}'", '|', 'less'] },
+  { scenario: "Find all files owned by root in /home directory and display their full paths.", tokens: ['find', '/home', '-user', 'root', '-type', 'f'], answer: ['find', '/home', '-user', 'root', '-type', 'f'] },
+];
+
+// ═══════════════════════════════════════════════════════
+// CHMOD BUILDER (C5)
+// ═══════════════════════════════════════════════════════
+const CHMOD_SCENARIOS = [
+  { scenario: "Your private SSH key needs the correct permissions so SSH doesn't reject it. Set it to read-only for owner only.", tokens: ['chmod', '400', '~/.ssh/id_ed25519'], answer: ['chmod', '400', '~/.ssh/id_ed25519'] },
+  { scenario: "A shell script deploy.sh needs to be executable by owner and group, readable by all, no write for anyone except owner.", tokens: ['chmod', '754', 'deploy.sh'], answer: ['chmod', '754', 'deploy.sh'] },
+  { scenario: "Change ownership of /var/www/html directory and everything inside it to the 'www-data' user and group.", tokens: ['chown', '-R', 'www-data:www-data', '/var/www/html'], answer: ['chown', '-R', 'www-data:www-data', '/var/www/html'] },
+  { scenario: "Set a config file so only root can read/write it, no access for group or others.", tokens: ['chmod', '600', '/etc/secret.conf'], answer: ['chmod', '600', '/etc/secret.conf'] },
+  { scenario: "Make a script executable by everyone on the system.", tokens: ['chmod', '+x', 'script.sh'], answer: ['chmod', '+x', 'script.sh'] },
+];
+
+// ═══════════════════════════════════════════════════════
+// GIT WORKFLOW BUILDER (C6)
+// ═══════════════════════════════════════════════════════
+const WORKFLOW_SCENARIOS = [
+  { scenario: "You accidentally staged a file containing an API key. Unstage it, add it to .gitignore, then commit the .gitignore change.", tokens: ['git restore --staged secret.env', 'echo "secret.env" >> .gitignore', 'git add .gitignore', 'git commit -m "add secret to gitignore"'], answer: ['git restore --staged secret.env', 'echo "secret.env" >> .gitignore', 'git add .gitignore', 'git commit -m "add secret to gitignore"'] },
+  { scenario: "Create a new feature branch called 'auth', switch to it, make a commit, then merge it back to main.", tokens: ['git checkout -b auth', 'git add .', 'git commit -m "add auth feature"', 'git checkout main', 'git merge auth'], answer: ['git checkout -b auth', 'git add .', 'git commit -m "add auth feature"', 'git checkout main', 'git merge auth'] },
+  { scenario: "Your remote repo has new changes. Pull them, resolve if needed, then push your own new commit.", tokens: ['git pull origin main', 'git add .', 'git commit -m "my changes"', 'git push origin main'], answer: ['git pull origin main', 'git add .', 'git commit -m "my changes"', 'git push origin main'] },
+  { scenario: "Set up global Git identity before your first commit on a new machine.", tokens: ['git config --global user.name "Your Name"', 'git config --global user.email "you@email.com"', 'git add .', 'git commit -m "initial commit"'], answer: ['git config --global user.name "Your Name"', 'git config --global user.email "you@email.com"', 'git add .', 'git commit -m "initial commit"'] },
+];
+
+// ═══════════════════════════════════════════════════════
+// EC2 SCENARIO BUILDER (C8)
+// ═══════════════════════════════════════════════════════
+const EC2_SCENARIOS = [
+  { scenario: "You just created a new ED25519 key pair and downloaded mykey.pem. Before SSHing, you must fix permissions, then connect to an EC2 at 54.26.10.18 as ec2-user.", tokens: ['chmod 400 mykey.pem', 'ssh -i mykey.pem ec2-user@54.26.10.18'], answer: ['chmod 400 mykey.pem', 'ssh -i mykey.pem ec2-user@54.26.10.18'] },
+  { scenario: "Upload a file called app.tar.gz from your local machine to the ec2-user home directory on server 18.234.55.12 using key prod.pem.", tokens: ['scp -i prod.pem app.tar.gz ec2-user@18.234.55.12:~/'], answer: ['scp -i prod.pem app.tar.gz ec2-user@18.234.55.12:~/'] },
+  { scenario: "You need to add a second public key (newkey.pub) to an already-running EC2 instance (key: access.pem, IP: 10.0.1.5). Copy it then append to authorized_keys.", tokens: ['scp -i access.pem newkey.pub ec2-user@10.0.1.5:~/', 'ssh -i access.pem ec2-user@10.0.1.5 "cat ~/newkey.pub >> ~/.ssh/authorized_keys"'], answer: ['scp -i access.pem newkey.pub ec2-user@10.0.1.5:~/', 'ssh -i access.pem ec2-user@10.0.1.5 "cat ~/newkey.pub >> ~/.ssh/authorized_keys"'] },
+  { scenario: "Generate a new ED25519 key pair named 'devkey', then set correct permissions on the private key.", tokens: ['ssh-keygen -t ed25519', 'chmod 400 devkey'], answer: ['ssh-keygen -t ed25519', 'chmod 400 devkey'] },
+  { scenario: "Download a log file /var/log/app.log from a remote EC2 (IP: 3.14.15.9, key: web.pem) to your current local directory.", tokens: ['scp -i web.pem ec2-user@3.14.15.9:/var/log/app.log .'], answer: ['scp -i web.pem ec2-user@3.14.15.9:/var/log/app.log .'] },
+];
+
+function buildPipe(containerId, color) { buildDragDrop(containerId, color, PIPE_SCENARIOS, 'Linux Text Tools — Pipe Builder', 'Build the correct pipeline for this task:'); }
+function buildChmod(containerId, color) { buildDragDrop(containerId, color, CHMOD_SCENARIOS, 'Linux Permissions — chmod Builder', 'Build the correct command sequence:'); }
+function buildWorkflow(containerId, color) { buildDragDrop(containerId, color, WORKFLOW_SCENARIOS, 'Git — Workflow Builder', 'Arrange the steps in the correct order:'); }
+function buildScenario(containerId, color) { buildDragDrop(containerId, color, EC2_SCENARIOS, 'EC2 Networking — Scenario Builder', 'Put the commands in the right order:'); }
+
+function buildDragDrop(containerId, color, scenarios, title, label) {
+  const sc = scenarios[Math.floor(Math.random() * scenarios.length)];
+  const avail = shuffle([...sc.tokens]);
+  let placed = [], available = [...avail];
+  let dragging = null;
+
+  function render() {
+    document.getElementById(containerId).innerHTML = `
+      <div class="screen-header"><button class="back-btn" onclick="goMenu()">← Menu</button><span class="screen-title">${title}</span></div>
+      <div class="builder-scenario">${label}<br><br><strong>${sc.scenario}</strong></div>
+      <div class="drag-zone-label">YOUR ANSWER — drag tokens here in order:</div>
+      <div class="drag-zone" id="drop-zone" ondragover="event.preventDefault();this.classList.add('dragover')" ondragleave="this.classList.remove('dragover')" ondrop="dropOnAnswer(event)">
+        ${placed.map((t,i) => `<div class="drag-token" draggable="true" data-src="placed" data-idx="${i}" ondragstart="dragStart(event,'placed',${i})" ondragend="dragEnd(event)">${t}</div>`).join('')}
+        ${placed.length === 0 ? '<span style="color:var(--muted);font-size:12px;padding:6px">← drop tokens here</span>' : ''}
+      </div>
+      <div class="drag-zone-label">AVAILABLE TOKENS:</div>
+      <div class="drag-zone" id="avail-zone" ondragover="event.preventDefault();this.classList.add('dragover')" ondragleave="this.classList.remove('dragover')" ondrop="dropOnAvail(event)">
+        ${available.map((t,i) => `<div class="drag-token" draggable="true" data-src="avail" data-idx="${i}" ondragstart="dragStart(event,'avail',${i})" ondragend="dragEnd(event)">${t}</div>`).join('')}
+      </div>
+      <button class="check-btn" onclick="checkDrop()">✓ Check Answer</button>
+      <button class="check-btn" onclick="buildDragDrop('${containerId}','${color}',${containerId.includes('c4')?'PIPE_SCENARIOS':containerId.includes('c5')?'CHMOD_SCENARIOS':containerId.includes('c6')?'WORKFLOW_SCENARIOS':'EC2_SCENARIOS'},'${title}','${label}')">↺ New Scenario</button>
+      <div class="builder-feedback" id="bfeed"></div>`;
+
+    window.dragStart = (e, src, i) => { dragging = {src, i}; e.target.classList.add('dragging'); };
+    window.dragEnd = (e) => { e.target.classList.remove('dragging'); document.querySelectorAll('.drag-zone').forEach(z=>z.classList.remove('dragover')); };
+    window.dropOnAnswer = (e) => {
+      e.preventDefault(); e.currentTarget.classList.remove('dragover');
+      if (!dragging) return;
+      if (dragging.src === 'avail') { placed.push(available[dragging.i]); available.splice(dragging.i, 1); }
+      dragging = null; render();
+    };
+    window.dropOnAvail = (e) => {
+      e.preventDefault(); e.currentTarget.classList.remove('dragover');
+      if (!dragging) return;
+      if (dragging.src === 'placed') { available.push(placed[dragging.i]); placed.splice(dragging.i, 1); }
+      dragging = null; render();
+    };
+    window.checkDrop = () => {
+      const correct = JSON.stringify(placed) === JSON.stringify(sc.answer);
+      const fb = document.getElementById('bfeed');
+      if (correct) { fb.className = 'builder-feedback correct'; fb.textContent = '✓ Correct! +25 XP'; addXP(25); addStreak(); }
+      else { fb.className = 'builder-feedback wrong'; fb.innerHTML = '✗ Not quite. Correct order:<br><code>' + sc.answer.join(' → ') + '</code>'; resetStreak(); }
+    };
+  }
+  render();
+}
+
+// ═══════════════════════════════════════════════════════
+// ══════════════ QUESTION DATA ════════════════════════
+// ═══════════════════════════════════════════════════════
+
+// ── CLASS 4: LINUX TEXT TOOLS ──
+const C4_QUIZ = [
+  { q: "What does the -r flag do when used with grep?", options: ["Searches recursively through directories","Reverses the output","Shows line numbers","Case-insensitive search"], a: "Searches recursively through directories", exp: "-r (or --recursive) makes grep descend into subdirectories. Without it, grep only searches the specified file(s)." },
+  { q: "Which command shows only lines that do NOT match a pattern?", options: ["grep -v 'pattern' file","grep -n 'pattern' file","grep -i 'pattern' file","grep -c 'pattern' file"], a: "grep -v 'pattern' file", exp: "-v inverts the match, printing lines that do NOT contain the pattern. Critical for filtering out noise in logs." },
+  { q: "What does this pipeline do?", code: "cat /etc/passwd | grep '/bin/bash' | wc -l", options: ["Counts users with bash as their default shell","Lists all bash scripts","Counts lines in /etc/passwd","Searches for bash commands"], a: "Counts users with bash as their default shell", exp: "It reads /etc/passwd, filters lines containing '/bin/bash' (users with bash shell), then wc -l counts the matching lines." },
+  { q: "What is the difference between > and >> in bash?", options: ["> overwrites, >> appends","> appends, >> overwrites","Both append to the file","Both overwrite the file"], a: "> overwrites, >> appends", exp: "> truncates and rewrites the file completely. >> adds to the end without deleting existing content. Critical distinction for logging." },
+  { q: "Which find command locates files modified within the last 24 hours?", options: ["find / -mtime -1","find / -newer 24","find / -time 24","find / -modified -24"], a: "find / -mtime -1", exp: "-mtime -1 means files modified less than 1 day (24 hours) ago. -mtime +1 means MORE than 1 day ago." },
+  { q: "What does grep -c do?", options: ["Counts matching lines, not showing them","Makes search case-insensitive","Colors the matched output","Searches compressed files"], a: "Counts matching lines, not showing them", exp: "-c prints only the count of matching lines, not the lines themselves. Useful when you only need a number, not the content." },
+  { q: "How do you search for a literal string that contains special regex characters like . and *?", options: ["grep -F 'literal.string' file","grep -r 'literal.string' file","grep -x 'literal.string' file","grep -P 'literal.string' file"], a: "grep -F 'literal.string' file", exp: "-F treats the pattern as a fixed string, not a regex. Without it, . means 'any character' and * is a quantifier in regex." },
+  { q: "What does find . -name '*.log' -exec rm {} \\; do?", options: ["Deletes all .log files in current directory tree","Lists .log files without deleting","Moves .log files to trash","Shows sizes of .log files"], a: "Deletes all .log files in current directory tree", exp: "-exec runs a command on each found file. {} is replaced by the filename. \\; ends the -exec command. This is a destructive operation." },
+  { q: "What does the pipe | actually do at the OS level?", options: ["Connects stdout of one process to stdin of next","Saves output to a temp file then reads it","Runs two processes sequentially","Merges two files together"], a: "Connects stdout of one process to stdin of next", exp: "Pipe creates an IPC mechanism where the kernel directly connects the output stream of one process to the input stream of the next — no temp files involved." },
+  { q: "Which command shows the last 20 lines of a file and keeps watching for new lines?", options: ["tail -f -n 20 logfile","less -f logfile","grep -t 20 logfile","head -r 20 logfile"], a: "tail -f -n 20 logfile", exp: "-f follows the file (watches for new writes), -n 20 shows 20 lines. This is how sysadmins monitor live logs on a server." },
+  { q: "What does echo $? print after running a command?", options: ["Exit code of the last command","The $? variable as a literal string","Current user's shell","Last command typed"], a: "Exit code of the last command", exp: "$? is a special shell variable containing the exit status of the most recent command. 0 = success, anything else = some form of error." },
+  { q: "How do you search for a pattern spanning exactly 2 lines in grep?", options: ["You cannot; use awk or perl for multi-line","grep -A 2 'pattern'","grep -m 2 'pattern'","grep -n 2 'pattern'"], a: "You cannot; use awk or perl for multi-line", exp: "grep processes one line at a time. For multi-line pattern matching you need awk, perl -0777, or pcregrep with -M flag." },
+  { q: "What does less +F do differently than tail -f?", options: ["Follows file like tail -f but lets you scroll back with Ctrl+C","Less cannot follow files","Less uses more memory","Both are identical in behavior"], a: "Follows file like tail -f but lets you scroll back with Ctrl+C", exp: "+F starts less in follow mode. Press Ctrl+C to stop following and scroll through history, then F to resume following. More powerful than tail -f." },
+  { q: "You need to find all .conf files NOT owned by root. Which command works?", options: ["find /etc -name '*.conf' ! -user root","find /etc -name '*.conf' -not root","find /etc -name '*.conf' -exclude root","grep -r 'root' /etc --invert"], a: "find /etc -name '*.conf' ! -user root", exp: "! negates a test in find. -user root filters by owner, so ! -user root finds files NOT owned by root." },
+  { q: "What is the purpose of the -o flag in grep?", options: ["Prints only the matched portion, not the whole line","Enables OR logic between patterns","Opens file with offset","Outputs to a file"], a: "Prints only the matched portion, not the whole line", exp: "-o (--only-matching) prints only the text that matched the regex, not the whole line. Useful for extracting IPs, emails, etc." },
+  { q: "Which command counts the number of unique words in a file?", code: "cat file.txt | tr ' ' '\\n' | sort | uniq | wc -l", options: ["This correctly counts unique words","This counts total words including duplicates","This only counts lines","This will produce an error"], a: "This correctly counts unique words", exp: "tr replaces spaces with newlines (one word per line), sort orders them, uniq removes duplicates, wc -l counts what remains — unique words." },
+  { q: "What does find -maxdepth 1 do?", options: ["Searches only in the specified directory, not subdirectories","Limits results to 1 file","Sets maximum file size to 1MB","Shows only 1 result"], a: "Searches only in the specified directory, not subdirectories", exp: "-maxdepth 1 means only descend 1 level (the target directory itself). -maxdepth 2 would include immediate subdirectories." },
+  { q: "How does grep handle binary files by default?", options: ["Prints 'Binary file matches' without showing the content","Shows binary content as-is","Skips binary files silently","Converts binary to hex and searches"], a: "Prints 'Binary file matches' without showing the content", exp: "By default grep won't display binary content. Use -a to treat binary as text, or -l to just get filenames of matching binary files." },
+  { q: "What does this command print?", code: "echo {1..5} | tr ' ' '\\n' | grep -v 3", options: ["1 2 4 5 (each on its own line)","1 2 3 4 5","3","Nothing"], a: "1 2 4 5 (each on its own line)", exp: "echo {1..5} expands to '1 2 3 4 5', tr converts spaces to newlines, grep -v 3 removes the line containing 3." },
+  { q: "What is the difference between grep 'error' and grep '^error' ?", options: ["First matches anywhere; second only at line start","First is case-sensitive; second is not","First uses regex; second is literal","They are identical"], a: "First matches anywhere; second only at line start", exp: "^ is a regex anchor meaning 'start of line'. grep '^error' only matches lines where 'error' is the very first word/character." },
+];
+
+const C4_TYPE = [
+  { prompt: "Find all files in /var/log ending in .log, modified in the last 2 days, and print their paths.", hint: "find with -mtime and -name", answers: ["find /var/log -name '*.log' -mtime -2", 'find /var/log -name "*.log" -mtime -2'], exp: "-name filters by pattern, -mtime -2 means modified within 2 days." },
+  { prompt: "Count how many lines in /etc/passwd contain the word 'nologin'.", hint: "grep then count", answers: ["grep -c 'nologin' /etc/passwd", 'grep -c "nologin" /etc/passwd'], exp: "-c returns the count of matching lines directly." },
+  { prompt: "Search case-insensitively for 'password' in all files under /home, showing filename and line number.", hint: "grep with -r -i -n", answers: ["grep -rin 'password' /home", 'grep -rni "password" /home', "grep -r -i -n 'password' /home"], exp: "-r recursive, -i case-insensitive, -n line numbers. Order of flags doesn't matter." },
+  { prompt: "Show the last 50 lines of /var/log/syslog and follow it in real time.", hint: "tail with both -n and -f", answers: ["tail -f -n 50 /var/log/syslog", "tail -n 50 -f /var/log/syslog"], exp: "-f follows, -n 50 sets the starting point to 50 lines back." },
+  { prompt: "Append the text 'deployment complete' to a file called deploy.log without overwriting it.", hint: "echo with append operator", answers: ["echo 'deployment complete' >> deploy.log", 'echo "deployment complete" >> deploy.log'], exp: ">> appends; > would erase the file first." },
+  { prompt: "Find all empty files in the current directory tree.", hint: "find with -empty flag", answers: ["find . -empty -type f", "find . -type f -empty"], exp: "-empty matches zero-size files. -type f restricts to files (not directories)." },
+  { prompt: "Extract only IP addresses from a log file called access.log.", hint: "grep -oE with IPv4 regex pattern", answers: ["grep -oE '[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}' access.log"], exp: "-o prints only matches, -E enables extended regex. The pattern matches IPv4 addresses." },
+  { prompt: "Print lines 20 through 30 of a large file called data.csv.", hint: "head and tail combination", answers: ["head -30 data.csv | tail -11", "sed -n '20,30p' data.csv"], exp: "head -30 gets lines 1-30, tail -11 keeps the last 11 of those (lines 20-30)." },
+];
+
+// ── CLASS 5: LINUX PERMISSIONS ──
+const C5_QUIZ = [
+  { q: "What does chmod 755 myfile set?", options: ["Owner: rwx, Group: r-x, Others: r-x","Owner: rwx, Group: rwx, Others: r-x","Owner: r-x, Group: r-x, Others: r-x","Owner: rwx, Group: rwx, Others: rwx"], a: "Owner: rwx, Group: r-x, Others: r-x", exp: "7=rwx(4+2+1), 5=r-x(4+0+1), 5=r-x. Classic web server file permission — owner can edit, everyone can read/execute." },
+  { q: "An EC2 SSH key gets rejected with 'WARNING: UNPROTECTED PRIVATE KEY FILE'. What do you do?", options: ["chmod 400 keyname.pem","chmod 777 keyname.pem","chown root keyname.pem","chmod 644 keyname.pem"], a: "chmod 400 keyname.pem", exp: "SSH requires private keys to be readable only by the owner (400 or 600). Any group/other permissions and SSH refuses to use the key as a security measure." },
+  { q: "What does the sticky bit do on a directory like /tmp?", options: ["Users can only delete their own files, even if they have write on the dir","Only root can write to the directory","Files cannot be executed from this directory","Prevents the directory from being deleted"], a: "Users can only delete their own files, even if they have write on the dir", exp: "The sticky bit (mode 1000 or t in ls output) lets multiple users write to a shared directory but prevents them from deleting each other's files." },
+  { q: "What does sudo !! do?", options: ["Re-runs the previous command with sudo","Opens sudo in interactive mode","Lists recent sudo commands","Shows sudo permissions for current user"], a: "Re-runs the previous command with sudo", exp: "!! expands to the previous command in bash history. sudo !! is the quick fix when you forget to type sudo first." },
+  { q: "What permission does 644 give in human-readable form?", options: ["Owner: rw-, Group: r--, Others: r--","Owner: rwx, Group: r--, Others: r--","Owner: rw-, Group: rw-, Others: r--","Owner: r--, Group: r--, Others: r--"], a: "Owner: rw-, Group: r--, Others: r--", exp: "6=rw-(4+2), 4=r--(4), 4=r--. Standard file permission — owner can read/write, everyone else read-only." },
+  { q: "How do you add execute permission for the owner without changing other bits?", options: ["chmod u+x filename","chmod +x filename","chmod 100 filename","chmod ox filename"], a: "chmod u+x filename", exp: "Symbolic mode: u=user(owner), g=group, o=others, a=all. +x adds execute without touching read/write or other categories." },
+  { q: "What is the difference between su and su -?", options: ["su - loads the target user's full environment; su keeps current env","su - is interactive; su is not","su requires root; su - does not","They are identical"], a: "su - loads the target user's full environment; su keeps current env", exp: "su - (login shell) changes HOME, PATH, and other env vars to the target user's. Plain su switches user identity but keeps your environment — often causes 'command not found' for root commands." },
+  { q: "What does /etc/sudoers %wheel ALL=(ALL) NOPASSWD: ALL mean?", options: ["Members of wheel group can run any sudo command without password","Only wheel user can use sudo","Wheel group has read access to all files","All users can become wheel without password"], a: "Members of wheel group can run any sudo command without password", exp: "% means group in sudoers. NOPASSWD removes the password prompt. This is a common AWS/cloud config for automation." },
+  { q: "ls -la shows -rw-r--r-- 1 alice devs 2048 file.txt. Who can write to this file?", options: ["Only alice","alice and anyone in devs group","alice and root","Everyone"], a: "Only alice", exp: "rw- = owner(alice) can read/write. r-- = group(devs) read-only. r-- = others read-only. Root can also write regardless of permissions." },
+  { q: "What does chmod -R 750 /var/app do?", options: ["Recursively sets 750 on all files and dirs under /var/app","Sets 750 only on /var/app directory itself","Removes execute from /var/app","Sets read permission for all users recursively"], a: "Recursively sets 750 on all files and dirs under /var/app", exp: "-R applies chmod recursively. Warning: applying the same mode to both files and directories is often wrong — directories need x to be entered, files usually should not have x." },
+  { q: "What does the setuid bit do when set on an executable?", options: ["The program runs with the file owner's permissions, not the caller's","Only the file owner can execute it","The program runs as root always","It prevents the file from being modified"], a: "The program runs with the file owner's permissions, not the caller's", exp: "setuid is why /usr/bin/passwd (owned by root) can write to /etc/shadow even when run by a normal user. It temporarily elevates to the file owner." },
+  { q: "What numeric permission means no access at all for a specific category?", options: ["0","1","4","7"], a: "0", exp: "0 = no bits set = no permissions (---). A file with 700 means only the owner has full access; group and others have zero access." },
+  { q: "How do you see what sudo privileges your current user has?", options: ["sudo -l","sudo --list-all","cat /etc/sudoers","sudo show-perms"], a: "sudo -l", exp: "sudo -l (lowercase L) lists the commands the current user is allowed (and forbidden) to run via sudo, per /etc/sudoers." },
+  { q: "What does chown alice:devteam report.txt do?", options: ["Changes owner to alice and group to devteam","Changes only the owner to alice","Changes only the group to devteam","Adds alice to the devteam group"], a: "Changes owner to alice and group to devteam", exp: "chown user:group sets both. chown alice: sets only owner. chown :devteam sets only group. chown requires sudo for files you don't own." },
+  { q: "In vi, what sequence saves the file and exits?", options: [":wq","ZZ",":x","All of the above"], a: "All of the above", exp: ":wq = write+quit. ZZ = same in normal mode. :x = writes only if changes were made (slightly different from :wq which writes even if unchanged)." },
+  { q: "What does umask 022 mean for newly created files?", options: ["Files get 644 permissions; directories get 755","Files get 022 permissions","Files get 755 permissions","All new files are executable"], a: "Files get 644 permissions; directories get 755", exp: "umask subtracts from the default. Files default to 666, minus 022 = 644. Dirs default to 777, minus 022 = 755. umask 027 would give 640/750." },
+  { q: "What permission does 400 give?", options: ["Owner read-only, no access for anyone else","Owner read/write, others read","Read for all users","Owner execute only"], a: "Owner read-only, no access for anyone else", exp: "4=r--(read only), 0=---(no access), 0=---(no access). This is why SSH keys are set to 400 — no one else can even read them." },
+  { q: "A file has permissions 666 and umask is 027. What are the resulting permissions?", options: ["640","644","660","600"], a: "640", exp: "666 XOR with 027: owner 6&6=6(rw-), group 6&2=4(r--), but wait — umask 027 masks out bits. 666 AND NOT(027) = 666 AND 750 = 640." },
+  { q: "What does the command visudo do and why use it instead of editing /etc/sudoers directly?", options: ["Opens sudoers with syntax checking to prevent locking yourself out","Opens sudoers in vim only","Creates a backup of sudoers","Encrypts the sudoers file"], a: "Opens sudoers with syntax checking to prevent locking yourself out", exp: "visudo locks the file during editing and validates syntax before saving. A typo in /etc/sudoers can permanently break sudo access — visudo prevents this." },
+  { q: "What does ls -la output 'drwxr-xr-x' mean?", options: ["Directory: owner rwx, group r-x, others r-x","Regular file with full permissions","Symbolic link directory","Directory readable only by owner"], a: "Directory: owner rwx, group r-x, others r-x", exp: "d = directory. rwx = owner can read/write/enter. r-x = group can list and enter but not create/delete. r-x = same for others." },
+];
+
+const C5_TYPE = [
+  { prompt: "Set /var/www/html and all its contents to be owned by www-data user and www-data group recursively.", hint: "chown with -R flag and user:group format", answers: ["chown -R www-data:www-data /var/www/html"], exp: "-R is recursive. user:group format sets both owner and group." },
+  { prompt: "Give owner read+write+execute, group read+execute, others nothing. Use numeric mode.", hint: "Owner=7, Group=5, Others=0", answers: ["chmod 750 filename", "chmod 750 script.sh"], exp: "7=rwx, 5=r-x, 0=--- → 750" },
+  { prompt: "Set the correct permission on an SSH private key so SSH accepts it.", hint: "Read-only for owner, nothing for anyone else", answers: ["chmod 400 keyfile.pem", "chmod 400 id_ed25519", "chmod 400 id_rsa"], exp: "400 = r-- --- --- Only owner can read it, satisfying SSH's strict permission requirement." },
+  { prompt: "View what sudo commands your current user is allowed to run.", hint: "sudo with -l flag", answers: ["sudo -l"], exp: "sudo -l lists your allowed commands per sudoers configuration." },
+  { prompt: "Add yourself (current user) to the docker group without removing existing group memberships.", hint: "usermod with -aG flags", answers: ["sudo usermod -aG docker $USER", "sudo usermod -a -G docker $USER"], exp: "-a appends (crucial — without it you'd replace all groups). -G specifies supplementary group." },
+  { prompt: "Make a script executable by owner only, leaving other permissions unchanged.", hint: "Symbolic mode with u+x", answers: ["chmod u+x script.sh"], exp: "u+x adds execute for user (owner) only, without affecting group or other bits." },
+];
+
+// ── CLASS 6: GIT ──
+const C6_QUIZ = [
+  { q: "What does git restore --staged filename do?", options: ["Unstages the file without discarding local changes","Deletes the file from the repo","Reverts the file to last commit and discards changes","Stashes the staged changes"], a: "Unstages the file without discarding local changes", exp: "restore --staged removes the file from the staging area (index) but keeps your working directory changes intact. Old syntax was git reset HEAD filename." },
+  { q: "You cloned a repo, made commits, but git push fails with 'rejected'. What's the most likely cause?", options: ["Remote has commits your local branch doesn't have","You haven't run git add","Your commit message is invalid","SSH key is not configured"], a: "Remote has commits your local branch doesn't have", exp: "Git won't push if the remote is ahead of your local branch. You must git pull (and resolve any conflicts) before pushing." },
+  { q: "What does git log --oneline --graph --all show?", options: ["Visual ASCII graph of all branches and their commit history","Only the last commit","All commits on all branches as a flat list","Files changed in each commit"], a: "Visual ASCII graph of all branches and their commit history", exp: "--graph draws branch topology with ASCII art. --oneline compresses each commit to one line. --all includes remote-tracking branches too." },
+  { q: "What is HEAD in Git?", options: ["A pointer to the currently checked-out commit/branch","The first commit in the repository","The remote origin's main branch","The last commit you pushed"], a: "A pointer to the currently checked-out commit/branch", exp: "HEAD is a symbolic reference — it usually points to a branch name (like main), which in turn points to a commit. Detached HEAD means HEAD points directly to a commit." },
+  { q: "What happens when you run git merge with a fast-forward possible?", options: ["Git simply moves the branch pointer forward — no merge commit","Git always creates a merge commit","Git asks you to confirm before merging","Git rebases the commits"], a: "Git simply moves the branch pointer forward — no merge commit", exp: "Fast-forward merge just advances the pointer. No new commit is created. Use --no-ff to force a merge commit if you want to preserve branch history." },
+  { q: "What does git stash do?", options: ["Saves uncommitted changes to a temporary stack and restores a clean working directory","Deletes all uncommitted changes permanently","Commits changes with a temporary message","Creates a backup branch"], a: "Saves uncommitted changes to a temporary stack and restores a clean working directory", exp: "stash is for when you need to switch branches but have uncommitted work. Use git stash pop to bring changes back." },
+  { q: "What is the difference between git fetch and git pull?", options: ["fetch downloads remote changes without merging; pull downloads AND merges","fetch is faster; pull is safer","fetch updates local files; pull only checks remote","They are identical"], a: "fetch downloads remote changes without merging; pull downloads AND merges", exp: "git pull = git fetch + git merge. Fetch is non-destructive — you can inspect changes with git diff before merging." },
+  { q: "What does git rebase main do when on a feature branch?", options: ["Replays feature branch commits on top of latest main","Merges main into feature branch creating a merge commit","Deletes the feature branch history","Updates main branch to include feature commits"], a: "Replays feature branch commits on top of latest main", exp: "Rebase rewrites commit history — your feature branch commits get new SHA hashes but appear as if they were written after the latest main commit. Creates cleaner linear history." },
+  { q: "A commit contains a password. It's been pushed. What must you do?", options: ["Rotate the credential immediately — git history rewrites don't fully protect you","git commit --amend to fix it","Delete the repo and start over","Use git filter-branch to remove it from history"], a: "Rotate the credential immediately — git history rewrites don't fully protect you", exp: "Even if you rewrite history, the old commit may be cached by GitHub or anyone who fetched. The credential must be considered compromised and rotated immediately." },
+  { q: "What does git cherry-pick <sha> do?", options: ["Applies a specific commit from any branch to your current branch","Selects the best commit in a range","Deletes all other commits except the specified one","Shows details of a commit"], a: "Applies a specific commit from any branch to your current branch", exp: "cherry-pick is surgical — it takes exactly one commit and applies its diff to the current branch. Useful for backporting bug fixes." },
+  { q: "What is origin in git push origin main?", options: ["The default alias for the remote repository URL","A branch name","Your local machine name","The upstream parent repository"], a: "The default alias for the remote repository URL", exp: "origin is just a conventional name — a remote alias stored in .git/config. You can have multiple remotes with different names (upstream, deploy, etc.)." },
+  { q: "What does git diff --staged show?", options: ["Differences between staged area and last commit","Differences between working dir and last commit","All uncommitted changes","Changes pushed to remote"], a: "Differences between staged area and last commit", exp: "Without --staged, git diff shows working dir vs staging area. --staged (alias: --cached) shows what would be committed — staging area vs last commit." },
+  { q: "When does a merge conflict occur?", options: ["Two branches modified the same lines of the same file differently","Any time you merge branches","When a branch is behind the remote","When commits have the same timestamp"], a: "Two branches modified the same lines of the same file differently", exp: "Git can auto-merge if changes are in different parts of a file. Conflicts happen when the same lines were changed in incompatible ways — you must manually decide what to keep." },
+  { q: "What is the purpose of .gitignore?", options: ["Tells git not to track specified files/patterns","Deletes listed files from the repo","Prevents listed users from committing","Marks files as read-only in the repo"], a: "Tells git not to track specified files/patterns", exp: ".gitignore patterns prevent files from being staged or committed. But files already tracked won't be untracked just by adding them to .gitignore — use git rm --cached first." },
+  { q: "What does git commit --amend do?", options: ["Modifies the last commit (message or staged content)","Creates an additional commit on top","Deletes the last commit","Merges the last two commits"], a: "Modifies the last commit (message or staged content)", exp: "amend rewrites the last commit. You can add staged files and/or change the message. Warning: never amend commits already pushed to shared branches — it rewrites history." },
+  { q: "What command shows which branch you're on and the status of staged/unstaged files?", options: ["git status","git log","git branch","git show HEAD"], a: "git status", exp: "git status is your most-used command. It shows current branch, staged changes, unstaged changes, and untracked files." },
+  { q: "What is the commit SHA?", options: ["A 40-character cryptographic hash uniquely identifying a commit","A sequential commit number","The branch name at time of commit","The author's ID"], a: "A 40-character cryptographic hash uniquely identifying a commit", exp: "Git uses SHA-1 (being migrated to SHA-256) to hash commit content. The hash changes if anything in the commit changes — this makes git history tamper-evident." },
+  { q: "What does git clone --depth 1 <url> do?", options: ["Downloads only the latest commit, not full history","Clones only 1 file","Creates a shallow clone with 1 branch","Limits clone size to 1MB"], a: "Downloads only the latest commit, not full history", exp: "Shallow clone is faster for CI/CD pipelines and large repos where you only need current code, not full git history. --depth N fetches the last N commits." },
+  { q: "After git init in a new folder, what is the first step before committing?", options: ["git add . to stage files","git commit -m 'init'","git push","git remote add origin <url>"], a: "git add . to stage files", exp: "Git won't commit untracked files. You must explicitly stage them with git add. git add . stages everything; git add <file> stages selectively." },
+  { q: "What does git branch -d featureBranch do vs git branch -D featureBranch?", options: ["-d deletes only if merged; -D force-deletes regardless","-D is for remote branches; -d for local","-d is deprecated; -D is the current syntax","Both are identical"], a: "-d deletes only if merged; -D force-deletes regardless", exp: "-d is safe — it refuses to delete unmerged branches. -D overrides this safety check. Use -D carefully; unmerged commits on that branch may be unreachable." },
+];
+
+const C6_TYPE = [
+  { prompt: "Create a new branch called 'hotfix' and switch to it in a single command.", hint: "git checkout with -b flag", answers: ["git checkout -b hotfix", "git switch -c hotfix"], exp: "-b creates and switches in one step. Modern git also accepts switch -c." },
+  { prompt: "Set your global git username to 'Shah Umarov' and email to 'shah@312school.com'.", hint: "git config --global for each setting", answers: ["git config --global user.name \"Shah Umarov\" && git config --global user.email \"shah@312school.com\"", "git config --global user.name 'Shah Umarov'"], exp: "These configs are stored in ~/.gitconfig and apply to all repos." },
+  { prompt: "Unstage a file called config.env that you accidentally added, without losing the local changes.", hint: "git restore with --staged flag", answers: ["git restore --staged config.env"], exp: "restore --staged removes from index (staging area) but leaves working directory intact." },
+  { prompt: "View a compact visual graph of all branches and their commits.", hint: "git log with --oneline --graph --all", answers: ["git log --oneline --graph --all"], exp: "Most useful git visualization without a GUI tool." },
+  { prompt: "Push your local 'feature' branch to origin for the first time, setting up tracking.", hint: "git push with -u flag", answers: ["git push -u origin feature"], exp: "-u sets the upstream tracking reference so future git push/pull on this branch need no arguments." },
+  { prompt: "Undo the last commit but keep the changes staged (ready to re-commit).", hint: "git reset with --soft flag", answers: ["git reset --soft HEAD~1"], exp: "--soft moves HEAD back one commit but keeps staged changes. --mixed (default) unstages too. --hard discards everything." },
+  { prompt: "Show exactly what changes are staged and ready to be committed.", hint: "git diff with --staged flag", answers: ["git diff --staged", "git diff --cached"], exp: "--staged and --cached are synonyms. Shows staging area vs last commit." },
+  { prompt: "Generate an SSH key using the ed25519 algorithm for GitHub authentication.", hint: "ssh-keygen -t ed25519", answers: ["ssh-keygen -t ed25519"], exp: "ed25519 is modern and more secure than RSA. Add the .pub key to GitHub Settings → SSH Keys." },
+];
+
+// ── CLASS 7: AWS FUNDAMENTALS ──
+const C7_QUIZ = [
+  { q: "An EC2 instance in us-east-1a goes down. Your app stays up because you deployed to us-east-1b as well. What AWS concept protected you?", options: ["Availability Zones","Regions","Edge Locations","VPCs"], a: "Availability Zones", exp: "AZs are physically separate data centers within a region, connected by low-latency links. This is the fundamental HA building block on AWS." },
+  { q: "Why does AWS charge per second/hour even if your EC2 instance is idle?", options: ["You're paying for reserved capacity, not actual CPU usage","AWS meters actual CPU cycles","Idle instances are free","You only pay when data is transferred"], a: "You're paying for reserved capacity, not actual CPU usage", exp: "Pay-as-you-go means the compute capacity is allocated to you whether you use it. EC2 billing is for the reservation of resources, not utilization." },
+  { q: "What is AWS GovCloud used for?", options: ["US government workloads requiring compliance with ITAR and FedRAMP","Cheaper EC2 for government employees","A region with lower latency for DC-area users","Free tier for nonprofits"], a: "US government workloads requiring compliance with ITAR and FedRAMP", exp: "GovCloud (us-gov-west-1, us-gov-east-1) is isolated infrastructure for US government agencies, contractors, and regulated defense workloads." },
+  { q: "Netflix spends ~$1 billion on AWS annually. What does this illustrate about cloud economics?", options: ["Even massive companies find cloud cheaper than building their own global infrastructure","AWS overcharges enterprise customers","Netflix owns its own servers managed by AWS","The cost shows cloud is inefficient at scale"], a: "Even massive companies find cloud cheaper than building their own global infrastructure", exp: "Netflix famously moved entirely to AWS. The capex of building equivalent global infrastructure + staffing would far exceed $1B/year — cloud shifts this to opex." },
+  { q: "What is the difference between stopping and terminating an EC2 instance?", options: ["Stop preserves the instance; terminate permanently deletes it","Stop deletes data; terminate keeps the AMI","They are identical for billing","Stop only pauses billing; terminate does not"], a: "Stop preserves the instance; terminate permanently deletes it", exp: "Stopped instances retain their EBS volumes and can be restarted. Terminated instances are gone forever (unless you have an EBS snapshot). Public IP changes on restart." },
+  { q: "You need the lowest possible price for a non-critical batch job that can be interrupted. Which EC2 pricing model?", options: ["Spot Instances","Reserved Instances","On-Demand","Dedicated Hosts"], a: "Spot Instances", exp: "Spot uses spare AWS capacity at up to 90% discount but can be reclaimed with 2-min notice. Perfect for fault-tolerant batch workloads." },
+  { q: "What is an AMI?", options: ["A template containing OS, software, and config used to launch EC2 instances","The monitoring agent on EC2","Amazon's machine learning service","An IP allocation service"], a: "A template containing OS, software, and config used to launch EC2 instances", exp: "Amazon Machine Image is the blueprint for an EC2 instance. You can create custom AMIs from running instances to deploy pre-configured servers." },
+  { q: "How many Availability Zones does us-east-1 (N. Virginia) have?", options: ["6","2","3","1"], a: "6", exp: "us-east-1 is AWS's oldest and largest region, with 6 AZs (us-east-1a through 1f). Most regions have 2-3 AZs." },
+  { q: "What service does AWS use to bill for data transfer between regions?", options: ["Data transfer OUT is charged per GB; transfer IN is free","All data transfer is free","You're charged for both in and out","Only transfers over 1GB are charged"], a: "Data transfer OUT is charged per GB; transfer IN is free", exp: "AWS charges for egress (data leaving AWS or leaving a region). Ingress is free. This is a major cost driver for high-traffic applications." },
+  { q: "What is an IAM Role vs an IAM User?", options: ["Users have long-term credentials; Roles are assumed temporarily by services/users","Roles are for humans; Users are for services","Users have more permissions than Roles","They are the same concept with different names"], a: "Users have long-term credentials; Roles are assumed temporarily by services/users", exp: "Best practice: EC2 instances, Lambda functions, etc. should use Roles (temporary credentials via STS). IAM Users with access keys are a security risk." },
+  { q: "What does an EC2 Security Group do?", options: ["Acts as a stateful firewall controlling inbound and outbound traffic at the instance level","Manages IAM permissions for EC2","Encrypts data on the instance","Limits the instance's CPU usage"], a: "Acts as a stateful firewall controlling inbound and outbound traffic at the instance level", exp: "Security Groups are virtual firewalls. Stateful means if you allow inbound traffic, the response is automatically allowed out. Default: all outbound allowed, no inbound." },
+  { q: "Your EC2 instance stops and restarts. What changes?", options: ["The public IP address changes (unless you have an Elastic IP)","The private IP changes","The instance type changes","The security group resets"], a: "The public IP address changes (unless you have an Elastic IP)", exp: "Dynamic public IPs are assigned from AWS's pool and released when an instance stops. Elastic IPs are static and persist. Private IPs within a VPC don't change." },
+  { q: "What region does AWS recommend for lowest latency from the US East Coast?", options: ["us-east-1 (N. Virginia)","us-west-2 (Oregon)","eu-west-1 (Ireland)","ap-southeast-1 (Singapore)"], a: "us-east-1 (N. Virginia)", exp: "us-east-1 is physically located in Northern Virginia and is also AWS's first and most feature-rich region." },
+  { q: "What is the Free Tier t2.micro or t3.micro limit per month?", options: ["750 hours, which covers 1 instance running 24/7 for a month","100 hours","Unlimited for 12 months","24 hours per day"], a: "750 hours, which covers 1 instance running 24/7 for a month", exp: "750 hours/month = 31.25 days, enough to keep one micro instance running continuously for a month. Split across multiple instances and you'll exhaust it faster." },
+  { q: "What is VPC?", options: ["A logically isolated section of AWS cloud where you control networking","A virtual CPU for EC2 instances","AWS's VPN service for office connectivity","A type of storage volume"], a: "A logically isolated section of AWS cloud where you control networking", exp: "Virtual Private Cloud gives you your own isolated network in AWS with custom IP ranges, subnets, route tables, and gateways. All EC2 instances launch into a VPC." },
+  { q: "Why is us-east-1 often the cheapest region?", options: ["It's the oldest/most established with highest economies of scale","It has older, less efficient hardware","AWS subsidizes it for government use","It's not — all regions have identical pricing"], a: "It's the oldest/most established with highest economies of scale", exp: "Older, larger regions have massive infrastructure investment and can operate more efficiently. Newer regions in remote areas (like ap-southeast-3) often cost 20-30% more." },
+  { q: "What command on a Linux EC2 shows instance metadata like instance-id and type?", options: ["curl http://169.254.169.254/latest/meta-data/","cat /etc/instance-info","aws ec2 describe-me","ifconfig --aws"], a: "curl http://169.254.169.254/latest/meta-data/", exp: "169.254.169.254 is the link-local metadata endpoint available from any EC2 instance. It exposes instance-id, AMI-id, IAM role credentials, and more." },
+  { q: "What is the purpose of an Elastic IP?", options: ["A static public IPv4 that persists across instance stop/start","A way to expand EC2 memory dynamically","A fixed billing rate for EC2","A VPN connection to on-premises"], a: "A static public IPv4 that persists across instance stop/start", exp: "Elastic IPs solve the 'public IP changes on restart' problem. You pay for EIPs that are NOT attached to a running instance (waste = cost)." },
+  { q: "Which storage type is lost when an EC2 instance is stopped or terminated?", options: ["Instance Store (ephemeral storage)","EBS volumes","S3 buckets","EFS mounts"], a: "Instance Store (ephemeral storage)", exp: "Instance Store is physically attached to the host. Stop/terminate = data gone. EBS is network-attached and persists. Critical distinction for stateful applications." },
+  { q: "What does the AWS Shared Responsibility Model mean for EC2?", options: ["AWS secures the infrastructure; you secure the OS, apps, and data","AWS manages everything including your application","You are responsible for the physical hardware","AWS handles OS patching for EC2"], a: "AWS secures the infrastructure; you secure the OS, apps, and data", exp: "AWS owns security OF the cloud (hardware, facilities, network). You own security IN the cloud: OS patches, security groups config, IAM policies, encryption of data." },
+];
+
+const C7_FLASH = [
+  { q: "What is an Availability Zone?", a: "A physically separate data center within an AWS Region, with independent power and cooling. Multiple AZs = fault tolerance." },
+  { q: "What is the AWS pay-as-you-go model?", a: "You pay only for what you use, billed per second/hour. No long-term commitments required (unlike Reserved Instances)." },
+  { q: "What is EC2?", a: "Elastic Compute Cloud — virtual servers in AWS. You choose CPU, RAM, storage, OS, and pay hourly/per-second." },
+  { q: "What is an AMI?", a: "Amazon Machine Image — a snapshot template used to launch EC2 instances. Contains OS, apps, and configuration." },
+  { q: "What is a Region?", a: "A geographic cluster of AWS data centers (e.g., us-east-1 = N. Virginia). Data doesn't leave a region without your action." },
+  { q: "What is AWS GovCloud?", a: "Isolated AWS regions for US government compliance (ITAR, FedRAMP). Only accessible by vetted US persons/entities." },
+  { q: "What is a Security Group?", a: "A stateful virtual firewall for EC2. Controls inbound/outbound traffic by port, protocol, and source IP." },
+  { q: "What is an Elastic IP?", a: "A static public IPv4 address. Persists across instance stop/start. Free when attached; charged when unattached." },
+  { q: "What is Instance Store?", a: "Ephemeral (temporary) storage physically on the EC2 host. Lost when instance stops or terminates. Fast but not persistent." },
+  { q: "What is EBS?", a: "Elastic Block Store — persistent network-attached storage for EC2. Survives instance stops. Think: hard drive for your server." },
+  { q: "What is Spot Instance?", a: "Unused EC2 capacity sold at up to 90% discount. Can be reclaimed with 2-min notice. Best for fault-tolerant batch jobs." },
+  { q: "What is the instance metadata URL?", a: "http://169.254.169.254/latest/meta-data/ — accessible from inside any EC2 instance to get instance-id, AMI, IAM role creds, etc." },
+  { q: "What is VPC?", a: "Virtual Private Cloud — your isolated network in AWS. You control IP ranges, subnets, routing, and internet access." },
+  { q: "What is the Shared Responsibility Model?", a: "AWS secures infrastructure (hardware/facilities). You secure your OS, apps, data, IAM, and security group configs." },
+  { q: "How many AZs in us-east-1?", a: "6 Availability Zones (us-east-1a through 1f). Largest and oldest AWS region." },
+];
+
+const C7_TYPE = [
+  { prompt: "Retrieve the instance ID of your currently running EC2 instance from the command line (from inside the instance).", hint: "Use the metadata endpoint with curl", answers: ["curl http://169.254.169.254/latest/meta-data/instance-id"], exp: "The metadata service is always available at 169.254.169.254 from within EC2." },
+  { prompt: "Connect to an EC2 instance at IP 54.26.10.18 using key webserver.pem as ec2-user.", hint: "ssh -i flag", answers: ["ssh -i webserver.pem ec2-user@54.26.10.18"], exp: "Standard EC2 SSH format: ssh -i keyfile.pem ec2-user@public-ip" },
+  { prompt: "List all your running EC2 instances using the AWS CLI.", hint: "aws ec2 describe-instances with --filters", answers: ["aws ec2 describe-instances --filters Name=instance-state-name,Values=running"], exp: "describe-instances without filters returns all states. --filters restricts to running only." },
+];
+
+// ── CLASS 8: EC2 NETWORKING & SSH ──
+const C8_QUIZ = [
+  { q: "An IPv4 address is 54.26.10.18. What does each of the 4 octets range from?", options: ["0 to 255","0 to 999","0 to 127","0 to 512"], a: "0 to 255", exp: "IPv4 uses 32 bits split into 4 octets of 8 bits each. 2^8 = 256 values (0-255). This limits the total address space to ~4.3 billion addresses." },
+  { q: "Why is IPv4 'running out' and IPv6 was created?", options: ["IPv4 only allows ~4.3 billion unique addresses, less than the number of internet-connected devices","IPv4 is slower than IPv6","IPv4 doesn't support encryption","IPv4 can't handle mobile devices"], a: "IPv4 only allows ~4.3 billion unique addresses, less than the number of internet-connected devices", exp: "IPv6 uses 128 bits, providing 340 undecillion addresses. Every device, sensor, and server can have a unique public IP without NAT workarounds." },
+  { q: "Your EC2 instance has a private IP of 10.0.1.45 and a public IP of 54.26.10.18. You try to SSH using 10.0.1.45 from your laptop. What happens?", options: ["Connection fails — 10.x.x.x is a private range unreachable from the public internet","Connection succeeds — all IPs are routable","Connection succeeds only on port 22","Connection times out after 30 seconds then succeeds"], a: "Connection fails — 10.x.x.x is a private range unreachable from the public internet", exp: "RFC 1918 private ranges (10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16) are not routed on the public internet. You must use the public IP from outside." },
+  { q: "What is the purpose of ports in networking?", options: ["They allow one IP address to host multiple distinct services simultaneously","They increase connection speed","They encrypt data in transit","They identify the operating system"], a: "They allow one IP address to host multiple distinct services simultaneously", exp: "Ports are like apartment numbers in a building. IP=building address, port=apartment. SSH on 22, HTTP on 80, HTTPS on 443 — same IP, different services." },
+  { q: "Why does SSH specifically require chmod 400 or 600 on private key files?", options: ["SSH refuses to use keys that group or others can read — it's a security enforcement","It's a convention but not required","chmod 644 works the same","AWS requires it, but standard SSH doesn't"], a: "SSH refuses to use keys that group or others can read — it's a security enforcement", exp: "If others can read your private key, they can impersonate you. SSH enforces this by checking permissions and aborting if the key is 'too open'. Error: UNPROTECTED PRIVATE KEY FILE." },
+  { q: "What is the difference between TCP and UDP?", options: ["TCP guarantees delivery with acknowledgments; UDP sends without confirmation","TCP is faster; UDP is more reliable","TCP is for video; UDP is for files","UDP uses more bandwidth than TCP"], a: "TCP guarantees delivery with acknowledgments; UDP sends without confirmation", exp: "TCP: three-way handshake, sequence numbers, acknowledgments, retransmission. UDP: fire and forget. SSH/HTTP/email use TCP. Video streaming/DNS/gaming use UDP." },
+  { q: "You're SSHing to an EC2 and get 'Connection timed out'. The instance is running. What should you check first?", options: ["Security Group inbound rules — port 22 may not be open from your IP","Your internet connection","The SSH key permissions","Whether the instance has rebooted"], a: "Security Group inbound rules — port 22 may not be open from your IP", exp: "Security Groups default to no inbound rules. Port 22 must be explicitly opened. 'Connection refused' = port open but SSH rejected. 'Timed out' = firewall blocking." },
+  { q: "What does the -i flag in the SSH command specify?", options: ["The identity file (private key) to use for authentication","The IP address to connect to","Interactive mode","The SSH protocol version"], a: "The identity file (private key) to use for authentication", exp: "ssh -i keyfile.pem ec2-user@ip — -i means 'identity file'. Without -i, SSH tries keys from ~/.ssh/ in a default order." },
+  { q: "Why does the EC2 public IP change when you stop and restart an instance?", options: ["AWS returns it to the pool and assigns a new one from DHCP — use Elastic IP to prevent this","It's a bug in EC2","Only happens in certain regions","The OS resets the IP configuration"], a: "AWS returns it to the pool and assigns a new one from DHCP — use Elastic IP to prevent this", exp: "Dynamic public IPs are allocated at start time. Elastic IP ($0 when attached to running instance) gives you a static IP that persists across restarts." },
+  { q: "What command do you use to upload a file to EC2 using the same key-based auth as SSH?", options: ["scp -i keyfile.pem localfile ec2-user@ip:~/","rsync localfile ec2-user@ip:~/","sftp -k keyfile.pem ec2-user@ip","aws s3 cp localfile s3://bucket"], a: "scp -i keyfile.pem localfile ec2-user@ip:~/", exp: "SCP (Secure Copy Protocol) runs over SSH and uses the same key authentication. Format: scp -i key source destination where remote = user@ip:path." },
+  { q: "What file on the EC2 server stores all authorized public keys for a user?", options: ["~/.ssh/authorized_keys","~/.ssh/known_hosts","~/.ssh/id_ed25519.pub","~/.ssh/config"], a: "~/.ssh/authorized_keys", exp: "When you SSH, the server checks your public key against ~/.ssh/authorized_keys. You can add multiple public keys (one per line) to grant access to multiple people/machines." },
+  { q: "You want to add a second SSH key to an EC2 instance without stopping it. What's the approach?", options: ["SCP the new public key to the instance, then append it to ~/.ssh/authorized_keys via SSH","You must stop the instance and use AWS console","Regenerate the key pair in AWS console","It's not possible to have two keys for one instance"], a: "SCP the new public key to the instance, then append it to ~/.ssh/authorized_keys via SSH", exp: "Use SCP to upload the .pub file, then: ssh -i oldkey.pem ec2-user@ip 'cat newkey.pub >> ~/.ssh/authorized_keys'. Use >> not > or you'll delete the original key access." },
+  { q: "A Security Group rule has source 0.0.0.0/0 on port 22. What does this mean?", options: ["Anyone from any IP on the internet can attempt SSH — high security risk","Only your machine can SSH","Only AWS services can access this port","Traffic is blocked from the internet"], a: "Anyone from any IP on the internet can attempt SSH — high security risk", exp: "0.0.0.0/0 = all IPs. This opens SSH to brute-force attacks from anywhere. Best practice: restrict to your office/home IP or use a bastion host/VPN." },
+  { q: "What protocol does SCP use under the hood?", options: ["SSH (port 22)","FTP (port 21)","SFTP (port 115)","HTTP (port 80)"], a: "SSH (port 22)", exp: "SCP is just SSH + a file transfer protocol on top. It uses the same keys, same port (22), same authentication — just transfers files instead of shell commands." },
+  { q: "Video call quality drops but never completely fails. Why is UDP preferred over TCP for video?", options: ["UDP drops packets without retransmission — better to skip a frame than freeze waiting for a retry","UDP has lower latency networks","TCP doesn't work for real-time video","UDP compresses video data better"], a: "UDP drops packets without retransmission — better to skip a frame than freeze waiting for a retry", exp: "TCP retransmits lost packets — for video that means freezing to wait. UDP just moves on. A slightly glitchy video is better than a frozen one. Real-time > reliability for media." },
+  { q: "What does the EC2 Security Group 'My IP' option do when setting inbound rules?", options: ["Automatically fills in your current public IP so only you can access the port","Creates a VPN connection from your IP","Restricts to your AWS account's IPs","Sets the rule to private subnet only"], a: "Automatically fills in your current public IP so only you can access the port", exp: "AWS detects your current public IP and pre-fills it. Important: if your IP is dynamic (home internet), you must update this rule when your IP changes." },
+  { q: "Which ssh-keygen command generates a modern, secure key pair for EC2?", options: ["ssh-keygen -t ed25519","ssh-keygen -t rsa -b 1024","ssh-keygen","ssh-keygen -t dsa"], a: "ssh-keygen -t ed25519", exp: "ed25519 is an elliptic curve algorithm — more secure and faster than RSA. Shorter key (256 bits vs 2048+ bits for equivalent RSA security). AWS supports both." },
+  { q: "What happens if you use > instead of >> when adding a new key to authorized_keys?", options: ["You overwrite the file and lock yourself out — original key no longer works","It works the same way","You get a permission denied error","The file becomes corrupted"], a: "You overwrite the file and lock yourself out — original key no longer works", exp: ">> appends, > overwrites. If you overwrite authorized_keys with just the new key, the old key that got you in no longer works. You'd need to use AWS console to recover." },
+  { q: "Port 443 vs port 80 — what is the key security difference?", options: ["443 is HTTPS (encrypted with TLS); 80 is HTTP (plaintext)","443 is faster than 80","80 is for internal traffic; 443 for public","443 requires authentication; 80 does not"], a: "443 is HTTPS (encrypted with TLS); 80 is HTTP (plaintext)", exp: "HTTP on port 80 sends everything in cleartext — passwords, session tokens visible to anyone on the network. HTTPS on 443 encrypts with TLS. Always use 443 for any sensitive traffic." },
+  { q: "You SCP a file and see '100% 2.3MB 4.2MB/s'. What does 100% confirm?", options: ["The transfer completed successfully with no data loss","The server is 100% utilized","SCP used 100% of available bandwidth","The file is 100% encrypted"], a: "The transfer completed successfully with no data loss", exp: "SCP's progress bar shows percentage transferred. 100% means the full file was transmitted. The speed (4.2MB/s) shows transfer rate. A failed transfer stops before 100%." },
+  { q: "What is the known_hosts file used for in SSH?", options: ["Stores fingerprints of servers you've connected to, to detect MITM attacks","Lists all users allowed to SSH in","Stores your SSH private keys","Contains SSH server configuration"], a: "Stores fingerprints of servers you've connected to, to detect MITM attacks", exp: "On first SSH connection, you're shown the server fingerprint and asked to confirm. It's saved to known_hosts. If it changes on a future connection, SSH warns of a potential man-in-the-middle attack." },
+  { q: "Why does -p 22 in the SSH command become optional?", options: ["22 is SSH's default port; -p only needed if server uses a non-standard port","AWS pre-configures -p 22","Port 22 is always open on all servers","The SSH client auto-detects the correct port"], a: "22 is SSH's default port; -p only needed if server uses a non-standard port", exp: "RFC 4251 designates 22 as SSH's well-known port. When connecting to a non-standard port (e.g., a hardened server using 2222), you must specify -p 2222." },
+];
+
+const C8_TYPE = [
+  { prompt: "Fix permissions on a downloaded key file called server.pem, then SSH to 18.220.44.5 as ec2-user.", hint: "Two commands: chmod then ssh", answers: ["chmod 400 server.pem && ssh -i server.pem ec2-user@18.220.44.5"], exp: "chmod 400 first — SSH will refuse if permissions are too open. Then ssh -i server.pem ec2-user@ip" },
+  { prompt: "Upload a file called backup.tar.gz from current directory to the home folder of ec2-user on server 3.88.12.5 using key prod.pem.", hint: "scp with -i flag, local then remote path", answers: ["scp -i prod.pem backup.tar.gz ec2-user@3.88.12.5:~/"], exp: "Format: scp -i key localfile user@ip:remote-path. ~/ is the home directory shortcut." },
+  { prompt: "Download /var/log/nginx/error.log from EC2 (IP: 54.12.88.3, key: web.pem) to your current local directory.", hint: "scp with remote path first, then local dot", answers: ["scp -i web.pem ec2-user@54.12.88.3:/var/log/nginx/error.log ."], exp: "For download: remote path comes first, local destination second. '.' means current directory." },
+  { prompt: "Generate an ed25519 key pair, naming it 'staging_key' (saves to staging_key and staging_key.pub).", hint: "ssh-keygen with -t and -f flags", answers: ["ssh-keygen -t ed25519 -f staging_key"], exp: "-f specifies output filename. Without -f it defaults to id_ed25519 or asks you." },
+  { prompt: "Append a new public key file (newaccess.pub) to the authorized_keys on remote EC2 (key: main.pem, IP: 10.0.2.100) in a single SSH command.", hint: "ssh with command in quotes using cat and >>", answers: ["ssh -i main.pem ec2-user@10.0.2.100 \"cat newaccess.pub >> ~/.ssh/authorized_keys\"", "ssh -i main.pem ec2-user@10.0.2.100 'cat newaccess.pub >> ~/.ssh/authorized_keys'"], exp: "You first need to SCP newaccess.pub to the server. Then this command appends it. >> is critical — > would lock you out." },
+  { prompt: "SSH to an EC2 on a non-standard port 2222, IP 52.14.88.200, key bastion.pem, as ec2-user.", hint: "ssh with -p flag for custom port", answers: ["ssh -i bastion.pem -p 2222 ec2-user@52.14.88.200"], exp: "-p specifies a non-default port. Port 22 is default and can be omitted; all others require -p." },
+  { prompt: "Check the SSH server's fingerprint before connecting to verify it's not a MITM attack.", hint: "ssh-keyscan to get the fingerprint", answers: ["ssh-keyscan -H 54.26.10.18", "ssh-keygen -l -f known_hosts"], exp: "ssh-keyscan retrieves the public key fingerprint of a server. Compare with what ~/.ssh/known_hosts stores." },
+];
+</script>
+</body>
+</html>
