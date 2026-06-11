@@ -17,6 +17,7 @@
     --c6: #fb923c;
     --c7: #34d399;
     --c8: #f472b6;
+    --c9: #fbbf24;
     --green: #22c55e;
     --red: #ef4444;
     --yellow: #eab308;
@@ -83,6 +84,7 @@
   .c6 { background: rgba(251,146,60,.15); color: var(--c6); }
   .c7 { background: rgba(52,211,153,.15); color: var(--c7); }
   .c8 { background: rgba(244,114,182,.15); color: var(--c8); }
+  .c9 { background: rgba(251,191,36,.15); color: var(--c9); }
   .class-name { font-size: 14px; font-weight: bold; }
   .class-topics { font-size: 11px; color: var(--muted); margin-left: auto; }
   .class-modes { padding: 12px 20px 16px; display: flex; flex-wrap: wrap; gap: 10px; }
@@ -103,6 +105,7 @@
   .mode-btn.c6:hover { border-color: var(--c6); color: var(--c6); }
   .mode-btn.c7:hover { border-color: var(--c7); color: var(--c7); }
   .mode-btn.c8:hover { border-color: var(--c8); color: var(--c8); }
+  .mode-btn.c9:hover { border-color: var(--c9); color: var(--c9); }
   .mode-icon { margin-right: 6px; }
 
   /* ── SCREEN ── */
@@ -429,6 +432,20 @@
       <button class="mode-btn c8" onclick="startMode('c8-scenario')"><span class="mode-icon">🔐</span>Scenario Builder</button>
     </div>
   </div>
+
+  <!-- CLASS 9 -->
+  <div class="class-card">
+    <div class="class-header">
+      <span class="class-badge c9">Class 9</span>
+      <span class="class-name">DNS &amp; Web Hosting</span>
+      <span class="class-topics">DNS · Route 53 · A Records · Nginx · Domains · Deploy</span>
+    </div>
+    <div class="class-modes">
+      <button class="mode-btn c9" onclick="startMode('c9-quiz')"><span class="mode-icon">⚡</span>Hard Quiz (20q)</button>
+      <button class="mode-btn c9" onclick="startMode('c9-type')"><span class="mode-icon">⌨️</span>Type the Command</button>
+      <button class="mode-btn c9" onclick="startMode('c9-flash')"><span class="mode-icon">🃏</span>Flashcards</button>
+    </div>
+  </div>
 </div>
 
 <!-- ═══════════════════════ SCREENS ═══════════════════════ -->
@@ -447,6 +464,9 @@
 <div id="c8-quiz" class="screen"></div>
 <div id="c8-type" class="screen"></div>
 <div id="c8-scenario" class="screen"></div>
+<div id="c9-quiz" class="screen"></div>
+<div id="c9-type" class="screen"></div>
+<div id="c9-flash" class="screen"></div>
 
 <script>
 // ═══════════════════════════════════════════════════════
@@ -490,6 +510,9 @@ function startMode(id) {
   if (id === 'c8-quiz')      buildQuiz('c8-quiz', C8_QUIZ, 'c8', 'EC2 Networking & SSH');
   if (id === 'c8-type')      buildType('c8-type', C8_TYPE, 'c8', 'EC2 Networking');
   if (id === 'c8-scenario')  buildScenario('c8-scenario');
+  if (id === 'c9-quiz')      buildQuiz('c9-quiz', C9_QUIZ, 'c9', 'DNS & Web Hosting');
+  if (id === 'c9-type')      buildType('c9-type', C9_TYPE, 'c9', 'DNS & Web Hosting');
+  if (id === 'c9-flash')     buildFlash('c9-flash', C9_FLASH, 'c9');
 }
 function goMenu() {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -504,7 +527,7 @@ function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
 function buildQuiz(containerId, questions, cls, title) {
   const qs = shuffle(questions);
   let idx = 0, score = 0;
-  const color = {c4:'var(--c4)',c5:'var(--c5)',c6:'var(--c6)',c7:'var(--c7)',c8:'var(--c8)'}[cls];
+  const color = {c4:'var(--c4)',c5:'var(--c5)',c6:'var(--c6)',c7:'var(--c7)',c8:'var(--c8)',c9:'var(--c9)'}[cls];
   function render() {
     if (idx >= qs.length) { showResult(containerId, score, qs.length, cls, title, () => buildQuiz(containerId, questions, cls, title)); return; }
     const q = qs[idx];
@@ -548,7 +571,7 @@ function buildQuiz(containerId, questions, cls, title) {
 
 function showResult(containerId, score, total, cls, title, replay) {
   const pct = Math.round(score/total*100);
-  const color = {c4:'var(--c4)',c5:'var(--c5)',c6:'var(--c6)',c7:'var(--c7)',c8:'var(--c8)'}[cls];
+  const color = {c4:'var(--c4)',c5:'var(--c5)',c6:'var(--c6)',c7:'var(--c7)',c8:'var(--c8)',c9:'var(--c9)'}[cls];
   const emoji = pct >= 85 ? '🏆' : pct >= 65 ? '💪' : '📚';
   const msg = pct >= 85 ? 'Elite. You know this cold.' : pct >= 65 ? 'Solid — keep drilling the misses.' : 'Review the notes and try again.';
   document.getElementById(containerId).innerHTML = `
@@ -572,7 +595,7 @@ function showResult(containerId, score, total, cls, title, replay) {
 function buildType(containerId, questions, cls, title) {
   const qs = shuffle(questions);
   let idx = 0, score = 0;
-  const color = {c4:'var(--c4)',c5:'var(--c5)',c6:'var(--c6)',c7:'var(--c7)',c8:'var(--c8)'}[cls];
+  const color = {c4:'var(--c4)',c5:'var(--c5)',c6:'var(--c6)',c7:'var(--c7)',c8:'var(--c8)',c9:'var(--c9)'}[cls];
   function render() {
     if (idx >= qs.length) { showResult(containerId, score, qs.length, cls, title, () => buildType(containerId, questions, cls, title)); return; }
     const q = qs[idx];
@@ -922,6 +945,55 @@ const C8_TYPE = [
   { prompt: "Append a new public key file (newaccess.pub) to the authorized_keys on remote EC2 (key: main.pem, IP: 10.0.2.100) in a single SSH command.", hint: "ssh with command in quotes using cat and >>", answers: ["ssh -i main.pem ec2-user@10.0.2.100 \"cat newaccess.pub >> ~/.ssh/authorized_keys\"", "ssh -i main.pem ec2-user@10.0.2.100 'cat newaccess.pub >> ~/.ssh/authorized_keys'"], exp: "You first need to SCP newaccess.pub to the server. Then this command appends it. >> is critical — > would lock you out." },
   { prompt: "SSH to an EC2 on a non-standard port 2222, IP 52.14.88.200, key bastion.pem, as ec2-user.", hint: "ssh with -p flag for custom port", answers: ["ssh -i bastion.pem -p 2222 ec2-user@52.14.88.200"], exp: "-p specifies a non-default port. Port 22 is default and can be omitted; all others require -p." },
   { prompt: "Check the SSH server's fingerprint before connecting to verify it's not a MITM attack.", hint: "ssh-keyscan to get the fingerprint", answers: ["ssh-keyscan -H 54.26.10.18", "ssh-keygen -l -f known_hosts"], exp: "ssh-keyscan retrieves the public key fingerprint of a server. Compare with what ~/.ssh/known_hosts stores." },
+];
+
+// ── CLASS 9: DNS & WEB HOSTING ──
+const C9_QUIZ = [
+  { q: "What does DNS stand for and what is its primary function?", options: ["Domain Name System — translates domain names to IP addresses","Dynamic Name Service — assigns IPs to devices automatically","Domain Network Service — routes packets between networks","Digital Naming System — encrypts domain lookups"], a: "Domain Name System — translates domain names to IP addresses", exp: "DNS is the internet's phonebook. Browsers can't connect to 'google.com' directly — DNS resolves it to an IP like 142.250.80.46 that routers understand." },
+  { q: "What is a DNS registrar?", options: ["A company that sells and records domain ownership","A server that resolves DNS queries","AWS's load balancer for EC2 traffic","Software that configures Nginx"], a: "A company that sells and records domain ownership", exp: "Registrars (GoDaddy, Route 53, Squarespace) sell domain names and record ownership in the global registry. They delegate DNS resolution to nameservers." },
+  { q: "What is AWS Route 53?", options: ["AWS's native DNS service for buying domains, managing records, and routing traffic","AWS's load balancer for distributing EC2 traffic","A firewall service for web applications","An EC2 instance type optimized for DNS"], a: "AWS's native DNS service for buying domains, managing records, and routing traffic", exp: "Route 53 is named after port 53, the DNS protocol port. It handles domain registration, hosted zones, health checks, and traffic routing policies." },
+  { q: "What is an A record in DNS?", options: ["Maps a domain name to an IPv4 address","Maps a domain name to another domain name (alias)","Maps a domain name to an IPv6 address","Maps a domain to a mail server"], a: "Maps a domain name to an IPv4 address", exp: "A = Address. The A record is the most fundamental DNS record. AAAA records map to IPv6 addresses. CNAME records create aliases to other domains." },
+  { q: "You register a domain in Route 53. Two records appear automatically. What are they and what should you do?", options: ["NS and SOA records — do not modify them","A and CNAME records — update them to point to your EC2","MX and TXT records — configure them for email","PTR and AAAA records — set them for reverse DNS"], a: "NS and SOA records — do not modify them", exp: "NS (Name Server) records tell the internet which servers are authoritative for your domain. SOA (Start of Authority) contains admin metadata. Modifying them can break your entire domain." },
+  { q: "Your EC2 stops and restarts; now your domain points to the wrong IP. What do you do?", options: ["Delete the old A record and create a new one with the updated public IP","Update the SOA record with the new IP","Restart the Route 53 hosted zone","The domain updates automatically — no action needed"], a: "Delete the old A record and create a new one with the updated public IP", exp: "EC2 dynamic public IPs change on every stop/start. You must manually update the A record — or use an Elastic IP to prevent this problem entirely." },
+  { q: "After an EC2 IP change, SSH shows 'host key verification failed' for your domain. How do you fix it?", options: ["Run ssh-keygen -r yourdomain.click to remove the stale fingerprint","Delete ~/.ssh/authorized_keys on the EC2","Regenerate your EC2 key pair in the AWS Console","Edit /etc/ssh/sshd_config and restart SSH"], a: "Run ssh-keygen -r yourdomain.click to remove the stale fingerprint", exp: "SSH stores server fingerprints in ~/.ssh/known_hosts. When the IP changes, the fingerprint no longer matches. ssh-keygen -r removes the stale entry so you can reconnect cleanly." },
+  { q: "Which port does HTTP use by default, and which does HTTPS use?", options: ["HTTP: 80, HTTPS: 443","HTTP: 443, HTTPS: 80","HTTP: 22, HTTPS: 80","HTTP: 8080, HTTPS: 8443"], a: "HTTP: 80, HTTPS: 443", exp: "Browsers automatically connect on port 80 for http:// and port 443 for https://. Both must be opened as inbound rules in the EC2 Security Group for a public website." },
+  { q: "What command installs Nginx on Amazon Linux?", options: ["sudo dnf install nginx","sudo apt install nginx","brew install nginx","sudo yum get nginx"], a: "sudo dnf install nginx", exp: "Amazon Linux uses dnf (or yum) as its package manager. Ubuntu/Debian uses apt. macOS uses brew. Matching the package manager to the OS is a foundational ops skill." },
+  { q: "What is Nginx's default web root directory on Amazon Linux?", options: ["/usr/share/nginx/html","/var/www/html","/etc/nginx/html","/home/ec2-user/public_html"], a: "/usr/share/nginx/html", exp: "This is where Nginx serves files from by default on Amazon Linux. Ubuntu's default is /var/www/html. Verify with: sudo grep -r 'root' /etc/nginx/nginx.conf" },
+  { q: "After installing Nginx, what command makes it start automatically on every reboot?", options: ["sudo systemctl enable nginx","sudo systemctl start nginx","sudo nginx --enable-boot","sudo systemctl restart nginx"], a: "sudo systemctl enable nginx", exp: "systemctl enable creates a symlink so the service launches at boot. systemctl start only starts it for the current session. Run both: start now, enable for persistence." },
+  { q: "You install Nginx and open port 80 in the Security Group, but the browser times out. What did you most likely forget?", options: ["sudo systemctl start nginx","sudo dnf install nginx","Opening port 22 in the Security Group","chmod 755 /usr/share/nginx/html"], a: "sudo systemctl start nginx", exp: "Installing a service doesn't auto-start it. You must explicitly run systemctl start nginx. A timeout (not 'connection refused') usually means the process isn't listening at all." },
+  { q: "Why are .click domains recommended over .com for students?", options: ["They cost ~$3/year with no price hike on renewal","They are free for AWS free-tier accounts","They have better search engine rankings","AWS gives 12 free months for .click TLDs"], a: "They cost ~$3/year with no price hike on renewal", exp: ".click is one of the cheapest TLDs. GoDaddy's intro price (e.g., $4.99) can jump to $22.99 on renewal. .click stays at ~$3. Avoid GoDaddy add-ons during checkout." },
+  { q: "How do you create a subdomain like app.yourdomain.click in Route 53?", options: ["Create a new A record with 'app' as the record name prefix","Buy a separate subdomain from the registrar","Add an MX record with the subdomain prefix","Modify the existing NS record to include the subdomain"], a: "Create a new A record with 'app' as the record name prefix", exp: "In Route 53, adding an A record named 'app' inside the yourdomain.click hosted zone creates app.yourdomain.click pointing to whatever IP you specify." },
+  { q: "What does sudo systemctl status nginx show you?", options: ["Whether Nginx is running, enabled, and recent log output","Nginx version and installed modules","All currently open ports on the server","Active HTTP connections being served right now"], a: "Whether Nginx is running, enabled, and recent log output", exp: "systemctl status is your first debugging command for any service. It shows active/inactive state, enabled/disabled for boot, and the last few log lines." },
+  { q: "What is the correct SCP command to recursively copy a local website folder to an EC2 home directory?", options: ["scp -i key.pem -r ~/website ec2-user@IP:~/","cp -r ~/website ec2-user@IP:~/","scp ~/website ec2-user@IP:~/ (no -r needed)","rsync ~/website ec2-user@IP:~/"], a: "scp -i key.pem -r ~/website ec2-user@IP:~/", exp: "-r is required for directories — without it SCP silently skips folders. -i specifies the key file. ~/ places files in the ec2-user home directory." },
+  { q: "You delete your EC2 instance. What happens to your domain in Route 53?", options: ["Nothing — the domain is independent of any EC2 instance","The domain is deleted along with the instance","Route 53 auto-points it to a new IP","The hosted zone is automatically removed"], a: "Nothing — the domain is independent of any EC2 instance", exp: "Domain registration and DNS are separate from compute. Deleting an EC2 just means the A record points to a dead IP. Launch a new EC2, update the A record, and the domain works again." },
+  { q: "After SCPing your website to EC2, what command copies the files into Nginx's web root?", options: ["sudo cp -r ~/website/* /usr/share/nginx/html/","sudo mv ~/website /usr/share/nginx/","nginx --reload ~/website","sudo scp ~/website /usr/share/nginx/html/"], a: "sudo cp -r ~/website/* /usr/share/nginx/html/", exp: "SCP lands files in your home directory. cp -r ~/website/* copies the contents (not the folder itself) into the web root. sudo is required since the web root is owned by root." },
+  { q: "Chrome keeps redirecting http://yourdomain.click to https:// but Nginx has no SSL. What is the quickest fix?", options: ["Explicitly type http://yourdomain.click in the address bar","Set Nginx to listen on port 443","Install a self-signed certificate first","Remove the HTTPS inbound rule from the Security Group"], a: "Explicitly type http://yourdomain.click in the address bar", exp: "Chrome applies HSTS and auto-upgrades many domains to HTTPS. Forcing http:// in the address bar bypasses this. For production, set up real SSL with Let's Encrypt and certbot." },
+  { q: "A student upgraded their AWS free-tier account to register a domain. What happened to their existing free-tier credits?", options: ["Credits were unaffected — domain purchase and free-tier credits are separate","All free-tier EC2 benefits were removed immediately","Only S3 free tier was removed","A $30 credit was deducted from their account balance"], a: "Credits were unaffected — domain purchase and free-tier credits are separate", exp: "Upgrading to enable domain registration does not remove free-tier EC2/S3 credits. This was confirmed in class by a student who upgraded and retained their free tier." },
+];
+
+const C9_TYPE = [
+  { prompt: "Install Nginx on Amazon Linux using the dnf package manager.", hint: "sudo + dnf + package name", answers: ["sudo dnf install nginx"], exp: "dnf is Amazon Linux's modern package manager. sudo is required to install system packages." },
+  { prompt: "Start Nginx right now AND enable it to survive reboots — chain both commands.", hint: "systemctl start and enable with &&", answers: ["sudo systemctl start nginx && sudo systemctl enable nginx", "sudo systemctl enable nginx && sudo systemctl start nginx"], exp: "start runs it immediately; enable creates a boot symlink. Both are needed for a fully live-and-persistent web server." },
+  { prompt: "Find what directory Nginx serves files from by searching its config file.", hint: "grep -r for 'root' in nginx.conf", answers: ["sudo grep -r 'root' /etc/nginx/nginx.conf", "sudo grep -r \"root\" /etc/nginx/nginx.conf"], exp: "The 'root' directive in nginx.conf defines the web root. On Amazon Linux it's /usr/share/nginx/html." },
+  { prompt: "Copy a local folder called 'mysite' recursively to the home directory of ec2-user on 54.22.11.3 using key webkey.pem.", hint: "scp with -i and -r flags", answers: ["scp -i webkey.pem -r mysite ec2-user@54.22.11.3:~/", "scp -i webkey.pem -r mysite/ ec2-user@54.22.11.3:~"], exp: "-r copies directories recursively. Without -r, SCP silently skips entire folders." },
+  { prompt: "Copy all files from ~/mysite into Nginx's default web root on Amazon Linux.", hint: "sudo cp -r with wildcard, target /usr/share/nginx/html/", answers: ["sudo cp -r ~/mysite/* /usr/share/nginx/html/"], exp: "/* copies folder contents, not the folder itself. sudo is required because the web root is owned by root." },
+  { prompt: "Check whether Nginx is running and enabled to start on boot.", hint: "systemctl status", answers: ["sudo systemctl status nginx", "systemctl status nginx"], exp: "status shows running state, enabled/disabled, and recent log lines — your first debugging stop for a broken web server." },
+  { prompt: "Remove a stale SSH host key entry for 'mysite.click' after the server IP changed.", hint: "ssh-keygen with -r flag", answers: ["ssh-keygen -r mysite.click"], exp: "Removes the old fingerprint from ~/.ssh/known_hosts. Without it SSH refuses to connect, citing a potential MITM attack." },
+];
+
+const C9_FLASH = [
+  { q: "What is DNS?", a: "Domain Name System — translates human-readable domain names (google.com) into IP addresses (142.250.80.46) that machines can route to. The internet's phonebook." },
+  { q: "What is a DNS registrar?", a: "A company that sells and records domain ownership (GoDaddy, Route 53, Squarespace). They update the global registry and delegate to nameservers." },
+  { q: "What is AWS Route 53?", a: "AWS's DNS service — buy domains, create hosted zones, manage A records, route traffic. Named after port 53, the DNS protocol port." },
+  { q: "What is an A record?", a: "Maps a domain name to an IPv4 address. The most fundamental DNS record. AAAA = IPv6 mapping. CNAME = alias to another domain." },
+  { q: "What are NS and SOA records?", a: "Auto-created with every hosted zone. NS = authoritative nameservers. SOA = admin metadata. Never modify these — it can break your domain entirely." },
+  { q: "What is Nginx?", a: "A high-performance web server. Serves HTML/CSS/JS files over HTTP/HTTPS. Install on EC2 with sudo dnf install nginx to host a website publicly." },
+  { q: "What is Nginx's web root on Amazon Linux?", a: "/usr/share/nginx/html — the directory Nginx serves files from by default. Ubuntu uses /var/www/html. Copy your website here to publish it." },
+  { q: "Package managers: Amazon Linux vs Ubuntu vs Mac?", a: "Amazon Linux: dnf or yum. Ubuntu/Debian: apt. macOS: brew. Always match the package manager to the OS or the command won't be found." },
+  { q: "HTTP port vs HTTPS port?", a: "HTTP = 80, HTTPS = 443. Both must be added as inbound rules in the EC2 Security Group for public web traffic to reach Nginx." },
+  { q: "What happens to your domain when you delete an EC2 instance?", a: "Nothing — domains are independent of compute. Update the A record to point to the new EC2's IP and the domain works again instantly." },
+  { q: "Why does EC2's public IP change after stop/restart?", a: "AWS assigns dynamic public IPs from a shared pool. Stop = IP released back. Start = new IP assigned. Use an Elastic IP for a persistent static address." },
+  { q: "What is the full deploy flow to get a website live?", a: "SCP files to EC2 home dir → sudo cp -r ~/site/* /usr/share/nginx/html/ → verify at the public IP → create A record in Route 53 to attach domain." },
 ];
 </script>
 </body>
