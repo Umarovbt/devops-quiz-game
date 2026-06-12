@@ -18,6 +18,7 @@
     --c7: #34d399;
     --c8: #f472b6;
     --c9: #fbbf24;
+    --c10: #2dd4bf;
     --green: #22c55e;
     --red: #ef4444;
     --yellow: #eab308;
@@ -85,6 +86,7 @@
   .c7 { background: rgba(52,211,153,.15); color: var(--c7); }
   .c8 { background: rgba(244,114,182,.15); color: var(--c8); }
   .c9 { background: rgba(251,191,36,.15); color: var(--c9); }
+  .c10 { background: rgba(45,212,191,.15); color: var(--c10); }
   .class-name { font-size: 14px; font-weight: bold; }
   .class-topics { font-size: 11px; color: var(--muted); margin-left: auto; }
   .class-modes { padding: 12px 20px 16px; display: flex; flex-wrap: wrap; gap: 10px; }
@@ -106,6 +108,7 @@
   .mode-btn.c7:hover { border-color: var(--c7); color: var(--c7); }
   .mode-btn.c8:hover { border-color: var(--c8); color: var(--c8); }
   .mode-btn.c9:hover { border-color: var(--c9); color: var(--c9); }
+  .mode-btn.c10:hover { border-color: var(--c10); color: var(--c10); }
   .mode-icon { margin-right: 6px; }
 
   /* ── SCREEN ── */
@@ -446,6 +449,20 @@
       <button class="mode-btn c9" onclick="startMode('c9-flash')"><span class="mode-icon">🃏</span>Flashcards</button>
     </div>
   </div>
+
+  <!-- CLASS 10 -->
+  <div class="class-card">
+    <div class="class-header">
+      <span class="class-badge c10">Class 10</span>
+      <span class="class-name">HTTPS, TLS &amp; Certbot</span>
+      <span class="class-topics">curl · HTTP · HTTPS · TLS · AWS CLI · Certbot · Nginx SSL</span>
+    </div>
+    <div class="class-modes">
+      <button class="mode-btn c10" onclick="startMode('c10-quiz')"><span class="mode-icon">⚡</span>Hard Quiz (20q)</button>
+      <button class="mode-btn c10" onclick="startMode('c10-type')"><span class="mode-icon">⌨️</span>Type the Command</button>
+      <button class="mode-btn c10" onclick="startMode('c10-flash')"><span class="mode-icon">🃏</span>Flashcards</button>
+    </div>
+  </div>
 </div>
 
 <!-- ═══════════════════════ SCREENS ═══════════════════════ -->
@@ -467,6 +484,9 @@
 <div id="c9-quiz" class="screen"></div>
 <div id="c9-type" class="screen"></div>
 <div id="c9-flash" class="screen"></div>
+<div id="c10-quiz" class="screen"></div>
+<div id="c10-type" class="screen"></div>
+<div id="c10-flash" class="screen"></div>
 
 <script>
 // ═══════════════════════════════════════════════════════
@@ -513,6 +533,9 @@ function startMode(id) {
   if (id === 'c9-quiz')      buildQuiz('c9-quiz', C9_QUIZ, 'c9', 'DNS & Web Hosting');
   if (id === 'c9-type')      buildType('c9-type', C9_TYPE, 'c9', 'DNS & Web Hosting');
   if (id === 'c9-flash')     buildFlash('c9-flash', C9_FLASH, 'c9');
+  if (id === 'c10-quiz')     buildQuiz('c10-quiz', C10_QUIZ, 'c10', 'HTTPS, TLS & Certbot');
+  if (id === 'c10-type')     buildType('c10-type', C10_TYPE, 'c10', 'HTTPS, TLS & Certbot');
+  if (id === 'c10-flash')    buildFlash('c10-flash', C10_FLASH, 'c10', 'TLS & Certbot Flashcards');
 }
 function goMenu() {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -527,7 +550,7 @@ function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
 function buildQuiz(containerId, questions, cls, title) {
   const qs = shuffle(questions);
   let idx = 0, score = 0;
-  const color = {c4:'var(--c4)',c5:'var(--c5)',c6:'var(--c6)',c7:'var(--c7)',c8:'var(--c8)',c9:'var(--c9)'}[cls];
+  const color = {c4:'var(--c4)',c5:'var(--c5)',c6:'var(--c6)',c7:'var(--c7)',c8:'var(--c8)',c9:'var(--c9)',c10:'var(--c10)'}[cls];
   function render() {
     if (idx >= qs.length) { showResult(containerId, score, qs.length, cls, title, () => buildQuiz(containerId, questions, cls, title)); return; }
     const q = qs[idx];
@@ -571,7 +594,7 @@ function buildQuiz(containerId, questions, cls, title) {
 
 function showResult(containerId, score, total, cls, title, replay) {
   const pct = Math.round(score/total*100);
-  const color = {c4:'var(--c4)',c5:'var(--c5)',c6:'var(--c6)',c7:'var(--c7)',c8:'var(--c8)',c9:'var(--c9)'}[cls];
+  const color = {c4:'var(--c4)',c5:'var(--c5)',c6:'var(--c6)',c7:'var(--c7)',c8:'var(--c8)',c9:'var(--c9)',c10:'var(--c10)'}[cls];
   const emoji = pct >= 85 ? '🏆' : pct >= 65 ? '💪' : '📚';
   const msg = pct >= 85 ? 'Elite. You know this cold.' : pct >= 65 ? 'Solid — keep drilling the misses.' : 'Review the notes and try again.';
   document.getElementById(containerId).innerHTML = `
@@ -595,7 +618,7 @@ function showResult(containerId, score, total, cls, title, replay) {
 function buildType(containerId, questions, cls, title) {
   const qs = shuffle(questions);
   let idx = 0, score = 0;
-  const color = {c4:'var(--c4)',c5:'var(--c5)',c6:'var(--c6)',c7:'var(--c7)',c8:'var(--c8)',c9:'var(--c9)'}[cls];
+  const color = {c4:'var(--c4)',c5:'var(--c5)',c6:'var(--c6)',c7:'var(--c7)',c8:'var(--c8)',c9:'var(--c9)',c10:'var(--c10)'}[cls];
   function render() {
     if (idx >= qs.length) { showResult(containerId, score, qs.length, cls, title, () => buildType(containerId, questions, cls, title)); return; }
     const q = qs[idx];
@@ -635,13 +658,14 @@ function buildType(containerId, questions, cls, title) {
 // ═══════════════════════════════════════════════════════
 // FLASHCARD ENGINE
 // ═══════════════════════════════════════════════════════
-function buildFlash(containerId, cards, cls) {
+function buildFlash(containerId, cards, cls, title) {
+  title = title || 'Flashcards';
   const qs = shuffle(cards);
   let idx = 0, flipped = false;
   function render() {
     const c = qs[idx];
     document.getElementById(containerId).innerHTML = `
-      <div class="screen-header"><button class="back-btn" onclick="goMenu()">← Menu</button><span class="screen-title">AWS Flashcards</span><span style="font-size:12px;color:var(--muted);margin-left:auto">${idx+1}/${qs.length}</span></div>
+      <div class="screen-header"><button class="back-btn" onclick="goMenu()">← Menu</button><span class="screen-title">${title}</span><span style="font-size:12px;color:var(--muted);margin-left:auto">${idx+1}/${qs.length}</span></div>
       <div class="flashcard" id="fc" onclick="flipCard()">
         <div class="flashcard-label">${flipped ? 'ANSWER' : 'CONCEPT'}</div>
         <div class="flashcard-text ${flipped ? 'fc-answer' : ''}">${flipped ? c.a : c.q}</div>
@@ -979,6 +1003,55 @@ const C9_TYPE = [
   { prompt: "Copy all files from ~/mysite into Nginx's default web root on Amazon Linux.", hint: "sudo cp -r with wildcard, target /usr/share/nginx/html/", answers: ["sudo cp -r ~/mysite/* /usr/share/nginx/html/"], exp: "/* copies folder contents, not the folder itself. sudo is required because the web root is owned by root." },
   { prompt: "Check whether Nginx is running and enabled to start on boot.", hint: "systemctl status", answers: ["sudo systemctl status nginx", "systemctl status nginx"], exp: "status shows running state, enabled/disabled, and recent log lines — your first debugging stop for a broken web server." },
   { prompt: "Remove a stale SSH host key entry for 'mysite.click' after the server IP changed.", hint: "ssh-keygen with -r flag", answers: ["ssh-keygen -r mysite.click"], exp: "Removes the old fingerprint from ~/.ssh/known_hosts. Without it SSH refuses to connect, citing a potential MITM attack." },
+];
+
+// ── CLASS 10: HTTPS, TLS & CERTBOT ──
+const C10_QUIZ = [
+  { q: "What does curl -L do?", options: ["Follows HTTP redirects to the final destination","Downloads output to a file","Enables verbose mode showing headers","Sends a POST request instead of GET"], a: "Follows HTTP redirects to the final destination", exp: "-L (--location) tells curl to follow 301/302 redirects. Without it, curl shows the redirect response and stops — you never see the final page content." },
+  { q: "What does curl -v show that a plain curl request does not?", options: ["Full TLS handshake, request headers sent, and response headers","Only the response body","Only the HTTP status code","Error messages when the server is down"], a: "Full TLS handshake, request headers sent, and response headers", exp: "-v (verbose) prints the entire conversation: DNS lookup, TLS negotiation, all request headers, all response headers. Essential for debugging connection issues." },
+  { q: "What HTTP status code indicates a resource has permanently moved to a new URL?", options: ["301","200","404","403"], a: "301", exp: "301 Moved Permanently tells clients to update bookmarks and follow the new URL. Browsers and curl -L follow it automatically." },
+  { q: "What does a 403 Forbidden response typically mean on an EC2-hosted site?", options: ["The server reached you but refuses the request — often a Security Group ACL or VPN requirement","The resource does not exist on the server","The server crashed and cannot respond","The domain name failed to resolve to an IP"], a: "The server reached you but refuses the request — often a Security Group ACL or VPN requirement", exp: "403 means the server received your request but is denying it. Common causes: IP restrictions, missing authentication, or Security Group rules blocking your IP." },
+  { q: "How does HTTPS protect traffic that HTTP does not?", options: ["Encrypts data in transit with TLS so every router and ISP on the path cannot read it","Compresses responses for faster transfer","Validates the user identity before allowing access","Signs each response with a checksum to prevent tampering"], a: "Encrypts data in transit with TLS so every router and ISP on the path cannot read it", exp: "HTTP sends everything in plaintext — passwords, tokens, form data visible to any machine on the path. TLS wraps the HTTP payload in encryption only the endpoints can decrypt." },
+  { q: "What are the TWO jobs of a TLS certificate?", options: ["Prove domain ownership via a trusted CA + carry the public/private keys for encryption","Store session tokens + validate user passwords","Sign code + compress traffic between client and server","Authenticate the browser identity + log all request timestamps"], a: "Prove domain ownership via a trusted CA + carry the public/private keys for encryption", exp: "Certificate job 1: a CA-signed attestation that this server legitimately controls the domain. Job 2: contains the public key material used to establish the encrypted TLS session." },
+  { q: "What is Let's Encrypt?", options: ["A free automated Certificate Authority that issues 90-day TLS certs","A DNS hosting provider","An AWS feature for enabling HTTPS on EC2","An Nginx plugin that installs TLS automatically"], a: "A free automated Certificate Authority that issues 90-day TLS certs", exp: "Let's Encrypt is a nonprofit CA backed by EFF and Mozilla. Certbot automates the challenge-response process. Paid alternatives (DigiCert, Venafi) exist for enterprise compliance." },
+  { q: "How long is a Let's Encrypt TLS certificate valid before it must be renewed?", options: ["~90 days","1 year","2 years","Until manually revoked"], a: "~90 days", exp: "90-day validity intentionally forces automation — manual renewal every 3 months is error-prone. Certbot can configure automatic renewal via a cron job or systemd timer." },
+  { q: "What does Certbot's DNS-01 validation method do?", options: ["Writes a temporary TXT record to Route 53 to prove domain ownership, then removes it","Downloads a challenge file to your Nginx web root on port 80","Sends a verification email to the domain admin address","Scans port 443 to confirm a web server is running"], a: "Writes a temporary TXT record to Route 53 to prove domain ownership, then removes it", exp: "DNS-01 challenge: Certbot creates _acme-challenge.yourdomain TXT record via Route 53 API, Let's Encrypt verifies it exists, then Certbot deletes it. No web server required." },
+  { q: "What is fullchain.pem and is it safe to copy to a server?", options: ["Your public certificate + CA chain — safe to copy anywhere","Your private key — never share or copy unsecured","A signed hash of your domain used for DNSSEC","Only the CA root certificate, not your domain cert"], a: "Your public certificate + CA chain — safe to copy anywhere", exp: "fullchain.pem is what the server sends to browsers — it is inherently public. Anyone visiting your site receives it. The private key (privkey.pem) is the secret that must be protected." },
+  { q: "Why is privkey.pem so dangerous if it leaks?", options: ["An attacker can impersonate your domain to all visitors with a trusted TLS cert","It grants AWS console access to your account","It gives SSH access to your EC2 instance","It allows modification of your Route 53 DNS records"], a: "An attacker can impersonate your domain to all visitors with a trusted TLS cert", exp: "The private key matches the public certificate the CA signed. With it, anyone can run a server that browsers trust as your domain. Revoke and reissue immediately if leaked." },
+  { q: "Should you run Certbot as root or as your normal user when using certbot-dns-route53?", options: ["Normal user — so your AWS access keys in environment variables are visible to Certbot","Root — so it has write access to /etc/letsencrypt","Either — it detects credentials automatically","Only via sudo, never as a normal user"], a: "Normal user — so your AWS access keys in environment variables are visible to Certbot", exp: "The certbot-dns-route53 plugin reads AWS credentials from your environment. Running as root means env vars set for your normal user are not inherited. Run certbot as yourself." },
+  { q: "What command verifies your AWS CLI is connected to your account?", options: ["aws route53 list-hosted-zones","aws iam get-user","aws ec2 describe-instances","aws configure list"], a: "aws route53 list-hosted-zones", exp: "This is the class-recommended connectivity check. If it returns your hosted zones without an auth error, your access key and Route 53 permissions are working correctly." },
+  { q: "Why should you avoid using the AWS root account for daily CLI operations?", options: ["Root has unrestricted access — leaked credentials can delete everything in your account","Root account costs more per API call","Root does not support MFA protection","Root cannot access Route 53 or EC2"], a: "Root has unrestricted access — leaked credentials can delete everything in your account", exp: "Root can do anything: delete all EC2 instances, drain S3, change billing, close the account. IAM users with scoped policies limit the blast radius of any credential compromise." },
+  { q: "The AWS secret access key is shown only once during creation. What must you do?", options: ["Download the CSV immediately — it cannot be retrieved again after closing the dialog","Copy it to a text file on your desktop","Take a screenshot of the browser tab","Commit it to a private git repo for safekeeping"], a: "Download the CSV immediately — it cannot be retrieved again after closing the dialog", exp: "AWS intentionally shows the secret key only once. If you miss it, you must delete the key and create a new one. Never store credentials in git repos or plaintext files." },
+  { q: "How do you copy fullchain.pem and privkey.pem from your Mac to EC2 (key: mykey.pem, IP: 54.1.2.3)?", options: ["scp -i mykey.pem fullchain.pem privkey.pem ec2-user@54.1.2.3:~/","aws s3 cp fullchain.pem s3://my-bucket/","curl -T fullchain.pem https://54.1.2.3/upload","rsync --ssl fullchain.pem privkey.pem ec2-user@54.1.2.3:~/"], a: "scp -i mykey.pem fullchain.pem privkey.pem ec2-user@54.1.2.3:~/", exp: "SCP uses the same SSH key auth. You can list multiple source files before the destination path. They land in ec2-user home directory. -i specifies the identity file." },
+  { q: "After SCPing cert files to EC2, where should Nginx read them from?", options: ["/etc/nginx/ssl/ — conventional Nginx TLS path, requires sudo to create and copy","~/certs/ in ec2-user home — already accessible without sudo","~/fullchain.pem directly — Nginx can read from home dirs","Anywhere, as long as nginx.conf has the correct absolute path"], a: "/etc/nginx/ssl/ — conventional Nginx TLS path, requires sudo to create and copy", exp: "/etc/nginx/ is the standard Nginx config directory. sudo mkdir -p /etc/nginx/ssl creates it; sudo cp moves certs there. ec2-user cannot write to /etc/ without sudo." },
+  { q: "What Nginx directive points to the TLS private key file?", options: ["ssl_certificate_key","ssl_certificate","ssl_private_key","tls_key_file"], a: "ssl_certificate_key", exp: "Nginx requires two directives: ssl_certificate for the full chain (public) and ssl_certificate_key for the private key. Mixing them up causes Nginx to fail on startup." },
+  { q: "What does sudo nginx -t do and when must you run it?", options: ["Tests the Nginx config for syntax errors without restarting — run before every restart","Reloads Nginx with zero downtime","Shows all currently active HTTP connections","Tests TLS certificate validity and expiry"], a: "Tests the Nginx config for syntax errors without restarting — run before every restart", exp: "A config typo will cause Nginx to refuse to start on restart, taking your site down. nginx -t catches errors before they cause an outage. Always run it first, every time." },
+  { q: "What must you add to your EC2 Security Group for HTTPS traffic to reach Nginx on port 443?", options: ["An inbound rule allowing TCP port 443 from 0.0.0.0/0","An outbound rule allowing port 443","A Route 53 record pointing to port 443","An IAM policy allowing HTTPS access"], a: "An inbound rule allowing TCP port 443 from 0.0.0.0/0", exp: "The Security Group is a stateful firewall. Without an inbound HTTPS rule, TLS connections are dropped before reaching Nginx — even if Nginx is perfectly configured for port 443." },
+];
+
+const C10_TYPE = [
+  { prompt: "Fetch https://example.com with full verbose output to see headers and TLS details.", hint: "curl with -v flag", answers: ["curl -v https://example.com"], exp: "-v shows TLS handshake, request headers, response headers, and status code. Essential for debugging HTTPS connections." },
+  { prompt: "Follow any redirects when fetching a URL with curl.", hint: "curl with -L flag", answers: ["curl -L https://example.com"], exp: "-L (--location) follows 301/302 redirects automatically until reaching the final page." },
+  { prompt: "Verify your AWS CLI can access Route 53 and your credentials are working.", hint: "aws route53 + list command", answers: ["aws route53 list-hosted-zones"], exp: "If this returns your hosted zones, your access key, secret key, and Route 53 permissions are all configured correctly." },
+  { prompt: "Install the Certbot DNS Route 53 plugin on a Mac using Homebrew.", hint: "brew install with the plugin package name", answers: ["brew install certbot-dns-route53"], exp: "Must be re-run after any brew upgrade certbot — Homebrew may upgrade Certbot without re-linking the plugin." },
+  { prompt: "Validate your Nginx configuration for syntax errors, then restart Nginx only if the test passes.", hint: "nginx -t && systemctl restart, both with sudo", answers: ["sudo nginx -t && sudo systemctl restart nginx"], exp: "The && ensures restart only runs if nginx -t exits with code 0 (no errors). A bad config on restart takes the site down." },
+  { prompt: "Copy fullchain.pem and privkey.pem to /etc/nginx/ssl/ on EC2 after SCPing them to the home directory.", hint: "sudo cp with both files and target path", answers: ["sudo cp ~/fullchain.pem ~/privkey.pem /etc/nginx/ssl/"], exp: "sudo is required — /etc/nginx/ is owned by root. This is the conventional Nginx SSL path referenced in nginx.conf." },
+  { prompt: "Check whether Nginx is currently active and whether it will start automatically on reboot.", hint: "systemctl status", answers: ["sudo systemctl status nginx", "systemctl status nginx"], exp: "status shows active/inactive state, enabled/disabled for boot, and recent log lines — first stop for any web server debugging." },
+];
+
+const C10_FLASH = [
+  { q: "What is curl?", a: "Command-line HTTP client. Sends GET by default. -v for verbose (headers + TLS), -L to follow redirects, -X POST for other methods. Like a browser without a UI." },
+  { q: "What do HTTP status codes 200, 301, 403, 404 mean?", a: "200 = OK. 301 = Moved Permanently (redirect). 403 = Forbidden (server refuses). 404 = Not Found (wrong path). 5xx = server-side errors." },
+  { q: "How does HTTPS protect data compared to HTTP?", a: "TLS encrypts the connection so routers, ISPs, and anyone on the path cannot read the payload. HTTP sends everything in plaintext including passwords and session tokens." },
+  { q: "What are the two jobs of a TLS certificate?", a: "1. Prove the server owns the domain (signed by a trusted CA). 2. Carry the public key used to negotiate the encrypted session." },
+  { q: "What is Let's Encrypt?", a: "A free, automated Certificate Authority. Issues 90-day TLS certs automated via Certbot. Paid alternatives (DigiCert, Venafi) exist for enterprise compliance." },
+  { q: "What is fullchain.pem?", a: "Your public certificate + the CA intermediate chain. Safe to share — browsers receive it on every visit. Nginx uses ssl_certificate to point to it." },
+  { q: "What is privkey.pem?", a: "Your TLS private key. NEVER share it. If leaked, an attacker can impersonate your domain. Revoke and reissue immediately. Nginx uses ssl_certificate_key." },
+  { q: "What does Certbot DNS-01 validation do?", a: "Writes a temporary _acme-challenge TXT record to Route 53. Let's Encrypt verifies it, Certbot removes it. Proves domain ownership without a running web server." },
+  { q: "Why run Certbot as a normal user, not root?", a: "The certbot-dns-route53 plugin reads AWS credentials from your env vars. Root does not inherit those env vars. Run as yourself, not with sudo." },
+  { q: "Why use IAM users instead of the AWS root account?", a: "Root has unrestricted access — leaked credentials are catastrophic. IAM users have scoped permissions, limiting blast radius. Create in IAM > Security Credentials." },
+  { q: "What is nginx -t?", a: "Tests Nginx config for syntax errors without restarting. Run before every systemctl restart nginx. A bad config on restart brings down your site." },
+  { q: "What EC2 Security Group rule is required for HTTPS?", a: "Inbound TCP port 443 from 0.0.0.0/0. Without it, TLS connections are dropped at the firewall before reaching Nginx, even if Nginx is correctly configured." },
 ];
 
 const C9_FLASH = [
