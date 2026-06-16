@@ -19,6 +19,7 @@
     --c8: #f472b6;
     --c9: #fbbf24;
     --c10: #2dd4bf;
+    --c11: #84cc16;
     --green: #22c55e;
     --red: #ef4444;
     --yellow: #eab308;
@@ -87,6 +88,7 @@
   .c8 { background: rgba(244,114,182,.15); color: var(--c8); }
   .c9 { background: rgba(251,191,36,.15); color: var(--c9); }
   .c10 { background: rgba(45,212,191,.15); color: var(--c10); }
+  .c11 { background: rgba(132,204,22,.15); color: var(--c11); }
   .class-name { font-size: 14px; font-weight: bold; }
   .class-topics { font-size: 11px; color: var(--muted); margin-left: auto; }
   .class-modes { padding: 12px 20px 16px; display: flex; flex-wrap: wrap; gap: 10px; }
@@ -109,6 +111,7 @@
   .mode-btn.c8:hover { border-color: var(--c8); color: var(--c8); }
   .mode-btn.c9:hover { border-color: var(--c9); color: var(--c9); }
   .mode-btn.c10:hover { border-color: var(--c10); color: var(--c10); }
+  .mode-btn.c11:hover { border-color: var(--c11); color: var(--c11); }
   .mode-icon { margin-right: 6px; }
 
   /* ── SCREEN ── */
@@ -463,6 +466,21 @@
       <button class="mode-btn c10" onclick="startMode('c10-flash')"><span class="mode-icon">🃏</span>Flashcards</button>
     </div>
   </div>
+
+  <!-- CLASS 11 -->
+  <div class="class-card">
+    <div class="class-header">
+      <span class="class-badge c11">Class 11</span>
+      <span class="class-name">Nginx Logs, Env Vars &amp; AI Bots</span>
+      <span class="class-topics">logs · nslookup · env vars · aws cli · claude api · telegram</span>
+    </div>
+    <div class="class-modes">
+      <button class="mode-btn c11" onclick="startMode('c11-quiz')"><span class="mode-icon">⚡</span>Hard Quiz (20q)</button>
+      <button class="mode-btn c11" onclick="startMode('c11-type')"><span class="mode-icon">⌨️</span>Type the Command</button>
+      <button class="mode-btn c11" onclick="startMode('c11-flash')"><span class="mode-icon">🃏</span>Flashcards</button>
+      <button class="mode-btn c11" onclick="startMode('c11-scenario')"><span class="mode-icon">🤖</span>Scenario Builder</button>
+    </div>
+  </div>
 </div>
 
 <!-- ═══════════════════════ SCREENS ═══════════════════════ -->
@@ -487,6 +505,10 @@
 <div id="c10-quiz" class="screen"></div>
 <div id="c10-type" class="screen"></div>
 <div id="c10-flash" class="screen"></div>
+<div id="c11-quiz" class="screen"></div>
+<div id="c11-type" class="screen"></div>
+<div id="c11-flash" class="screen"></div>
+<div id="c11-scenario" class="screen"></div>
 
 <script>
 // ═══════════════════════════════════════════════════════
@@ -536,6 +558,10 @@ function startMode(id) {
   if (id === 'c10-quiz')     buildQuiz('c10-quiz', C10_QUIZ, 'c10', 'HTTPS, TLS & Certbot');
   if (id === 'c10-type')     buildType('c10-type', C10_TYPE, 'c10', 'HTTPS, TLS & Certbot');
   if (id === 'c10-flash')    buildFlash('c10-flash', C10_FLASH, 'c10', 'TLS & Certbot Flashcards');
+  if (id === 'c11-quiz')     buildQuiz('c11-quiz', C11_QUIZ, 'c11', 'Nginx Logs & AI Automation');
+  if (id === 'c11-type')     buildType('c11-type', C11_TYPE, 'c11', 'Nginx Logs & AI Automation');
+  if (id === 'c11-flash')    buildFlash('c11-flash', C11_FLASH, 'c11', 'Automation Flashcards');
+  if (id === 'c11-scenario') buildC11Scenario('c11-scenario');
 }
 function goMenu() {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -550,7 +576,7 @@ function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
 function buildQuiz(containerId, questions, cls, title) {
   const qs = shuffle(questions);
   let idx = 0, score = 0;
-  const color = {c4:'var(--c4)',c5:'var(--c5)',c6:'var(--c6)',c7:'var(--c7)',c8:'var(--c8)',c9:'var(--c9)',c10:'var(--c10)'}[cls];
+  const color = {c4:'var(--c4)',c5:'var(--c5)',c6:'var(--c6)',c7:'var(--c7)',c8:'var(--c8)',c9:'var(--c9)',c10:'var(--c10)',c11:'var(--c11)'}[cls];
   function render() {
     if (idx >= qs.length) { showResult(containerId, score, qs.length, cls, title, () => buildQuiz(containerId, questions, cls, title)); return; }
     const q = qs[idx];
@@ -594,7 +620,7 @@ function buildQuiz(containerId, questions, cls, title) {
 
 function showResult(containerId, score, total, cls, title, replay) {
   const pct = Math.round(score/total*100);
-  const color = {c4:'var(--c4)',c5:'var(--c5)',c6:'var(--c6)',c7:'var(--c7)',c8:'var(--c8)',c9:'var(--c9)',c10:'var(--c10)'}[cls];
+  const color = {c4:'var(--c4)',c5:'var(--c5)',c6:'var(--c6)',c7:'var(--c7)',c8:'var(--c8)',c9:'var(--c9)',c10:'var(--c10)',c11:'var(--c11)'}[cls];
   const emoji = pct >= 85 ? '🏆' : pct >= 65 ? '💪' : '📚';
   const msg = pct >= 85 ? 'Elite. You know this cold.' : pct >= 65 ? 'Solid — keep drilling the misses.' : 'Review the notes and try again.';
   document.getElementById(containerId).innerHTML = `
@@ -618,7 +644,7 @@ function showResult(containerId, score, total, cls, title, replay) {
 function buildType(containerId, questions, cls, title) {
   const qs = shuffle(questions);
   let idx = 0, score = 0;
-  const color = {c4:'var(--c4)',c5:'var(--c5)',c6:'var(--c6)',c7:'var(--c7)',c8:'var(--c8)',c9:'var(--c9)',c10:'var(--c10)'}[cls];
+  const color = {c4:'var(--c4)',c5:'var(--c5)',c6:'var(--c6)',c7:'var(--c7)',c8:'var(--c8)',c9:'var(--c9)',c10:'var(--c10)',c11:'var(--c11)'}[cls];
   function render() {
     if (idx >= qs.length) { showResult(containerId, score, qs.length, cls, title, () => buildType(containerId, questions, cls, title)); return; }
     const q = qs[idx];
@@ -730,6 +756,7 @@ function buildPipe(containerId) { buildDragDrop(containerId, PIPE_SCENARIOS, 'Li
 function buildChmod(containerId) { buildDragDrop(containerId, CHMOD_SCENARIOS, 'Linux Permissions — chmod Builder', 'Build the correct command sequence:'); }
 function buildWorkflow(containerId) { buildDragDrop(containerId, WORKFLOW_SCENARIOS, 'Git — Workflow Builder', 'Arrange the steps in the correct order:'); }
 function buildScenario(containerId) { buildDragDrop(containerId, EC2_SCENARIOS, 'EC2 Networking — Scenario Builder', 'Put the commands in the right order:'); }
+function buildC11Scenario(containerId) { buildDragDrop(containerId, C11_SCENARIOS, 'Troubleshooting & AI Bots — Scenario Builder', 'Arrange the steps in the correct order:'); }
 
 function buildDragDrop(containerId, scenarios, title, label, excludeIdx) {
   let scIdx;
@@ -753,7 +780,7 @@ function buildDragDrop(containerId, scenarios, title, label, excludeIdx) {
         ${available.map((t,i) => `<div class="drag-token" draggable="true" data-src="avail" data-idx="${i}" ondragstart="dragStart(event,'avail',${i})" ondragend="dragEnd(event)">${t}</div>`).join('')}
       </div>
       <button class="check-btn" onclick="checkDrop()">✓ Check Answer</button>
-      <button class="check-btn" onclick="buildDragDrop('${containerId}',${containerId.includes('c4')?'PIPE_SCENARIOS':containerId.includes('c5')?'CHMOD_SCENARIOS':containerId.includes('c6')?'WORKFLOW_SCENARIOS':'EC2_SCENARIOS'},'${title}','${label}',${scIdx})">↺ New Scenario</button>
+      <button class="check-btn" onclick="buildDragDrop('${containerId}',${containerId.includes('c4')?'PIPE_SCENARIOS':containerId.includes('c5')?'CHMOD_SCENARIOS':containerId.includes('c6')?'WORKFLOW_SCENARIOS':containerId.includes('c11')?'C11_SCENARIOS':'EC2_SCENARIOS'},'${title}','${label}',${scIdx})">↺ New Scenario</button>
       <div class="builder-feedback" id="bfeed"></div>`;
 
     window.dragStart = (e, src, i) => { dragging = {src, i}; e.target.classList.add('dragging'); };
@@ -1067,6 +1094,64 @@ const C9_FLASH = [
   { q: "What happens to your domain when you delete an EC2 instance?", a: "Nothing — domains are independent of compute. Update the A record to point to the new EC2's IP and the domain works again instantly." },
   { q: "Why does EC2's public IP change after stop/restart?", a: "AWS assigns dynamic public IPs from a shared pool. Stop = IP released back. Start = new IP assigned. Use an Elastic IP for a persistent static address." },
   { q: "What is the full deploy flow to get a website live?", a: "SCP files to EC2 home dir → sudo cp -r ~/site/* /usr/share/nginx/html/ → verify at the public IP → create A record in Route 53 to attach domain." },
+];
+
+// ── CLASS 11: NGINX LOGS, ENV VARS & AI BOTS ──
+const C11_QUIZ = [
+  { q: "Where are nginx's two main log files located?", options: ["/var/log/nginx/ — access.log and error.log","/etc/nginx/logs/ — access.log and error.log","/home/ec2-user/nginx/ — access.log and error.log","/var/log/ — nginx-access.log and nginx-error.log"], a: "/var/log/nginx/ — access.log and error.log", exp: "All nginx logs live under /var/log/nginx/. access.log records every HTTP request; error.log records server/app errors only. Separate files make each faster to search." },
+  { q: "What does `tail -f /var/log/nginx/access.log` do that `cat` cannot?", options: ["Streams new lines in real time as requests arrive; cat only shows existing content","Filters only 500 error lines","Shows both access and error logs at once","Decodes compressed log entries"], a: "Streams new lines in real time as requests arrive; cat only shows existing content", exp: "-f (follow) keeps the file open and prints new lines as they're appended. Essential for watching live traffic. Press Ctrl+C to stop." },
+  { q: "A status code of 500 appears repeatedly in access.log. What does this indicate?", options: ["A server-side error — the app is crashing","A client typo in the URL","A DNS misconfiguration","The TLS certificate expired"], a: "A server-side error — the app is crashing", exp: "5xx codes are server-side errors. 500 means nginx or the backend threw an unhandled error. Check error.log next for the stack trace or specific error message." },
+  { q: "What information does each line in nginx's access.log contain?", options: ["Client IP, timestamp, HTTP method, path, status code, and user-agent","Only the timestamp and status code","Username, path, and response time","Nginx config directives applied to the request"], a: "Client IP, timestamp, HTTP method, path, status code, and user-agent", exp: "A typical line: 54.26.10.18 - - [date] \"GET /index.html HTTP/1.1\" 200 612 \"-\" \"Mozilla/5.0...\" — tells you who visited what, when, and whether it succeeded." },
+  { q: "In the 4-step nginx troubleshooting flow, what is Step 2 AFTER checking logs?", options: ["nslookup/dig to verify DNS resolves to the correct EC2 IP","Restart nginx","Reboot the EC2 instance","Check the security group rules"], a: "nslookup/dig to verify DNS resolves to the correct EC2 IP", exp: "Step 1: nginx logs. Step 2: DNS (nslookup/dig). Step 3: ping (ICMP reachability). Step 4: curl -I for HTTP status. Following this order avoids wasting time." },
+  { q: "What does `nslookup mysite.click` tell you?", options: ["Which IP address the domain currently resolves to","Whether nginx is running on the server","The TTL remaining on your DNS record","Whether port 80 is open on the server"], a: "Which IP address the domain currently resolves to", exp: "nslookup queries DNS and shows the resolved IP. Compare this with your EC2's current public IP — if they don't match, your A record is stale. Update it in Route 53." },
+  { q: "You ping your EC2's public IP but get no response, yet the website loads fine in a browser. What explains this?", options: ["ICMP is not allowed in the Security Group — ping fails but HTTP still works","The server is down but serving cached pages","Ping checks a different port than HTTP","EC2 doesn't support ICMP at all"], a: "ICMP is not allowed in the Security Group — ping fails but HTTP still works", exp: "Ping uses ICMP, not TCP/HTTP. Security Groups block ICMP by default. Add an inbound 'All ICMP - IPv4' rule separately. This doesn't affect HTTP/HTTPS traffic." },
+  { q: "What is an environment variable?", options: ["A key-value pair stored in RAM in the current shell session","A configuration file stored on disk in /etc/environment","A system-wide setting that persists across reboots","A Docker container variable defined in .env files"], a: "A key-value pair stored in RAM in the current shell session", exp: "Env vars live only in memory, scoped to the current terminal. They vanish when the terminal closes. export KEY=value to set, echo $KEY to read, unset KEY to delete." },
+  { q: "What does `export` do that plain `KEY=value` does not?", options: ["Makes the variable visible to child processes launched from this shell","Writes the variable to disk for persistence","Makes it visible to all users on the system","They are identical — export is just convention"], a: "Makes the variable visible to child processes launched from this shell", exp: "Without export, only the current shell can read KEY. With export, any subprocess (like claude or node) inherits it — which is why programs can read ANTHROPIC_API_KEY." },
+  { q: "What is the risk of committing an API key to a public GitHub repository?", options: ["Automated bots scrape public commits within seconds and can burn your API credits","GitHub auto-rotates detected keys","The key is encrypted in git history so it's safe","Only repo collaborators can see committed secrets"], a: "Automated bots scrape public commits within seconds and can burn your API credits", exp: "GitHub's public event stream is actively monitored by credential-harvesting bots. A leaked Anthropic key can generate thousands of dollars in charges in minutes. Revoke and rotate immediately." },
+  { q: "On a headless EC2 server, why can't you use `claude login` (browser OAuth)?", options: ["EC2 has no browser — OAuth requires GUI; use an API key instead","EC2 doesn't have enough CPU for OAuth","The OAuth port is blocked by AWS security groups","API keys are faster than OAuth on Linux"], a: "EC2 has no browser — OAuth requires GUI; use an API key instead", exp: "claude login opens a browser tab for OAuth. On an SSH-only server there is no browser. Set ANTHROPIC_API_KEY and Claude auto-detects it without a login flow." },
+  { q: "What does `claude -p \"say hi\"` do differently from just running `claude`?", options: ["Runs a one-shot prompt and exits without entering the interactive shell","Opens the claude REPL with pre-filled text","Pins a specific Claude model version","Pipes output to a file named 'say hi'"], a: "Runs a one-shot prompt and exits without entering the interactive shell", exp: "-p (prompt) passes a single query and returns the response then exits. This is how you use Claude in shell scripts, cron jobs, or automation pipelines." },
+  { q: "What does `--allowedTools web_search` add to a claude command?", options: ["Grants Claude permission to fetch live data from the web during that run","Makes Claude search your local filesystem","Enables parallel tool execution","Unlocks extended context window"], a: "Grants Claude permission to fetch live data from the web during that run", exp: "By default Claude has no tools. --allowedTools web_search lets it query the internet in real time. Required for current events, live weather, or real-time data." },
+  { q: "What is the primary purpose of an EC2 user data script?", options: ["Runs automatically at first boot to install software without manual SSH","Stores EC2 API credentials securely","Defines the instance's security group rules","Configures the hostname in Route 53"], a: "Runs automatically at first boot to install software without manual SSH", exp: "User data executes as root on the very first launch. A typical script: dnf update, install nginx, systemctl enable nginx, write a custom index.html. No SSH required." },
+  { q: "What AWS CLI command launches a new EC2 instance programmatically?", options: ["aws ec2 run-instances","aws ec2 create-instance","aws ec2 start-instances","aws ec2 launch"], a: "aws ec2 run-instances", exp: "run-instances is the correct CLI subcommand. Key flags: --image-id (AMI), --instance-type, --key-name, --security-group-ids, and --user-data for bootstrap scripts." },
+  { q: "Where do you get a Telegram bot token?", options: ["From @BotFather in Telegram after running /newbot","From Telegram's developer portal","From your Telegram account settings under API access","From the channel settings once created"], a: "From @BotFather in Telegram after running /newbot", exp: "@BotFather is Telegram's official bot-management service. /newbot prompts for a name and username, then returns a token like 1234567890:ABC-DEFxyz. Save it immediately." },
+  { q: "What must you do for your Telegram bot to post messages to a channel?", options: ["Add the bot as a channel administrator with post permissions","Create the channel through BotFather directly","Set the channel to private first","Register the channel username with the Telegram API"], a: "Add the bot as a channel administrator with post permissions", exp: "Bots cannot post to channels unless they're admins. Go to channel settings → Administrators → Add Administrator → search for your bot's @username." },
+  { q: "What does `curl -I https://mysite.click` do?", options: ["Sends a HEAD request — returns HTTP headers only, not the page body","Downloads the full page silently","Tests TLS certificate validity","Follows all redirects until the final page"], a: "Sends a HEAD request — returns HTTP headers only, not the page body", exp: "-I sends HTTP HEAD method. You get the status code (200, 301, 403, etc.) and headers without downloading HTML. Useful for quick status checks in troubleshooting." },
+  { q: "After deploying EC2 via AWS CLI with a user data script, the instance is running but the site isn't accessible. What's the most likely issue?", options: ["The security group doesn't have inbound HTTP (80) or HTTPS (443) open","The user data script failed silently","AWS CLI deployments have a 5-minute warmup period","The AMI is incompatible with nginx"], a: "The security group doesn't have inbound HTTP (80) or HTTPS (443) open", exp: "Security Groups default to no inbound rules. Even with nginx running perfectly, traffic is blocked at the firewall. Include --security-group-ids with a group that has ports 80 and 443 open." },
+  { q: "Which command confirms an environment variable has been successfully removed?", options: ["echo $KEY — returns empty line if unset","env --verify KEY","unset --check KEY","printenv KEY --status"], a: "echo $KEY — returns empty line if unset", exp: "After unset KEY, echo $KEY returns a blank line. Alternatively, env | grep KEY returns nothing. If a value still appears, the var wasn't unset or exists in a parent shell." },
+];
+
+const C11_TYPE = [
+  { prompt: "Watch nginx access logs in real time as HTTP requests come in.", hint: "tail with -f flag on access.log", answers: ["tail -f /var/log/nginx/access.log"], exp: "-f (follow) streams new lines as they're appended to the file. Press Ctrl+C to stop watching." },
+  { prompt: "Look up which IP address the domain 'mysite.click' currently resolves to.", hint: "nslookup with the domain name", answers: ["nslookup mysite.click"], exp: "nslookup queries DNS and shows the IP. Compare with your EC2 public IP — mismatch means the A record is stale." },
+  { prompt: "Fetch only the HTTP response headers for https://mysite.click to check the status code.", hint: "curl with uppercase -I flag (HEAD request)", answers: ["curl -I https://mysite.click"], exp: "-I sends an HTTP HEAD request. Returns status code and headers without downloading the page body." },
+  { prompt: "Set an environment variable TELEGRAM_BOT_TOKEN to '7890:XYZ' for the current session.", hint: "export KEY=value", answers: ["export TELEGRAM_BOT_TOKEN='7890:XYZ'", "export TELEGRAM_BOT_TOKEN=\"7890:XYZ\""], exp: "export makes the variable available to child processes. It lives in RAM and disappears when the terminal closes." },
+  { prompt: "Print the current value of the ANTHROPIC_API_KEY environment variable.", hint: "echo with dollar sign prefix", answers: ["echo $ANTHROPIC_API_KEY"], exp: "$ dereferences the variable. If it prints nothing, the variable is not set in this session." },
+  { prompt: "List all environment variables currently set, filtering for any containing 'BOT'.", hint: "env piped through grep", answers: ["env | grep BOT"], exp: "env lists all env vars. Pipe to grep to filter. Case-sensitive by default — use grep -i BOT for case-insensitive matching." },
+  { prompt: "Remove the ANTHROPIC_API_KEY variable from the current session without closing the terminal.", hint: "unset command", answers: ["unset ANTHROPIC_API_KEY"], exp: "unset removes the variable from the current shell session. The terminal stays open; only that variable is gone." },
+  { prompt: "Run a one-shot Claude prompt asking it to 'list 3 Linux commands' without entering the interactive shell.", hint: "claude with -p flag", answers: ["claude -p \"list 3 Linux commands\"", "claude -p 'list 3 Linux commands'"], exp: "-p (prompt) runs Claude non-interactively. The response prints to stdout and Claude exits. Used in scripts and automation." },
+  { prompt: "Ping 54.26.10.18 exactly 4 times to test network reachability.", hint: "ping with -c flag to limit count", answers: ["ping -c 4 54.26.10.18"], exp: "Without -c, ping runs forever on Linux. -c 4 sends exactly 4 ICMP echo requests then exits with a summary." },
+];
+
+const C11_FLASH = [
+  { q: "What two nginx log files exist and what does each record?", a: "/var/log/nginx/access.log: one line per HTTP request (IP, method, path, status code). /var/log/nginx/error.log: server/app errors only. Separate files = faster debugging." },
+  { q: "What are the 4 steps to troubleshoot a website not loading?", a: "1) Check nginx logs for errors. 2) nslookup/dig domain to verify DNS. 3) ping the IP (ICMP reachability). 4) curl -I https://domain for HTTP status code." },
+  { q: "What is an environment variable?", a: "A key-value pair stored in RAM for the current shell session. export KEY=value to set, echo $KEY to read, env to list all, unset KEY to delete. Lost when terminal closes." },
+  { q: "What does export do vs just KEY=value?", a: "export makes the variable visible to child processes. Without it, only the current shell can read the variable — programs like claude or node won't inherit it." },
+  { q: "What is the AWS CLI?", a: "The aws command-line tool for managing AWS resources from the terminal. Enables scripting and automation of EC2, Route 53, S3, and more — no browser needed." },
+  { q: "What is a user data script in EC2?", a: "A shell script that runs once automatically at first EC2 launch. Used to install software (nginx, node), configure services, and write files — no SSH needed." },
+  { q: "How do you use Claude on a headless EC2 server?", a: "Install Node.js → npm install -g @anthropic-ai/claude-code → export ANTHROPIC_API_KEY=\"sk-ant-...\" → claude -p \"prompt\" (one-shot) or just claude (interactive)." },
+  { q: "What does claude -p do?", a: "Runs a one-shot prompt and exits without entering the interactive REPL. Used in shell scripts and cron jobs. Example: claude -p \"write today's tech news\"" },
+  { q: "What is @BotFather in Telegram?", a: "Telegram's official bot-creation service. /newbot returns a bot token. Add your bot as channel admin so it can post messages. Export token as TELEGRAM_BOT_TOKEN." },
+  { q: "What does curl -I do?", a: "Sends an HTTP HEAD request — returns only response headers (status code, content-type, etc.) without downloading the page body. Great for quick status checks." },
+  { q: "What does tail -f do?", a: "Follows a file live, streaming new lines as they're written. Press Ctrl+C to stop. Use on nginx access.log to watch traffic in real time during debugging." },
+  { q: "Why does ping fail even when the website works?", a: "Ping uses ICMP, not TCP. EC2 Security Groups block ICMP by default. Add an inbound 'All ICMP - IPv4' rule separately from the HTTP/HTTPS rules." },
+];
+
+const C11_SCENARIOS = [
+  { scenario: "Website won't load — run the complete 4-step troubleshooting flow in the correct order.", tokens: ["tail -f /var/log/nginx/access.log", "nslookup mysite.click", "ping -c 4 <EC2-IP>", "curl -I https://mysite.click"], answer: ["tail -f /var/log/nginx/access.log", "nslookup mysite.click", "ping -c 4 <EC2-IP>", "curl -I https://mysite.click"] },
+  { scenario: "Set up the Claude CLI on a fresh Amazon Linux EC2 so it can run one-shot prompts headlessly.", tokens: ["sudo dnf install nodejs npm -y", "npm install -g @anthropic-ai/claude-code", "export ANTHROPIC_API_KEY=\"sk-ant-...\"", "claude -p \"say hi\""], answer: ["sudo dnf install nodejs npm -y", "npm install -g @anthropic-ai/claude-code", "export ANTHROPIC_API_KEY=\"sk-ant-...\"", "claude -p \"say hi\""] },
+  { scenario: "Create a Telegram bot and configure it to post to your new public channel.", tokens: ["message @BotFather and run /newbot", "copy the token and export TELEGRAM_BOT_TOKEN", "create a public Telegram channel", "add the bot as a channel administrator"], answer: ["message @BotFather and run /newbot", "copy the token and export TELEGRAM_BOT_TOKEN", "create a public Telegram channel", "add the bot as a channel administrator"] },
+  { scenario: "Launch an EC2 instance with nginx pre-installed using the AWS CLI — no manual SSH needed.", tokens: ["write user-data.sh (dnf install + enable nginx)", "aws ec2 run-instances --user-data file://user-data.sh", "aws ec2 describe-instances to get the public IP", "curl http://<public-IP> to verify nginx is serving"], answer: ["write user-data.sh (dnf install + enable nginx)", "aws ec2 run-instances --user-data file://user-data.sh", "aws ec2 describe-instances to get the public IP", "curl http://<public-IP> to verify nginx is serving"] },
 ];
 </script>
 </body>
