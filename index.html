@@ -20,6 +20,7 @@
     --c9: #fbbf24;
     --c10: #2dd4bf;
     --c11: #84cc16;
+    --c12: #f87171;
     --green: #22c55e;
     --red: #ef4444;
     --yellow: #eab308;
@@ -89,6 +90,7 @@
   .c9 { background: rgba(251,191,36,.15); color: var(--c9); }
   .c10 { background: rgba(45,212,191,.15); color: var(--c10); }
   .c11 { background: rgba(132,204,22,.15); color: var(--c11); }
+  .c12 { background: rgba(248,113,113,.15); color: var(--c12); }
   .class-name { font-size: 14px; font-weight: bold; }
   .class-topics { font-size: 11px; color: var(--muted); margin-left: auto; }
   .class-modes { padding: 12px 20px 16px; display: flex; flex-wrap: wrap; gap: 10px; }
@@ -112,6 +114,7 @@
   .mode-btn.c9:hover { border-color: var(--c9); color: var(--c9); }
   .mode-btn.c10:hover { border-color: var(--c10); color: var(--c10); }
   .mode-btn.c11:hover { border-color: var(--c11); color: var(--c11); }
+  .mode-btn.c12:hover { border-color: var(--c12); color: var(--c12); }
   .mode-icon { margin-right: 6px; }
 
   /* ── SCREEN ── */
@@ -467,6 +470,21 @@
     </div>
   </div>
 
+  <!-- CLASS 12 -->
+  <div class="class-card">
+    <div class="class-header">
+      <span class="class-badge c12">Class 12</span>
+      <span class="class-name">AWS Secrets Manager &amp; IAM</span>
+      <span class="class-topics">Secrets Manager · KMS · IAM Policies · Least Privilege · ARNs</span>
+    </div>
+    <div class="class-modes">
+      <button class="mode-btn c12" onclick="startMode('c12-quiz')"><span class="mode-icon">⚡</span>Hard Quiz (20q)</button>
+      <button class="mode-btn c12" onclick="startMode('c12-type')"><span class="mode-icon">⌨️</span>Type the Command</button>
+      <button class="mode-btn c12" onclick="startMode('c12-flash')"><span class="mode-icon">🃏</span>Flashcards</button>
+      <button class="mode-btn c12" onclick="startMode('c12-scenario')"><span class="mode-icon">🔑</span>Scenario Builder</button>
+    </div>
+  </div>
+
   <!-- CLASS 11 -->
   <div class="class-card">
     <div class="class-header">
@@ -509,6 +527,10 @@
 <div id="c11-type" class="screen"></div>
 <div id="c11-flash" class="screen"></div>
 <div id="c11-scenario" class="screen"></div>
+<div id="c12-quiz" class="screen"></div>
+<div id="c12-type" class="screen"></div>
+<div id="c12-flash" class="screen"></div>
+<div id="c12-scenario" class="screen"></div>
 
 <script>
 // ═══════════════════════════════════════════════════════
@@ -562,6 +584,10 @@ function startMode(id) {
   if (id === 'c11-type')     buildType('c11-type', C11_TYPE, 'c11', 'Nginx Logs & AI Automation');
   if (id === 'c11-flash')    buildFlash('c11-flash', C11_FLASH, 'c11', 'Automation Flashcards');
   if (id === 'c11-scenario') buildC11Scenario('c11-scenario');
+  if (id === 'c12-quiz')     buildQuiz('c12-quiz', C12_QUIZ, 'c12', 'Secrets Manager & IAM');
+  if (id === 'c12-type')     buildType('c12-type', C12_TYPE, 'c12', 'Secrets Manager & IAM');
+  if (id === 'c12-flash')    buildFlash('c12-flash', C12_FLASH, 'c12', 'Secrets Manager Flashcards');
+  if (id === 'c12-scenario') buildC12Scenario('c12-scenario');
 }
 function goMenu() {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -757,6 +783,7 @@ function buildChmod(containerId) { buildDragDrop(containerId, CHMOD_SCENARIOS, '
 function buildWorkflow(containerId) { buildDragDrop(containerId, WORKFLOW_SCENARIOS, 'Git — Workflow Builder', 'Arrange the steps in the correct order:'); }
 function buildScenario(containerId) { buildDragDrop(containerId, EC2_SCENARIOS, 'EC2 Networking — Scenario Builder', 'Put the commands in the right order:'); }
 function buildC11Scenario(containerId) { buildDragDrop(containerId, C11_SCENARIOS, 'Troubleshooting & AI Bots — Scenario Builder', 'Arrange the steps in the correct order:'); }
+function buildC12Scenario(containerId) { buildDragDrop(containerId, C12_SCENARIOS, 'Secrets Manager & IAM — Scenario Builder', 'Arrange the steps in the correct order:'); }
 
 function buildDragDrop(containerId, scenarios, title, label, excludeIdx) {
   let scIdx;
@@ -780,7 +807,7 @@ function buildDragDrop(containerId, scenarios, title, label, excludeIdx) {
         ${available.map((t,i) => `<div class="drag-token" draggable="true" data-src="avail" data-idx="${i}" ondragstart="dragStart(event,'avail',${i})" ondragend="dragEnd(event)">${t}</div>`).join('')}
       </div>
       <button class="check-btn" onclick="checkDrop()">✓ Check Answer</button>
-      <button class="check-btn" onclick="buildDragDrop('${containerId}',${containerId.includes('c4')?'PIPE_SCENARIOS':containerId.includes('c5')?'CHMOD_SCENARIOS':containerId.includes('c6')?'WORKFLOW_SCENARIOS':containerId.includes('c11')?'C11_SCENARIOS':'EC2_SCENARIOS'},'${title}','${label}',${scIdx})">↺ New Scenario</button>
+      <button class="check-btn" onclick="buildDragDrop('${containerId}',${containerId.includes('c4')?'PIPE_SCENARIOS':containerId.includes('c5')?'CHMOD_SCENARIOS':containerId.includes('c6')?'WORKFLOW_SCENARIOS':containerId.includes('c12')?'C12_SCENARIOS':containerId.includes('c11')?'C11_SCENARIOS':'EC2_SCENARIOS'},'${title}','${label}',${scIdx})">↺ New Scenario</button>
       <div class="builder-feedback" id="bfeed"></div>`;
 
     window.dragStart = (e, src, i) => { dragging = {src, i}; e.target.classList.add('dragging'); };
@@ -1145,6 +1172,63 @@ const C11_FLASH = [
   { q: "What does curl -I do?", a: "Sends an HTTP HEAD request — returns only response headers (status code, content-type, etc.) without downloading the page body. Great for quick status checks." },
   { q: "What does tail -f do?", a: "Follows a file live, streaming new lines as they're written. Press Ctrl+C to stop. Use on nginx access.log to watch traffic in real time during debugging." },
   { q: "Why does ping fail even when the website works?", a: "Ping uses ICMP, not TCP. EC2 Security Groups block ICMP by default. Add an inbound 'All ICMP - IPv4' rule separately from the HTTP/HTTPS rules." },
+];
+
+// ── CLASS 12: AWS SECRETS MANAGER & IAM ──
+const C12_QUIZ = [
+  { q: "What is the primary purpose of AWS Secrets Manager?", options: ["Securely stores, manages, and rotates secrets like DB passwords and API keys","Manages IAM users and their access policies","Encrypts EBS volumes at rest","Stores environment variables for Lambda functions"], a: "Securely stores, manages, and rotates secrets like DB passwords and API keys", exp: "Secrets Manager eliminates hardcoded credentials. Apps call GetSecretValue at runtime instead of reading from .env files or git repos. It also supports automatic rotation with Lambda." },
+  { q: "Which IAM action retrieves the actual secret value (the password or API key itself)?", options: ["secretsmanager:GetSecretValue","secretsmanager:DescribeSecret","secretsmanager:ListSecrets","secretsmanager:ReadSecret"], a: "secretsmanager:GetSecretValue", exp: "GetSecretValue returns the actual SecretString or SecretBinary. DescribeSecret returns metadata like name, ARN, and rotation config — but NEVER the actual secret value." },
+  { q: "What does the Sid field in an IAM policy statement do?", options: ["A human-readable label for the statement — optional but recommended for clarity","The secret's unique identifier in Secrets Manager","A required field that determines which IAM actions are allowed","The AWS account ID where the policy applies"], a: "A human-readable label for the statement — optional but recommended for clarity", exp: "Sid (Statement ID) is optional but helps identify what a statement does when auditing. A Sid like 'SecretsManagerGetAndDescribeSecret' is far more readable than an anonymous block." },
+  { q: "Why does the policy grant ListSecrets on Resource: '*' instead of a specific ARN?", options: ["List operations work at the service level and can't be scoped to individual resources","The policy author made a mistake — it should be scoped","ListSecrets requires root-level permissions","All Secrets Manager actions require * as the resource"], a: "List operations work at the service level and can't be scoped to individual resources", exp: "AWS requires list/batch operations that scan across resources to use Resource: *. You can't say 'list only this one secret' — listing inherently scans all. Restrict GetSecretValue to specific ARNs instead." },
+  { q: "What does the condition 'kms:ViaService': 'secretsmanager.*.amazonaws.com' enforce?", options: ["KMS Decrypt can only be called through Secrets Manager, not directly","The KMS key must be in the same region as the secret","Only Secrets Manager admins can decrypt using this key","KMS validates the secret before returning the decrypted value"], a: "KMS Decrypt can only be called through Secrets Manager, not directly", exp: "kms:ViaService restricts who can trigger Decrypt. 'secretsmanager.*.amazonaws.com' means only calls routed through Secrets Manager (any region) are allowed. Direct kms:Decrypt calls are blocked." },
+  { q: "What does the `kms:EncryptionContext:SecretARN` condition in a KMS policy check?", options: ["KMS Decrypt is only allowed when the context matches a Secrets Manager secret ARN","The secret must be tagged with the KMS key ARN","Both the secret and KMS key must be in the same region","Encryption context is just a log label with no security effect"], a: "KMS Decrypt is only allowed when the context matches a Secrets Manager secret ARN", exp: "Encryption context is additional authenticated data attached to KMS operations. This condition ensures the Decrypt is for a valid Secrets Manager secret — not arbitrary KMS-encrypted ciphertext." },
+  { q: "An EC2 app needs to read secrets from Secrets Manager. Where should the AWS credentials be configured?", options: ["In an IAM Role attached to the EC2 — no static keys needed","In environment variables set via the AWS Console","Hardcoded in the application's config file","In a .env file in the app's home directory"], a: "In an IAM Role attached to the EC2 — no static keys needed", exp: "EC2 IAM Roles provide temporary credentials via the metadata service (169.254.169.254), rotated automatically. No static keys on disk is the secure pattern — zero credentials to leak." },
+  { q: "Every Secrets Manager secret ARN ends with random characters (e.g., prod/db-pass-AbCdEf). Why does the IAM policy use a wildcard?", options: ["AWS appends 6 random characters to every secret name — wildcard covers any suffix","The policy applies to all secrets by intent","The * allows matching across multiple AWS accounts","Secret ARNs don't follow a fixed pattern"], a: "AWS appends 6 random characters to every secret name — wildcard covers any suffix", exp: "Secrets Manager adds a 6-character random suffix to every secret ARN. Using arn:aws:secretsmanager:*:*:secret:prod/db-pass-* ensures the policy matches regardless of that suffix." },
+  { q: "GetSecretValue is allowed in the IAM policy, but the call still fails with AccessDenied on a KMS-encrypted secret. What's missing?", options: ["kms:Decrypt permission — Secrets Manager needs it to decrypt the stored value","The secret must be re-created without KMS encryption","IAM evaluation requires both Allow and Deny statements","The caller must be in the same region as the KMS key"], a: "kms:Decrypt permission — Secrets Manager needs it to decrypt the stored value", exp: "Secrets Manager calls KMS internally when fetching a secret encrypted with a CMK. If the role lacks kms:Decrypt, the whole GetSecretValue fails — even if the SM permission is granted." },
+  { q: "What is the AWS principle of least privilege?", options: ["Grant only the minimum permissions needed — nothing extra","Grant all permissions and rely on CloudTrail to detect abuse","All IAM users should have admin access for operational flexibility","Permissions should be set at the organization level only"], a: "Grant only the minimum permissions needed — nothing extra", exp: "Scoping GetSecretValue to specific secret ARNs instead of * is least privilege in action. Even if credentials leak, the blast radius is limited to only the secrets the app actually needs." },
+  { q: "Which AWS service logs every GetSecretValue call made to a secret for audit purposes?", options: ["AWS CloudTrail","Amazon CloudWatch Metrics","AWS Config","Amazon Inspector"], a: "AWS CloudTrail", exp: "CloudTrail logs every Secrets Manager API call: who called GetSecretValue, from which IP, at what time. This audit trail is a key security advantage over hardcoded or env-var credentials." },
+  { q: "What is the difference between secretsmanager:GetSecretValue and secretsmanager:BatchGetSecretValue?", options: ["GetSecretValue retrieves one secret; BatchGetSecretValue retrieves up to 20 in a single API call","BatchGetSecretValue is faster and should always replace GetSecretValue","GetSecretValue returns plaintext; BatchGetSecretValue returns ARNs only","They are identical — BatchGet is an alias for legacy compatibility"], a: "GetSecretValue retrieves one secret; BatchGetSecretValue retrieves up to 20 in a single API call", exp: "BatchGetSecretValue reduces API calls for apps needing many credentials at startup. Both return the actual SecretString — both require proper IAM permissions including kms:Decrypt if using CMKs." },
+  { q: "What is the correct ARN format for an AWS Secrets Manager secret?", options: ["arn:aws:secretsmanager:region:account-id:secret:name-suffix","arn:aws:secrets:region:account-id:secret-name","arn:aws:iam:account-id:secret:name","arn:secretsmanager:aws:region:account:name"], a: "arn:aws:secretsmanager:region:account-id:secret:name-suffix", exp: "ARN format: arn:partition:service:region:account:resource-type:resource-id. Example: arn:aws:secretsmanager:us-east-1:123456789012:secret:prod/db/password-AbCdEf" },
+  { q: "Why is Secrets Manager better than storing credentials in a .env file on EC2?", options: ["Audit logs, automatic rotation, and secrets stay out of git history","Secrets Manager reads faster than files on disk",".env files are not encrypted on EC2","AWS mandates Secrets Manager for production workloads"], a: "Audit logs, automatic rotation, and secrets stay out of git history", exp: ".env files can leak into git repos, be read by any process with file access, and require manual rotation. Secrets Manager adds IAM-controlled access, CloudTrail logging, and optional auto-rotation." },
+  { q: "A developer commits an API key to a public GitHub repo. What is the FIRST action to take?", options: ["Revoke and rotate the key immediately — assume it's already compromised","Delete the commit and force-push to erase history","Make the repo private to prevent further exposure","Create a new secret in Secrets Manager to replace it"], a: "Revoke and rotate the key immediately — assume it's already compromised", exp: "Bots scrape GitHub's public event stream within seconds. The key must be treated as fully compromised. Force-push helps prevent future exposure but the original key is gone — rotate it." },
+  { q: "How does an IAM Role differ from an IAM User for granting EC2 access to Secrets Manager?", options: ["Roles provide temporary credentials auto-rotated by STS — no static keys on disk","Roles require you to manually refresh credentials every 24 hours","Users are preferred for EC2 because they have persistent access keys","Roles and users work identically for AWS service access"], a: "Roles provide temporary credentials auto-rotated by STS — no static keys on disk", exp: "EC2 assumes a role and gets temp credentials via the metadata service (rotated every 15min–1hr). Storing IAM user access keys on disk is a security anti-pattern — disk breach = credential leak." },
+  { q: "What does AWS KMS do when Secrets Manager calls it during a GetSecretValue request?", options: ["Decrypts the secret's ciphertext using the CMK, then Secrets Manager returns the plaintext","Validates that the caller has the correct IAM permissions","Re-encrypts the secret before sending it to the caller","Logs the decryption request and blocks it until MFA is confirmed"], a: "Decrypts the secret's ciphertext using the CMK, then Secrets Manager returns the plaintext", exp: "Secrets are stored encrypted in Secrets Manager using KMS. On GetSecretValue, Secrets Manager calls kms:Decrypt internally with the secret ARN as encryption context, then returns the plaintext." },
+  { q: "The IAM policy uses the StringLike condition operator. How does it differ from StringEquals?", options: ["StringLike supports wildcards (* and ?); StringEquals requires an exact match","StringLike is case-insensitive; StringEquals is case-sensitive","StringLike checks multiple values; StringEquals checks only one","They are interchangeable — StringLike is just the newer syntax"], a: "StringLike supports wildcards (* and ?); StringEquals requires an exact match", exp: "StringLike with 'secretsmanager.*.amazonaws.com' matches any region's Secrets Manager endpoint. StringEquals would need the exact region string, making the policy unnecessarily rigid." },
+  { q: "In IAM, if an Effect: Allow and Effect: Deny both apply to the same action, which wins?", options: ["Deny always wins and overrides Allow","Allow wins because it was listed first","Both cancel each other — the action is treated as if no policy exists","Deny only applies to actions performed by the root account"], a: "Deny always wins and overrides Allow", exp: "IAM evaluation: explicit Deny always overrides any number of Allows. This is why Deny statements are used for security guardrails — no other policy can override them." },
+  { q: "Your app gets AccessDenied on GetSecretValue. The IAM role has the action allowed. What should you check next?", options: ["Whether the secret ARN in the policy matches the actual secret ARN being requested","Whether the app is running in the correct VPC","Whether the secret has been rotated recently","Whether Secrets Manager is enabled in your region"], a: "Whether the secret ARN in the policy matches the actual secret ARN being requested", exp: "IAM is resource-specific. If the policy says arn:aws:secretsmanager:us-east-1:*:secret:prod/* but the app requests a secret in us-west-2, the regions don't match — AccessDenied despite the correct action." },
+];
+
+const C12_TYPE = [
+  { prompt: "Retrieve the current value of a secret named 'prod/api-key' from AWS Secrets Manager.", hint: "aws secretsmanager + get-secret-value --secret-id", answers: ["aws secretsmanager get-secret-value --secret-id prod/api-key"], exp: "--secret-id accepts the secret name or full ARN. Returns SecretString plus metadata like ARN and version." },
+  { prompt: "List all secrets stored in your AWS Secrets Manager account.", hint: "aws secretsmanager list-secrets", answers: ["aws secretsmanager list-secrets"], exp: "Returns secret names, ARNs, and metadata — NOT the actual values. Only GetSecretValue retrieves the actual password or key." },
+  { prompt: "Get the metadata (name, ARN, rotation config) for a secret named 'db/password' — without retrieving its value.", hint: "describe-secret subcommand", answers: ["aws secretsmanager describe-secret --secret-id db/password"], exp: "DescribeSecret returns rotation config, tags, ARN, creation date — everything EXCEPT the actual secret value. Safe to run for debugging." },
+  { prompt: "Create a new secret called 'app/telegram-token' with the value '7890:XYZ123'.", hint: "create-secret with --name and --secret-string", answers: ["aws secretsmanager create-secret --name app/telegram-token --secret-string 7890:XYZ123", "aws secretsmanager create-secret --name app/telegram-token --secret-string \"7890:XYZ123\""], exp: "--secret-string stores a plaintext string. For structured creds (like RDS), store JSON: --secret-string '{\"username\":\"admin\",\"password\":\"xyz\"}'." },
+  { prompt: "Check which IAM identity (user or role) your AWS CLI is currently authenticated as.", hint: "aws sts get-caller-identity", answers: ["aws sts get-caller-identity"], exp: "Returns UserId, Account ID, and ARN. Run this before testing Secrets Manager access to confirm you're using the expected role." },
+  { prompt: "List all KMS keys in your AWS account.", hint: "aws kms list-keys", answers: ["aws kms list-keys"], exp: "Returns KMS key IDs and ARNs. Use these IDs when creating a secret with a specific CMK: aws secretsmanager create-secret --kms-key-id arn:aws:kms:..." },
+  { prompt: "Retrieve a secret's value and output only the SecretString as plain text (no JSON wrapping).", hint: "get-secret-value with --query SecretString and --output text", answers: ["aws secretsmanager get-secret-value --secret-id prod/api-key --query SecretString --output text"], exp: "--query uses JMESPath to extract one field. --output text strips JSON formatting. This is how shell scripts consume secrets directly without parsing JSON." },
+  { prompt: "Trigger an immediate manual rotation for a secret named 'prod/api-key'.", hint: "aws secretsmanager rotate-secret", answers: ["aws secretsmanager rotate-secret --secret-id prod/api-key"], exp: "Manual rotation invokes the Lambda rotation function immediately. Requires rotation to be configured first. The old version remains retrievable via AWSPREVIOUS label during cutover." },
+];
+
+const C12_FLASH = [
+  { q: "What is AWS Secrets Manager?", a: "A service that securely stores, manages, and auto-rotates secrets (DB passwords, API keys, tokens). Apps call GetSecretValue at runtime — no hardcoded credentials, no .env files." },
+  { q: "GetSecretValue vs DescribeSecret — what's the difference?", a: "GetSecretValue returns the actual secret (password/key). DescribeSecret returns only metadata (ARN, rotation config, tags). Only GetSecretValue needs strict IAM scoping." },
+  { q: "What is the principle of least privilege?", a: "Grant only the minimum permissions needed for the task. Scope GetSecretValue to specific secret ARNs, not *. If credentials leak, blast radius is limited to only those secrets." },
+  { q: "What is an IAM Condition block?", a: "Extra constraints in a policy statement. The statement only applies when ALL conditions are met. Used to restrict WHEN and HOW an action is allowed (e.g., only via a specific service)." },
+  { q: "What does kms:ViaService do in a KMS policy?", a: "Restricts KMS Decrypt to calls routed through a specific AWS service. 'secretsmanager.*.amazonaws.com' means only Secrets Manager can trigger decryption — not direct KMS API calls." },
+  { q: "Why does a Secrets Manager secret ARN end with a wildcard in IAM policies?", a: "AWS appends 6 random characters to every secret name (e.g., prod/db-pass-AbCdEf). The wildcard * in the policy ARN covers any suffix without needing to hardcode it." },
+  { q: "What is AWS KMS?", a: "Key Management Service — creates and manages cryptographic keys for encrypting/decrypting data. Secrets Manager uses KMS to encrypt secrets at rest. GetSecretValue triggers kms:Decrypt." },
+  { q: "What happens if kms:Decrypt is missing from a role with GetSecretValue?", a: "AccessDenied. Secrets Manager can't decrypt the stored ciphertext without the KMS permission. Both secretsmanager:GetSecretValue AND kms:Decrypt are required for KMS-encrypted secrets." },
+  { q: "Why use * for ListSecrets but a specific ARN for GetSecretValue?", a: "List operations scan across all resources — AWS requires Resource: * for them. GetSecretValue operates on one secret — scope it to the exact ARN(s) your app needs. Least privilege." },
+  { q: "What is an IAM Role vs IAM User for EC2?", a: "Roles provide temporary credentials auto-rotated by STS via the metadata service — no static keys on disk. Users have permanent access keys — if the disk is breached, keys leak. Always use roles for EC2." },
+  { q: "What is a Sid in an IAM policy statement?", a: "Statement ID — an optional human-readable label. Descriptive Sids like 'KMSDecryptKey' or 'SecretsManagerGetAndDescribeSecret' make policies readable and auditable. Like a code comment for IAM." },
+  { q: "What does CloudTrail have to do with Secrets Manager?", a: "CloudTrail logs every Secrets Manager API call: who called GetSecretValue, from which IP, and when. This audit trail is a key security advantage over .env files or hardcoded credentials." },
+];
+
+const C12_SCENARIOS = [
+  { scenario: "Set up a new secret and grant an EC2 role permission to read it — in the correct order.", tokens: ["aws secretsmanager create-secret --name prod/db-pass --secret-string 'mypassword'", "Create IAM policy with secretsmanager:GetSecretValue scoped to the secret ARN", "Attach the IAM policy to the EC2 instance role", "Test on EC2: aws secretsmanager get-secret-value --secret-id prod/db-pass"], answer: ["aws secretsmanager create-secret --name prod/db-pass --secret-string 'mypassword'", "Create IAM policy with secretsmanager:GetSecretValue scoped to the secret ARN", "Attach the IAM policy to the EC2 instance role", "Test on EC2: aws secretsmanager get-secret-value --secret-id prod/db-pass"] },
+  { scenario: "Debug an AccessDenied error on GetSecretValue — step through the troubleshooting flow.", tokens: ["aws sts get-caller-identity to verify the active role", "Check IAM policy has secretsmanager:GetSecretValue action", "Confirm secret ARN in policy matches the actual secret ARN being requested", "Verify kms:Decrypt is in policy if the secret uses a Customer Managed Key"], answer: ["aws sts get-caller-identity to verify the active role", "Check IAM policy has secretsmanager:GetSecretValue action", "Confirm secret ARN in policy matches the actual secret ARN being requested", "Verify kms:Decrypt is in policy if the secret uses a Customer Managed Key"] },
+  { scenario: "Migrate an API key from a hardcoded .env file to Secrets Manager — complete the migration in order.", tokens: ["Store API key in Secrets Manager: aws secretsmanager create-secret", "Attach IAM policy with GetSecretValue to the app's EC2 role", "Update app code to call GetSecretValue instead of reading .env", "Delete .env file and add it to .gitignore"], answer: ["Store API key in Secrets Manager: aws secretsmanager create-secret", "Attach IAM policy with GetSecretValue to the app's EC2 role", "Update app code to call GetSecretValue instead of reading .env", "Delete .env file and add it to .gitignore"] },
+  { scenario: "Verify your EC2 IAM role can access Secrets Manager before deploying the app.", tokens: ["curl http://169.254.169.254/latest/meta-data/iam/security-credentials/ to confirm role is attached", "aws sts get-caller-identity to confirm active role identity", "aws secretsmanager list-secrets to test list permission", "aws secretsmanager get-secret-value --secret-id prod/api-key to test read permission"], answer: ["curl http://169.254.169.254/latest/meta-data/iam/security-credentials/ to confirm role is attached", "aws sts get-caller-identity to confirm active role identity", "aws secretsmanager list-secrets to test list permission", "aws secretsmanager get-secret-value --secret-id prod/api-key to test read permission"] },
 ];
 
 const C11_SCENARIOS = [
