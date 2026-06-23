@@ -21,6 +21,7 @@
     --c10: #2dd4bf;
     --c11: #84cc16;
     --c12: #f87171;
+    --c13: #e879f9;
     --green: #22c55e;
     --red: #ef4444;
     --yellow: #eab308;
@@ -91,6 +92,7 @@
   .c10 { background: rgba(45,212,191,.15); color: var(--c10); }
   .c11 { background: rgba(132,204,22,.15); color: var(--c11); }
   .c12 { background: rgba(248,113,113,.15); color: var(--c12); }
+  .c13 { background: rgba(232,121,249,.15); color: var(--c13); }
   .class-name { font-size: 14px; font-weight: bold; }
   .class-topics { font-size: 11px; color: var(--muted); margin-left: auto; }
   .class-modes { padding: 12px 20px 16px; display: flex; flex-wrap: wrap; gap: 10px; }
@@ -115,6 +117,7 @@
   .mode-btn.c10:hover { border-color: var(--c10); color: var(--c10); }
   .mode-btn.c11:hover { border-color: var(--c11); color: var(--c11); }
   .mode-btn.c12:hover { border-color: var(--c12); color: var(--c12); }
+  .mode-btn.c13:hover { border-color: var(--c13); color: var(--c13); }
   .mode-icon { margin-right: 6px; }
 
   /* ── SCREEN ── */
@@ -499,6 +502,21 @@
       <button class="mode-btn c12" onclick="startMode('c12-scenario')"><span class="mode-icon">🔑</span>Scenario Builder</button>
     </div>
   </div>
+
+  <!-- CLASS 13 -->
+  <div class="class-card">
+    <div class="class-header">
+      <span class="class-badge c13">Class 13</span>
+      <span class="class-name">Git Clone, Bash Scripting &amp; Quiz Bot</span>
+      <span class="class-topics">git clone · git pull · env vars · if/bash · exit codes · cron · Telegram bot</span>
+    </div>
+    <div class="class-modes">
+      <button class="mode-btn c13" onclick="startMode('c13-quiz')"><span class="mode-icon">⚡</span>Hard Quiz (20q)</button>
+      <button class="mode-btn c13" onclick="startMode('c13-type')"><span class="mode-icon">⌨️</span>Type the Command</button>
+      <button class="mode-btn c13" onclick="startMode('c13-flash')"><span class="mode-icon">🃏</span>Flashcards</button>
+      <button class="mode-btn c13" onclick="startMode('c13-scenario')"><span class="mode-icon">🤖</span>Scenario Builder</button>
+    </div>
+  </div>
 </div>
 
 <!-- ═══════════════════════ SCREENS ═══════════════════════ -->
@@ -531,6 +549,10 @@
 <div id="c12-type" class="screen"></div>
 <div id="c12-flash" class="screen"></div>
 <div id="c12-scenario" class="screen"></div>
+<div id="c13-quiz" class="screen"></div>
+<div id="c13-type" class="screen"></div>
+<div id="c13-flash" class="screen"></div>
+<div id="c13-scenario" class="screen"></div>
 
 <script>
 // ═══════════════════════════════════════════════════════
@@ -588,6 +610,10 @@ function startMode(id) {
   if (id === 'c12-type')     buildType('c12-type', C12_TYPE, 'c12', 'Secrets Manager & IAM');
   if (id === 'c12-flash')    buildFlash('c12-flash', C12_FLASH, 'c12', 'Secrets Manager Flashcards');
   if (id === 'c12-scenario') buildC12Scenario('c12-scenario');
+  if (id === 'c13-quiz')     buildQuiz('c13-quiz', C13_QUIZ, 'c13', 'Git Clone, Bash & Quiz Bot');
+  if (id === 'c13-type')     buildType('c13-type', C13_TYPE, 'c13', 'Git Clone, Bash & Quiz Bot');
+  if (id === 'c13-flash')    buildFlash('c13-flash', C13_FLASH, 'c13', 'Bash Scripting Flashcards');
+  if (id === 'c13-scenario') buildC13Scenario('c13-scenario');
 }
 function goMenu() {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -602,7 +628,7 @@ function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
 function buildQuiz(containerId, questions, cls, title) {
   const qs = shuffle(questions);
   let idx = 0, score = 0;
-  const color = {c4:'var(--c4)',c5:'var(--c5)',c6:'var(--c6)',c7:'var(--c7)',c8:'var(--c8)',c9:'var(--c9)',c10:'var(--c10)',c11:'var(--c11)'}[cls];
+  const color = {c4:'var(--c4)',c5:'var(--c5)',c6:'var(--c6)',c7:'var(--c7)',c8:'var(--c8)',c9:'var(--c9)',c10:'var(--c10)',c11:'var(--c11)',c12:'var(--c12)',c13:'var(--c13)'}[cls];
   function render() {
     if (idx >= qs.length) { showResult(containerId, score, qs.length, cls, title, () => buildQuiz(containerId, questions, cls, title)); return; }
     const q = qs[idx];
@@ -646,7 +672,7 @@ function buildQuiz(containerId, questions, cls, title) {
 
 function showResult(containerId, score, total, cls, title, replay) {
   const pct = Math.round(score/total*100);
-  const color = {c4:'var(--c4)',c5:'var(--c5)',c6:'var(--c6)',c7:'var(--c7)',c8:'var(--c8)',c9:'var(--c9)',c10:'var(--c10)',c11:'var(--c11)'}[cls];
+  const color = {c4:'var(--c4)',c5:'var(--c5)',c6:'var(--c6)',c7:'var(--c7)',c8:'var(--c8)',c9:'var(--c9)',c10:'var(--c10)',c11:'var(--c11)',c12:'var(--c12)',c13:'var(--c13)'}[cls];
   const emoji = pct >= 85 ? '🏆' : pct >= 65 ? '💪' : '📚';
   const msg = pct >= 85 ? 'Elite. You know this cold.' : pct >= 65 ? 'Solid — keep drilling the misses.' : 'Review the notes and try again.';
   document.getElementById(containerId).innerHTML = `
@@ -670,7 +696,7 @@ function showResult(containerId, score, total, cls, title, replay) {
 function buildType(containerId, questions, cls, title) {
   const qs = shuffle(questions);
   let idx = 0, score = 0;
-  const color = {c4:'var(--c4)',c5:'var(--c5)',c6:'var(--c6)',c7:'var(--c7)',c8:'var(--c8)',c9:'var(--c9)',c10:'var(--c10)',c11:'var(--c11)'}[cls];
+  const color = {c4:'var(--c4)',c5:'var(--c5)',c6:'var(--c6)',c7:'var(--c7)',c8:'var(--c8)',c9:'var(--c9)',c10:'var(--c10)',c11:'var(--c11)',c12:'var(--c12)',c13:'var(--c13)'}[cls];
   function render() {
     if (idx >= qs.length) { showResult(containerId, score, qs.length, cls, title, () => buildType(containerId, questions, cls, title)); return; }
     const q = qs[idx];
@@ -784,6 +810,7 @@ function buildWorkflow(containerId) { buildDragDrop(containerId, WORKFLOW_SCENAR
 function buildScenario(containerId) { buildDragDrop(containerId, EC2_SCENARIOS, 'EC2 Networking — Scenario Builder', 'Put the commands in the right order:'); }
 function buildC11Scenario(containerId) { buildDragDrop(containerId, C11_SCENARIOS, 'Troubleshooting & AI Bots — Scenario Builder', 'Arrange the steps in the correct order:'); }
 function buildC12Scenario(containerId) { buildDragDrop(containerId, C12_SCENARIOS, 'Secrets Manager & IAM — Scenario Builder', 'Arrange the steps in the correct order:'); }
+function buildC13Scenario(containerId) { buildDragDrop(containerId, C13_SCENARIOS, 'Bash Scripting & Quiz Bot — Scenario Builder', 'Arrange the steps in the correct order:'); }
 
 function buildDragDrop(containerId, scenarios, title, label, excludeIdx) {
   let scIdx;
@@ -807,7 +834,7 @@ function buildDragDrop(containerId, scenarios, title, label, excludeIdx) {
         ${available.map((t,i) => `<div class="drag-token" draggable="true" data-src="avail" data-idx="${i}" ondragstart="dragStart(event,'avail',${i})" ondragend="dragEnd(event)">${t}</div>`).join('')}
       </div>
       <button class="check-btn" onclick="checkDrop()">✓ Check Answer</button>
-      <button class="check-btn" onclick="buildDragDrop('${containerId}',${containerId.includes('c4')?'PIPE_SCENARIOS':containerId.includes('c5')?'CHMOD_SCENARIOS':containerId.includes('c6')?'WORKFLOW_SCENARIOS':containerId.includes('c12')?'C12_SCENARIOS':containerId.includes('c11')?'C11_SCENARIOS':'EC2_SCENARIOS'},'${title}','${label}',${scIdx})">↺ New Scenario</button>
+      <button class="check-btn" onclick="buildDragDrop('${containerId}',${containerId.includes('c4')?'PIPE_SCENARIOS':containerId.includes('c5')?'CHMOD_SCENARIOS':containerId.includes('c6')?'WORKFLOW_SCENARIOS':containerId.includes('c13')?'C13_SCENARIOS':containerId.includes('c12')?'C12_SCENARIOS':containerId.includes('c11')?'C11_SCENARIOS':'EC2_SCENARIOS'},'${title}','${label}',${scIdx})">↺ New Scenario</button>
       <div class="builder-feedback" id="bfeed"></div>`;
 
     window.dragStart = (e, src, i) => { dragging = {src, i}; e.target.classList.add('dragging'); };
@@ -1229,6 +1256,63 @@ const C12_SCENARIOS = [
   { scenario: "Debug an AccessDenied error on GetSecretValue — step through the troubleshooting flow.", tokens: ["aws sts get-caller-identity to verify the active role", "Check IAM policy has secretsmanager:GetSecretValue action", "Confirm secret ARN in policy matches the actual secret ARN being requested", "Verify kms:Decrypt is in policy if the secret uses a Customer Managed Key"], answer: ["aws sts get-caller-identity to verify the active role", "Check IAM policy has secretsmanager:GetSecretValue action", "Confirm secret ARN in policy matches the actual secret ARN being requested", "Verify kms:Decrypt is in policy if the secret uses a Customer Managed Key"] },
   { scenario: "Migrate an API key from a hardcoded .env file to Secrets Manager — complete the migration in order.", tokens: ["Store API key in Secrets Manager: aws secretsmanager create-secret", "Attach IAM policy with GetSecretValue to the app's EC2 role", "Update app code to call GetSecretValue instead of reading .env", "Delete .env file and add it to .gitignore"], answer: ["Store API key in Secrets Manager: aws secretsmanager create-secret", "Attach IAM policy with GetSecretValue to the app's EC2 role", "Update app code to call GetSecretValue instead of reading .env", "Delete .env file and add it to .gitignore"] },
   { scenario: "Verify your EC2 IAM role can access Secrets Manager before deploying the app.", tokens: ["curl http://169.254.169.254/latest/meta-data/iam/security-credentials/ to confirm role is attached", "aws sts get-caller-identity to confirm active role identity", "aws secretsmanager list-secrets to test list permission", "aws secretsmanager get-secret-value --secret-id prod/api-key to test read permission"], answer: ["curl http://169.254.169.254/latest/meta-data/iam/security-credentials/ to confirm role is attached", "aws sts get-caller-identity to confirm active role identity", "aws secretsmanager list-secrets to test list permission", "aws secretsmanager get-secret-value --secret-id prod/api-key to test read permission"] },
+];
+
+// ── CLASS 13: GIT CLONE, BASH SCRIPTING & QUIZ BOT ──
+const C13_QUIZ = [
+  { q: "What is the difference between `git clone` and `git pull`?", options: ["clone is a one-time download to a new directory; pull updates an existing local repo","clone downloads only the .git folder; pull downloads the code","clone and pull are identical — different names for the same command","clone requires SSH; pull requires HTTPS"], a: "clone is a one-time download to a new directory; pull updates an existing local repo", exp: "git clone creates a fresh directory and downloads the entire repository for the first time. git pull is run INSIDE an existing repo to fetch and merge new changes from the remote." },
+  { q: "Why do SSH git remotes stay authenticated permanently while HTTPS prompts for login each session?", options: ["SSH uses key-pair cryptography — once your key is on GitHub no password is needed; HTTPS requires credentials each session","SSH stores your password in /etc/gitconfig","HTTPS requires re-auth as a deliberate security feature","SSH only works on Linux; HTTPS works everywhere"], a: "SSH uses key-pair cryptography — once your key is on GitHub no password is needed; HTTPS requires credentials each session", exp: "SSH authenticates with your private key matched against the public key registered on GitHub. No password ever after setup. HTTPS requires a username + personal access token each session unless a credential manager caches it." },
+  { q: "What error appears when you run `git pull` from a directory that is NOT a git repository?", options: ["fatal: not a git repository","permission denied (publickey)","remote: Repository not found","merge conflict detected"], a: "fatal: not a git repository", exp: "Git looks for a .git directory in the current folder and its parents. If none is found, it exits with 'fatal: not a git repository'. Fix: cd into the correct repo directory first." },
+  { q: "What does `git remote -v` show?", options: ["The remote URL(s) the local repo is connected to, for both fetch and push","All remote branches and their last commit","The git version installed on this machine","All collaborators on the remote repository"], a: "The remote URL(s) the local repo is connected to, for both fetch and push", exp: "-v (verbose) shows two lines per remote: one for fetch, one for push. The URL tells you whether the remote uses SSH (git@github.com:...) or HTTPS (https://github.com/...)." },
+  { q: "What does exit code 0 mean after a command runs?", options: ["Success — the command completed without error","The command was killed by SIGTERM","The command produced no output","The script exited at line 0"], a: "Success — the command completed without error", exp: "0 is the universal Unix success code. Any non-zero exit code signals failure: 1=general error, 2=syntax/misuse, 128=fatal signal/git error. Scripts check $? to detect and handle failures." },
+  { q: "What does `echo $?` print?", options: ["The exit code of the most recently run command","The current shell's process ID","A literal dollar sign and question mark","The current user's home directory"], a: "The exit code of the most recently run command", exp: "$? is a special shell variable automatically set after every command. 0=success, non-zero=error. Check it immediately after the command you want to test — any subsequent command resets it." },
+  { q: "In a bash `if` statement, what does the `-d` flag check?", options: ["Whether a path exists and is a directory","Whether a file is downloadable","Whether a variable is defined","Whether a command is available in PATH"], a: "Whether a path exists and is a directory", exp: "-d tests if the path exists AND is a directory. Used in the quiz bot: if [ -d \"$REPO_DIR\" ] detects whether the repo was already cloned. -f checks for a regular file, -z checks if a variable is empty." },
+  { q: "In a bash `if` statement, what does the `-z` flag test?", options: ["Whether a variable is empty (zero-length string)","Whether a file has zero bytes on disk","Whether a process has zero CPU usage","Whether a command is not found in PATH"], a: "Whether a variable is empty (zero-length string)", exp: "-z returns true if the string has length 0 — the variable is empty or unset. Used in env var guards: if [ -z \"$TELEGRAM_BOT_TOKEN\" ]; then echo 'missing'; exit 1; fi" },
+  { q: "What is wrong with this bash if statement: `if [-d \"$DIR\"]; then`?", options: ["Missing spaces inside brackets — must be [ -d \"$DIR\" ]","Missing semicolon before then","Should be -dir not -d","The $ prefix is not needed before DIR"], a: "Missing spaces inside brackets — must be [ -d \"$DIR\" ]", exp: "Bash requires a space after [ and before ]. [ is actually a command and -d is its first argument. Without spaces bash throws 'command not found' or 'unexpected token'." },
+  { q: "What is the difference between `export KEY=value` and `KEY=value` in bash?", options: ["export makes the variable visible to child processes; bare assignment stays in the current shell only","export writes the value to disk for persistence","export applies to all users; bare assignment is for the current user only","They are identical — export is just convention"], a: "export makes the variable visible to child processes; bare assignment stays in the current shell only", exp: "Without export, only the current shell can read KEY. With export, any subprocess you launch (a script, claude, curl) inherits it. The quiz bot needs export so Claude can read ANTHROPIC_API_KEY." },
+  { q: "What does the `env` command do when run with no arguments?", options: ["Lists all currently exported environment variables","Sets a custom environment for the next command only","Clears all environment variables from the session","Shows only the PATH variable"], a: "Lists all currently exported environment variables", exp: "env with no arguments prints all exported env vars as KEY=value pairs. env | grep TOKEN filters the list. It confirms a variable was exported and shows its current value." },
+  { q: "What is the shebang line `#!/bin/bash` at the top of a shell script?", options: ["Tells the OS to use /bin/bash to interpret the script","A comment that documents the author's name","The script's file path required by the OS","Enables bash strict mode (set -e)"], a: "Tells the OS to use /bin/bash to interpret the script", exp: "#! (hash-bang/shebang) followed by the interpreter path. When the OS executes the script, it reads line 1 to find the correct interpreter. Without it, the default shell (may not be bash) runs the script." },
+  { q: "Why must you run `chmod 744 quiz-bot.sh` before executing it with `./quiz-bot.sh`?", options: ["New files have no execute permission — chmod 744 grants the owner execute access","chmod 744 grants network access needed for curl calls","Without chmod, the script runs as root and is dangerous","chmod 744 unlocks bash built-ins inside the script"], a: "New files have no execute permission — chmod 744 grants the owner execute access", exp: "A newly created file defaults to 644 (rw-r--r--). Executing a file requires the x bit. 744 = rwxr--r-- — owner can read/write/execute; group and others can only read." },
+  { q: "What does this cron schedule mean: `0 9 * * 1-5`?", options: ["Run at 9:00 AM Monday through Friday","Run every 9 minutes on weekdays","Run at minute 0 of hour 9 on the 1st through 5th of every month","Run 9 times each weekday"], a: "Run at 9:00 AM Monday through Friday", exp: "Cron fields: minute(0) hour(9) day-of-month(*) month(*) day-of-week(1-5=Mon-Fri). minute 0, hour 9 = exactly 9:00 AM. 1-5 in the last field = Monday through Friday." },
+  { q: "Why must a cron job live on an EC2 server rather than a local laptop?", options: ["EC2 is always on — local machines miss cron jobs when the laptop sleeps or shuts down","EC2 has a faster CPU that handles scheduled scripts better","Cron is not installed on macOS by default","macOS cron cannot read environment variables"], a: "EC2 is always on — local machines miss cron jobs when the laptop sleeps or shuts down", exp: "Cron fires at the scheduled time only if the machine is running. A laptop sleeping at midnight misses every midnight cron job. EC2 runs 24/7 so time-sensitive automation always triggers reliably." },
+  { q: "What format should TELEGRAM_CHAT_ID use for a public Telegram channel?", options: ["@channel_username (with the @ prefix)","channel_username (no @ prefix)","The numeric chat ID only (negative number)","t.me/channel_username (full URL)"], a: "@channel_username (with the @ prefix)", exp: "For public channels, the Telegram Bot API accepts @channel_username directly as the chat_id. For private channels you must use the numeric ID (a negative number like -1001234567890)." },
+  { q: "In the quiz bot script, what guards against running the rest of the script when a required env var is missing?", options: ["Check with -z, print an error, and call exit 1","Use set -e at the top of the script","Wrap the whole script in a try/catch block","The script automatically stops when a variable is empty"], a: "Check with -z, print an error, and call exit 1", exp: "Pattern: if [ -z \"$VAR\" ]; then echo 'ERROR: VAR not set'; exit 1; fi — the env var guard. exit 1 stops execution with an error code, preventing silent failure where the script continues with broken state." },
+  { q: "How does the quiz bot determine which class session's slides to use for the quiz?", options: ["Finds the highest-numbered session folder in the cloned repo","Reads a config file named current-session.txt","Maps the current date to a session number automatically","Asks Claude to determine the most recent session"], a: "Finds the highest-numbered session folder in the cloned repo", exp: "The script uses find/ls on the cloned repo to locate the folder with the highest number (e.g., session-13). This way it always picks the latest class's deck.html without manual updates each week." },
+  { q: "What `claude` flags did the quiz bot use to generate a quiz question from deck.html?", options: ["-p with --model claude-sonnet, --allowedTools 'web_search bash', and -v for verbose output","--interactive with --file deck.html --format quiz","--headless with --context deck.html","--model gpt-4 and --tools all"], a: "-p with --model claude-sonnet, --allowedTools 'web_search bash', and -v for verbose output", exp: "-p runs Claude non-interactively. --model selects the model (Sonnet = cost/quality sweet spot). --allowedTools restricts which tools Claude may use. -v shows verbose output during generation." },
+  { q: "What exit code does `git clone` return when the remote URL is invalid or access is denied?", options: ["128 — fatal git error","1 — general error","2 — syntax/misuse error","403 — forbidden"], a: "128 — fatal git error", exp: "128 is git's exit code for fatal errors: invalid repo URL, permission denied (missing SSH key), no network, etc. Scripts should check for exit code 128 after git clone/pull and surface a clear error message." },
+];
+
+const C13_TYPE = [
+  { prompt: "Clone a GitHub repo using SSH URL git@github.com:username/class-repo.git into the current directory.", hint: "git clone followed by the SSH URL", answers: ["git clone git@github.com:username/class-repo.git"], exp: "git clone creates a new directory named after the repo and downloads the full history. Run it once — use git pull for all future updates." },
+  { prompt: "Update an existing local repo by fetching and merging the latest changes from origin.", hint: "git pull (run from inside the repo directory)", answers: ["git pull", "git pull origin main"], exp: "git pull fetches from origin and merges into the current branch. You must be inside the repo directory — otherwise 'fatal: not a git repository'." },
+  { prompt: "Show the remote URL(s) that the current local repo is connected to.", hint: "git remote with -v flag", answers: ["git remote -v"], exp: "-v (verbose) shows the URL for both fetch and push. SSH URLs start with git@github.com; HTTPS URLs start with https://github.com." },
+  { prompt: "In a bash script, check if the directory stored in $REPO_DIR exists; if not, print 'not found' and exit.", hint: "if with -z or -d flag and proper spacing in brackets", answers: ["if [ ! -d \"$REPO_DIR\" ]; then echo 'not found'; exit 1; fi", "if [ ! -d \"$REPO_DIR\" ]; then echo not found; exit 1; fi"], exp: "! -d means 'does NOT exist as a directory'. Spaces inside [ ] are required — [ is a command. exit 1 stops the script on failure." },
+  { prompt: "Make quiz-bot.sh executable by the owner, readable by everyone else.", hint: "chmod 744 — owner rwx, group/others r--", answers: ["chmod 744 quiz-bot.sh"], exp: "744 = rwxr--r-- — owner can execute, group and others can only read. Required before ./quiz-bot.sh will run." },
+  { prompt: "Print the exit code of the command that was just run.", hint: "echo with special variable $?", answers: ["echo $?"], exp: "$? holds the exit code of the last command: 0=success, non-zero=failure. Check it immediately after the command — any subsequent command resets it." },
+  { prompt: "Export an environment variable REPO_DIR set to /home/ec2-user/class-repo for the current session.", hint: "export KEY=value", answers: ["export REPO_DIR=/home/ec2-user/class-repo", "export REPO_DIR=\"/home/ec2-user/class-repo\""], exp: "export makes the variable available to child processes (scripts, subprocesses). Without export, subprocesses can't read REPO_DIR." },
+  { prompt: "List all environment variables in the current session that contain the word 'TELEGRAM'.", hint: "env piped to grep", answers: ["env | grep TELEGRAM", "env | grep -i telegram"], exp: "env lists all exported vars. grep filters for the pattern. Use -i for case-insensitive matching." },
+];
+
+const C13_FLASH = [
+  { q: "When do you use git clone vs git pull?", a: "git clone: one-time download of a repo to a new directory. git pull: updates an existing local repo. Clone first, then pull every time you need the latest changes." },
+  { q: "Why do SSH git remotes stay authenticated while HTTPS prompts for login?", a: "SSH uses public/private key cryptography — once your public key is on GitHub, no password ever. HTTPS requires username + personal access token each session unless a credential manager caches it." },
+  { q: "What does git remote -v tell you?", a: "Shows the URL your local repo is connected to — for both fetch and push. SSH URL starts with git@github.com; HTTPS starts with https://github.com. Run from inside the repo." },
+  { q: "What are the key bash exit codes to know?", a: "0=success. 1=general error/no such file. 2=syntax or shell built-in misuse. 128=fatal git error (bad URL, no repo, permission denied). Check with echo $? immediately after the command." },
+  { q: "What do -d, -f, and -z test in a bash if statement?", a: "-d: does this path exist as a directory? -f: is this a regular file? -z: is this string empty (zero length)? Used to guard scripts: check for existing repos, files, and empty env vars." },
+  { q: "export KEY=value vs KEY=value — what is the difference?", a: "export makes KEY visible to child processes (scripts, claude, curl, node). Plain KEY=value stays in the current shell — subprocesses cannot read it. Always export vars that scripts need to inherit." },
+  { q: "What does #!/bin/bash at the top of a script do?", a: "The shebang — tells the OS to use /bin/bash to interpret the script. Without it, the default shell (may not be bash) runs the script, causing unexpected behavior with bash-specific syntax." },
+  { q: "What permissions does chmod 744 grant and why use it for scripts?", a: "744 = rwxr--r-- — owner can read/write/execute; group and others can only read. Use it on shell scripts so you can run ./script.sh but others cannot modify or accidentally execute it." },
+  { q: "What are the 5 crontab fields in order?", a: "minute (0-59) | hour (0-23) | day-of-month (1-31) | month (1-12) | day-of-week (0-7, Sun=0). Example: 0 9 * * 1-5 = 9:00 AM Monday through Friday." },
+  { q: "What is the env var guard pattern in bash scripts?", a: "if [ -z \"$VAR\" ]; then echo 'ERROR: VAR not set'; exit 1; fi — checks if variable is empty, prints a clear error, and exits immediately with code 1. Prevents silent failures." },
+  { q: "What are the 5 steps of the quiz bot script in order?", a: "1) Check required env vars (exit if missing). 2) Clone repo first time, git pull on subsequent runs. 3) Find highest-numbered session folder. 4) Run claude -p to generate quiz from deck.html. 5) Post to Telegram via curl." },
+  { q: "Why run cron jobs on EC2 rather than a local laptop?", a: "EC2 runs 24/7 — cron fires reliably at any scheduled hour. A sleeping laptop misses its jobs entirely. Always deploy time-sensitive automation (bots, daily reports) to an always-on server." },
+];
+
+const C13_SCENARIOS = [
+  { scenario: "Write the clone-or-pull conditional logic in a bash script — arrange in correct order.", tokens: ["if [ -d \"$REPO_DIR\" ]; then", "git -C \"$REPO_DIR\" pull", "else", "git clone \"$DEX_REPO\" \"$REPO_DIR\"", "fi"], answer: ["if [ -d \"$REPO_DIR\" ]; then", "git -C \"$REPO_DIR\" pull", "else", "git clone \"$DEX_REPO\" \"$REPO_DIR\"", "fi"] },
+  { scenario: "Quiz bot execution — arrange the 5 phases in the correct order.", tokens: ["Check required env vars (TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID, DEX_REPO)", "Clone repo if missing, git pull if it already exists", "Find the highest-numbered session folder in the repo", "Call claude -p to generate a quiz question from deck.html", "Post the quiz to the Telegram channel via curl"], answer: ["Check required env vars (TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID, DEX_REPO)", "Clone repo if missing, git pull if it already exists", "Find the highest-numbered session folder in the repo", "Call claude -p to generate a quiz question from deck.html", "Post the quiz to the Telegram channel via curl"] },
+  { scenario: "Set up env vars and run the quiz bot for the first time — correct order.", tokens: ["export TELEGRAM_BOT_TOKEN='your-bot-token'", "export TELEGRAM_CHAT_ID='@yourchannel'", "export DEX_REPO='git@github.com:org/class-repo.git'", "chmod 744 quiz-bot.sh", "./quiz-bot.sh"], answer: ["export TELEGRAM_BOT_TOKEN='your-bot-token'", "export TELEGRAM_CHAT_ID='@yourchannel'", "export DEX_REPO='git@github.com:org/class-repo.git'", "chmod 744 quiz-bot.sh", "./quiz-bot.sh"] },
+  { scenario: "Debug a failing quiz bot — step through the diagnostic flow in the correct order.", tokens: ["echo $? after the failing step to read the exit code", "Check env vars are set: echo $TELEGRAM_BOT_TOKEN", "Verify repo cloned correctly: ls $REPO_DIR", "Test Telegram post manually with curl to isolate the failure"], answer: ["echo $? after the failing step to read the exit code", "Check env vars are set: echo $TELEGRAM_BOT_TOKEN", "Verify repo cloned correctly: ls $REPO_DIR", "Test Telegram post manually with curl to isolate the failure"] },
 ];
 
 const C11_SCENARIOS = [
