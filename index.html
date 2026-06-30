@@ -22,6 +22,7 @@
     --c11: #84cc16;
     --c12: #f87171;
     --c13: #e879f9;
+    --c14: #60a5fa;
     --green: #22c55e;
     --red: #ef4444;
     --yellow: #eab308;
@@ -93,6 +94,7 @@
   .c11 { background: rgba(132,204,22,.15); color: var(--c11); }
   .c12 { background: rgba(248,113,113,.15); color: var(--c12); }
   .c13 { background: rgba(232,121,249,.15); color: var(--c13); }
+  .c14 { background: rgba(96,165,250,.15); color: var(--c14); }
   .class-name { font-size: 14px; font-weight: bold; }
   .class-topics { font-size: 11px; color: var(--muted); margin-left: auto; }
   .class-modes { padding: 12px 20px 16px; display: flex; flex-wrap: wrap; gap: 10px; }
@@ -118,6 +120,7 @@
   .mode-btn.c11:hover { border-color: var(--c11); color: var(--c11); }
   .mode-btn.c12:hover { border-color: var(--c12); color: var(--c12); }
   .mode-btn.c13:hover { border-color: var(--c13); color: var(--c13); }
+  .mode-btn.c14:hover { border-color: var(--c14); color: var(--c14); }
   .mode-icon { margin-right: 6px; }
 
   /* ── SCREEN ── */
@@ -517,6 +520,21 @@
       <button class="mode-btn c13" onclick="startMode('c13-scenario')"><span class="mode-icon">🤖</span>Scenario Builder</button>
     </div>
   </div>
+
+  <!-- CLASS 14 -->
+  <div class="class-card">
+    <div class="class-header">
+      <span class="class-badge c14">Class 14</span>
+      <span class="class-name">Python Intro — Variables, Types, Lists &amp; Loops</span>
+      <span class="class-topics">python3 · variables · str/int/float/bool · lists · indexing · for loops · REPL</span>
+    </div>
+    <div class="class-modes">
+      <button class="mode-btn c14" onclick="startMode('c14-quiz')"><span class="mode-icon">⚡</span>Hard Quiz (20q)</button>
+      <button class="mode-btn c14" onclick="startMode('c14-type')"><span class="mode-icon">⌨️</span>Type the Command</button>
+      <button class="mode-btn c14" onclick="startMode('c14-flash')"><span class="mode-icon">🃏</span>Flashcards</button>
+      <button class="mode-btn c14" onclick="startMode('c14-scenario')"><span class="mode-icon">🐍</span>Scenario Builder</button>
+    </div>
+  </div>
 </div>
 
 <!-- ═══════════════════════ SCREENS ═══════════════════════ -->
@@ -553,6 +571,10 @@
 <div id="c13-type" class="screen"></div>
 <div id="c13-flash" class="screen"></div>
 <div id="c13-scenario" class="screen"></div>
+<div id="c14-quiz" class="screen"></div>
+<div id="c14-type" class="screen"></div>
+<div id="c14-flash" class="screen"></div>
+<div id="c14-scenario" class="screen"></div>
 
 <script>
 // ═══════════════════════════════════════════════════════
@@ -614,6 +636,10 @@ function startMode(id) {
   if (id === 'c13-type')     buildType('c13-type', C13_TYPE, 'c13', 'Git Clone, Bash & Quiz Bot');
   if (id === 'c13-flash')    buildFlash('c13-flash', C13_FLASH, 'c13', 'Bash Scripting Flashcards');
   if (id === 'c13-scenario') buildC13Scenario('c13-scenario');
+  if (id === 'c14-quiz')     buildQuiz('c14-quiz', C14_QUIZ, 'c14', 'Python Intro');
+  if (id === 'c14-type')     buildType('c14-type', C14_TYPE, 'c14', 'Python Intro');
+  if (id === 'c14-flash')    buildFlash('c14-flash', C14_FLASH, 'c14', 'Python Flashcards');
+  if (id === 'c14-scenario') buildC14Scenario('c14-scenario');
 }
 function goMenu() {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -628,7 +654,7 @@ function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
 function buildQuiz(containerId, questions, cls, title) {
   const qs = shuffle(questions);
   let idx = 0, score = 0;
-  const color = {c4:'var(--c4)',c5:'var(--c5)',c6:'var(--c6)',c7:'var(--c7)',c8:'var(--c8)',c9:'var(--c9)',c10:'var(--c10)',c11:'var(--c11)',c12:'var(--c12)',c13:'var(--c13)'}[cls];
+  const color = {c4:'var(--c4)',c5:'var(--c5)',c6:'var(--c6)',c7:'var(--c7)',c8:'var(--c8)',c9:'var(--c9)',c10:'var(--c10)',c11:'var(--c11)',c12:'var(--c12)',c13:'var(--c13)',c14:'var(--c14)'}[cls];
   function render() {
     if (idx >= qs.length) { showResult(containerId, score, qs.length, cls, title, () => buildQuiz(containerId, questions, cls, title)); return; }
     const q = qs[idx];
@@ -672,7 +698,7 @@ function buildQuiz(containerId, questions, cls, title) {
 
 function showResult(containerId, score, total, cls, title, replay) {
   const pct = Math.round(score/total*100);
-  const color = {c4:'var(--c4)',c5:'var(--c5)',c6:'var(--c6)',c7:'var(--c7)',c8:'var(--c8)',c9:'var(--c9)',c10:'var(--c10)',c11:'var(--c11)',c12:'var(--c12)',c13:'var(--c13)'}[cls];
+  const color = {c4:'var(--c4)',c5:'var(--c5)',c6:'var(--c6)',c7:'var(--c7)',c8:'var(--c8)',c9:'var(--c9)',c10:'var(--c10)',c11:'var(--c11)',c12:'var(--c12)',c13:'var(--c13)',c14:'var(--c14)'}[cls];
   const emoji = pct >= 85 ? '🏆' : pct >= 65 ? '💪' : '📚';
   const msg = pct >= 85 ? 'Elite. You know this cold.' : pct >= 65 ? 'Solid — keep drilling the misses.' : 'Review the notes and try again.';
   document.getElementById(containerId).innerHTML = `
@@ -696,7 +722,7 @@ function showResult(containerId, score, total, cls, title, replay) {
 function buildType(containerId, questions, cls, title) {
   const qs = shuffle(questions);
   let idx = 0, score = 0;
-  const color = {c4:'var(--c4)',c5:'var(--c5)',c6:'var(--c6)',c7:'var(--c7)',c8:'var(--c8)',c9:'var(--c9)',c10:'var(--c10)',c11:'var(--c11)',c12:'var(--c12)',c13:'var(--c13)'}[cls];
+  const color = {c4:'var(--c4)',c5:'var(--c5)',c6:'var(--c6)',c7:'var(--c7)',c8:'var(--c8)',c9:'var(--c9)',c10:'var(--c10)',c11:'var(--c11)',c12:'var(--c12)',c13:'var(--c13)',c14:'var(--c14)'}[cls];
   function render() {
     if (idx >= qs.length) { showResult(containerId, score, qs.length, cls, title, () => buildType(containerId, questions, cls, title)); return; }
     const q = qs[idx];
@@ -811,6 +837,7 @@ function buildScenario(containerId) { buildDragDrop(containerId, EC2_SCENARIOS, 
 function buildC11Scenario(containerId) { buildDragDrop(containerId, C11_SCENARIOS, 'Troubleshooting & AI Bots — Scenario Builder', 'Arrange the steps in the correct order:'); }
 function buildC12Scenario(containerId) { buildDragDrop(containerId, C12_SCENARIOS, 'Secrets Manager & IAM — Scenario Builder', 'Arrange the steps in the correct order:'); }
 function buildC13Scenario(containerId) { buildDragDrop(containerId, C13_SCENARIOS, 'Bash Scripting & Quiz Bot — Scenario Builder', 'Arrange the steps in the correct order:'); }
+function buildC14Scenario(containerId) { buildDragDrop(containerId, C14_SCENARIOS, 'Python Intro — Scenario Builder', 'Arrange the steps in the correct order:'); }
 
 function buildDragDrop(containerId, scenarios, title, label, excludeIdx) {
   let scIdx;
@@ -834,7 +861,7 @@ function buildDragDrop(containerId, scenarios, title, label, excludeIdx) {
         ${available.map((t,i) => `<div class="drag-token" draggable="true" data-src="avail" data-idx="${i}" ondragstart="dragStart(event,'avail',${i})" ondragend="dragEnd(event)">${t}</div>`).join('')}
       </div>
       <button class="check-btn" onclick="checkDrop()">✓ Check Answer</button>
-      <button class="check-btn" onclick="buildDragDrop('${containerId}',${containerId.includes('c4')?'PIPE_SCENARIOS':containerId.includes('c5')?'CHMOD_SCENARIOS':containerId.includes('c6')?'WORKFLOW_SCENARIOS':containerId.includes('c13')?'C13_SCENARIOS':containerId.includes('c12')?'C12_SCENARIOS':containerId.includes('c11')?'C11_SCENARIOS':'EC2_SCENARIOS'},'${title}','${label}',${scIdx})">↺ New Scenario</button>
+      <button class="check-btn" onclick="buildDragDrop('${containerId}',${containerId.includes('c4')?'PIPE_SCENARIOS':containerId.includes('c5')?'CHMOD_SCENARIOS':containerId.includes('c6')?'WORKFLOW_SCENARIOS':containerId.includes('c14')?'C14_SCENARIOS':containerId.includes('c13')?'C13_SCENARIOS':containerId.includes('c12')?'C12_SCENARIOS':containerId.includes('c11')?'C11_SCENARIOS':'EC2_SCENARIOS'},'${title}','${label}',${scIdx})">↺ New Scenario</button>
       <div class="builder-feedback" id="bfeed"></div>`;
 
     window.dragStart = (e, src, i) => { dragging = {src, i}; e.target.classList.add('dragging'); };
@@ -1320,6 +1347,62 @@ const C11_SCENARIOS = [
   { scenario: "Set up the Claude CLI on a fresh Amazon Linux EC2 so it can run one-shot prompts headlessly.", tokens: ["sudo dnf install nodejs npm -y", "npm install -g @anthropic-ai/claude-code", "export ANTHROPIC_API_KEY=\"sk-ant-...\"", "claude -p \"say hi\""], answer: ["sudo dnf install nodejs npm -y", "npm install -g @anthropic-ai/claude-code", "export ANTHROPIC_API_KEY=\"sk-ant-...\"", "claude -p \"say hi\""] },
   { scenario: "Create a Telegram bot and configure it to post to your new public channel.", tokens: ["message @BotFather and run /newbot", "copy the token and export TELEGRAM_BOT_TOKEN", "create a public Telegram channel", "add the bot as a channel administrator"], answer: ["message @BotFather and run /newbot", "copy the token and export TELEGRAM_BOT_TOKEN", "create a public Telegram channel", "add the bot as a channel administrator"] },
   { scenario: "Launch an EC2 instance with nginx pre-installed using the AWS CLI — no manual SSH needed.", tokens: ["write user-data.sh (dnf install + enable nginx)", "aws ec2 run-instances --user-data file://user-data.sh", "aws ec2 describe-instances to get the public IP", "curl http://<public-IP> to verify nginx is serving"], answer: ["write user-data.sh (dnf install + enable nginx)", "aws ec2 run-instances --user-data file://user-data.sh", "aws ec2 describe-instances to get the public IP", "curl http://<public-IP> to verify nginx is serving"] },
+];
+
+const C14_QUIZ = [
+  { q: "You run this in terminal: <code>python3 -c \"print('2' + '2')\"</code> — what prints?", options: ["22","4","2 2","TypeError: can only concatenate str (not int) to str"], a: "22", exp: "Both '2' values are strings (quotes make them strings). + on strings joins them — '2' + '2' = '22'. For math you need integers: print(2 + 2) prints 4." },
+  { q: "What command launches the Python interactive REPL (Read-Eval-Print Loop)?", options: ["python3","python3 shell","python3 --interactive","python3 -r"], a: "python3", exp: "Running python3 with no arguments opens the interactive interpreter. You see >>> and can type code line by line. Exit with exit() or Ctrl+D." },
+  { q: "You have: classes = [\"git\",\"linux\",\"networking\"]. What does classes[3] return?", options: ["IndexError: list index out of range","networking","None","git"], a: "IndexError: list index out of range", exp: "Python uses zero-based indexing: [0]=git, [1]=linux, [2]=networking. Index 3 does not exist — Python raises IndexError. Valid indexes are 0, 1, 2." },
+  { q: "topic = \"git\". What does print(\"topic\") output?", options: ["topic","git","\"topic\"","NameError: name 'topic' is not defined"], a: "topic", exp: "Quoting inside print() makes it a string literal — print prints the word 'topic' exactly. To print the variable's value, write print(topic) without quotes." },
+  { q: "What does print(type(42)) output?", options: ["<class 'int'>","int","42","<type integer>"], a: "<class 'int'>", exp: "type() returns the type object. Python displays it as <class 'int'>. This is how you confirm a value is an integer vs a string or float inside the REPL." },
+  { q: "What does print(type(3.14)) output?", options: ["<class 'float'>","<class 'int'>","<class 'decimal'>","3.14"], a: "<class 'float'>", exp: "Any number with a decimal point is a float in Python. type(3.14) returns float. type(3) returns int. Distinction matters: int / int may give different results than float / int." },
+  { q: "You write a for loop but forget to indent the body. What happens?", options: ["IndentationError: expected an indented block","The loop runs without executing the body","SyntaxError: invalid syntax on the for line","Python auto-indents and runs fine"], a: "IndentationError: expected an indented block", exp: "Python uses indentation (4 spaces) to define code blocks — there are no braces. Forgetting to indent the loop body is a syntax error. The interpreter won't run the file at all." },
+  { q: "What does classes[-1] return when classes = [\"git\",\"linux\",\"networking\"]?", options: ["networking","git","IndexError","linux"], a: "networking", exp: "Negative indexes count from the end: -1 = last element, -2 = second to last. classes[-1] is 'networking'. Useful for grabbing the last item without knowing the list length." },
+  { q: "What is the result of: len([\"aws\",\"linux\",\"python\",\"git\"])?", options: ["4","3","0","IndexError"], a: "4", exp: "len() returns the number of items in a list. Four items = 4. Note: the last valid index is len-1 (index 3). Accessing index 4 would raise IndexError." },
+  { q: "Which of these creates a tuple, NOT a list?", options: ["(\"git\", \"linux\")","[\"git\", \"linux\"]","{\"git\", \"linux\"}","<\"git\", \"linux\">"], a: "(\"git\", \"linux\")", exp: "Parentheses () create a tuple (immutable — cannot be changed after creation). Square brackets [] create a list (mutable). Curly braces {} create a set or dict. Tuples are faster; lists are flexible." },
+  { q: "You run python3 script.py and get: NameError: name 'topic' is not defined. What is the most likely cause?", options: ["You used topic before assigning it a value","topic is a reserved Python keyword","The file was not saved before running","python3 cannot read variable names with lowercase letters"], a: "You used topic before assigning it a value", exp: "Python reads files top to bottom. If you print(topic) before topic = 'git', it crashes with NameError. Fix: always assign the variable before you use it. Also check: did you save the file?" },
+  { q: "What does int(\"42\") return?", options: ["42 (integer)","\"42\" (still a string)","42.0 (float)","TypeError"], a: "42 (integer)", exp: "int() converts a string to an integer. int(\"42\") = 42. Now you can do math: int(\"40\") + 2 = 42. Without conversion, \"40\" + 2 raises TypeError because you can't add string and int." },
+  { q: "What does str(42) return?", options: ["\"42\" (string)","42 (integer unchanged)","42.0 (float)","TypeError"], a: "\"42\" (string)", exp: "str() converts any value to its string representation. str(42) = \"42\". Now you can concatenate it: \"Score: \" + str(42) = \"Score: 42\". Without str(), \"Score: \" + 42 raises TypeError." },
+  { q: "classes = [\"git\",\"linux\"]; classes.append(\"aws\"); print(classes) — what prints?", options: ["['git', 'linux', 'aws']","['git', 'linux']","['aws', 'git', 'linux']","Error: list is immutable"], a: "['git', 'linux', 'aws']", exp: ".append() adds one item to the END of the list in-place and returns None. The original list is modified. After append, classes has 3 elements: git, linux, aws." },
+  { q: "Which Python command checks the installed Python version from the terminal (not inside Python)?", options: ["python3 --version","python3 -v","python3 version","python3 --info"], a: "python3 --version", exp: "Run python3 --version in your terminal (not inside the REPL). It prints something like: Python 3.11.4. Useful to confirm python3 is installed and which version before running scripts." },
+  { q: "For a for loop over a list of 3 items — how many times does the indented block run?", options: ["3","1","0 (loops must be initialized)","Depends on the variable name used"], a: "3", exp: "The loop body runs once per item. for c in [\"git\",\"linux\",\"net\"]: runs 3 times — c takes each value in turn: \"git\", then \"linux\", then \"net\". The variable name doesn't matter." },
+  { q: "What is the standard Python indentation inside a for loop?", options: ["4 spaces","1 tab (any size)","2 spaces","Indentation is optional in Python"], a: "4 spaces", exp: "PEP 8 (Python style guide) requires 4 spaces per indent level. VS Code auto-inserts 4 spaces when you press Enter after a colon. Mixing tabs and spaces causes TabError." },
+  { q: "You run: python3 -c \"print(2 + 2)\" — what prints?", options: ["4","22","2 + 2","TypeError"], a: "4", exp: "Inside quotes, 2 and 2 are integers (no quotes around them). + on integers is math: 2 + 2 = 4. The -c flag lets you run a Python one-liner directly in the terminal without a file." },
+  { q: "What is a Boolean in Python and what are its only two values?", options: ["True or False","1 or 0","yes or no","on or off"], a: "True or False", exp: "Boolean is the fourth basic data type (after str, int, float). Values are exactly True and False — capital first letter, no quotes. type(True) returns <class 'bool'>. Used in if conditions." },
+  { q: "What is the difference between a list and a tuple in Python?", options: ["List is mutable (changeable); tuple is immutable (fixed after creation)","List uses (), tuple uses []","Tuple can hold more items than a list","List is for strings only; tuple is for integers only"], a: "List is mutable (changeable); tuple is immutable (fixed after creation)", exp: "Lists [] can be appended to, updated, and deleted. Tuples () cannot be changed after creation — no append, no item assignment. Use tuples for data that should never change (coordinates, RGB colors)." },
+];
+
+const C14_TYPE = [
+  { prompt: "Launch the Python 3 interactive interpreter in your terminal.", hint: "python3 with no arguments", answers: ["python3"], exp: "python3 with no arguments opens the REPL — you see >>> and can type Python code line by line. Exit with exit() or press Ctrl+D." },
+  { prompt: "Run a Python script file named script.py located in the current directory.", hint: "python3 followed by the filename", answers: ["python3 script.py"], exp: "python3 script.py reads and executes the file top to bottom. Make sure you saved the file first — unsaved changes won't run. VS Code shows a dot on the tab when unsaved." },
+  { prompt: "Check which version of Python 3 is installed on this machine.", hint: "python3 with -- version flag", answers: ["python3 --version", "python3 --version"], exp: "python3 --version prints the installed version (e.g., Python 3.11.4). Run this in the terminal, not inside the Python REPL." },
+  { prompt: "Run a Python one-liner that prints 'hello devops' directly from the terminal without creating a file.", hint: "python3 -c flag followed by the code in quotes", answers: ["python3 -c \"print('hello devops')\"", "python3 -c 'print(\"hello devops\")'" ], exp: "-c lets you run Python code inline. Wrap the code in double quotes, use single quotes inside. Great for quick tests without opening VS Code." },
+  { prompt: "Inside the Python REPL, check the data type of the value 3.14.", hint: "type() function wrapped in print()", answers: ["print(type(3.14))", "type(3.14)"], exp: "type() returns the type object. In the REPL you can call type(3.14) directly — it echoes <class 'float'>. In a script, wrap it in print() to see output." },
+  { prompt: "Exit the Python interactive REPL and return to the terminal shell.", hint: "exit() with parentheses, or keyboard shortcut", answers: ["exit()", "quit()"], exp: "exit() and quit() both close the REPL. Ctrl+D also works. The () are required — exit without parentheses just prints text describing how to exit." },
+  { prompt: "In a Python script, define a list called tools containing git, linux, and aws, then print its length.", hint: "tools = [...] then print(len(...))", answers: ["tools = [\"git\", \"linux\", \"aws\"]\nprint(len(tools))", "tools = ['git', 'linux', 'aws']\nprint(len(tools))"], exp: "len() returns the number of items. Three items = 3. The list uses square brackets [], items separated by commas, strings in quotes." },
+  { prompt: "Write a for loop that prints each item in a list called classes on its own line.", hint: "for variable in list: then indented print()", answers: ["for c in classes:\n    print(c)", "for item in classes:\n    print(item)"], exp: "The loop variable (c or item) takes each value in turn. The print() must be indented 4 spaces — that indentation is what tells Python it's inside the loop body." },
+];
+
+const C14_FLASH = [
+  { q: "What is a variable in Python?", a: "A name that stores a value. topic = \"git\" assigns the string \"git\" to topic. Use the name anywhere to get the value. Change it once and every reference updates. No quotes around the variable name when using it." },
+  { q: "What are the 4 basic Python data types from Class 14?", a: "str (text in quotes: \"hello\"), int (whole number: 42), float (decimal: 3.14), bool (True or False). type() reveals which type a value is. Quotes make it a string — even \"42\" is a string, not a number." },
+  { q: "What is the difference between print(topic) and print(\"topic\")?", a: "print(topic) outputs the VALUE stored in the variable topic (e.g., git). print(\"topic\") outputs the literal word 'topic' — the quotes make it a string, ignoring any variable with that name." },
+  { q: "What does Python list indexing start at?", a: "Zero. classes = [\"git\",\"linux\",\"net\"]: index 0=git, 1=linux, 2=net. Last item: classes[-1]. Accessing an index beyond the list raises IndexError. len(classes) - 1 is always the last valid index." },
+  { q: "How does a for loop work in Python?", a: "for c in classes: runs the indented body once per item. c takes each value automatically. No need for indexes. Body MUST be indented 4 spaces — indentation defines the loop boundary. Removing indent ends the loop." },
+  { q: "What is the difference between \"2\" + \"2\" and 2 + 2 in Python?", a: "\"2\" + \"2\" = \"22\" (string concatenation — joins text). 2 + 2 = 4 (integer math). Quotes determine type. Common bug: reading numbers from user input — they come as strings, must convert: int(\"2\") + 2 = 4." },
+  { q: "How do you run a Python file from the terminal?", a: "python3 script.py — same idea as bash: the interpreter (python3) runs the file (script.py). Must save the file first. VS Code shows a white dot on the tab when unsaved. Check python3 --version to confirm it's installed." },
+  { q: "What does python3 -c do?", a: "Runs a Python code string directly in the terminal without a file. Example: python3 -c \"print('hello')\" prints hello. Useful for quick tests, one-liners, or checking behavior without opening an editor." },
+  { q: "What is the Python REPL and how do you start it?", a: "Read-Eval-Print Loop — an interactive prompt where you type Python code and see results immediately. Start it with python3 (no file). You see >>>. Each line runs on Enter. Exit with exit() or Ctrl+D." },
+  { q: "What are list vs tuple in Python?", a: "List [] is mutable — you can append, change, and delete items. Tuple () is immutable — fixed after creation. Both are ordered and indexed from 0. Use list when data changes; use tuple for fixed data (coordinates, config values)." },
+  { q: "What does len() return and what is the IndexError trap?", a: "len(list) returns the count of items (e.g., 4 for a 4-item list). The last valid index is len-1 (index 3 for a 4-item list). Accessing index 4 raises IndexError. Use -1 as a safe way to get the last item." },
+  { q: "How do you convert between str, int, and float in Python?", a: "int(\"42\") → 42, str(42) → \"42\", float(\"3.14\") → 3.14, int(3.9) → 3 (truncates, no rounding). Always convert before mixing types in operations — \"Score: \" + str(42) works; \"Score: \" + 42 raises TypeError." },
+];
+
+const C14_SCENARIOS = [
+  { scenario: "Write a Python script that defines a list and prints each item — arrange in correct order.", tokens: ["classes = [\"git\", \"linux\", \"python\"]", "for c in classes:", "    print(c)"], answer: ["classes = [\"git\", \"linux\", \"python\"]", "for c in classes:", "    print(c)"] },
+  { scenario: "Debug why print(topic) prints the word 'topic' instead of 'git' — steps in order.", tokens: ["Check: is topic wrapped in quotes inside print()?", "If print(\"topic\") — remove the quotes to get the variable value", "Change to print(topic) without quotes", "Save the file and run python3 script.py again"], answer: ["Check: is topic wrapped in quotes inside print()?", "If print(\"topic\") — remove the quotes to get the variable value", "Change to print(topic) without quotes", "Save the file and run python3 script.py again"] },
+  { scenario: "Set up and run your first Python script in VS Code — correct sequence.", tokens: ["Install VS Code and enable autosave (File > Autosave)", "Install the Python extension from the VS Code marketplace", "Create script.py and write: print('hello devops')", "Open terminal in VS Code and run python3 script.py"], answer: ["Install VS Code and enable autosave (File > Autosave)", "Install the Python extension from the VS Code marketplace", "Create script.py and write: print('hello devops')", "Open terminal in VS Code and run python3 script.py"] },
+  { scenario: "Fix an IndexError: list index out of range — diagnostic steps in order.", tokens: ["Print the list to see how many items it has", "Check the index you used — remember indexing starts at 0", "Use len(classes) to find the last valid index (len - 1)", "Fix the index or use classes[-1] for the last item"], answer: ["Print the list to see how many items it has", "Check the index you used — remember indexing starts at 0", "Use len(classes) to find the last valid index (len - 1)", "Fix the index or use classes[-1] for the last item"] },
 ];
 </script>
 </body>
