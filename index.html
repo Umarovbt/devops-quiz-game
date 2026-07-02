@@ -61,12 +61,32 @@
     text-transform: uppercase;
     margin-bottom: 32px;
   }
+  /* each card's accent is bound once here, then everything inside
+     it (header, border, buttons, cursor glow) reads var(--accent) */
+  .class-card[data-accent="c4"]  { --accent: var(--c4); }
+  .class-card[data-accent="c5"]  { --accent: var(--c5); }
+  .class-card[data-accent="c6"]  { --accent: var(--c6); }
+  .class-card[data-accent="c7"]  { --accent: var(--c7); }
+  .class-card[data-accent="c8"]  { --accent: var(--c8); }
+  .class-card[data-accent="c9"]  { --accent: var(--c9); }
+  .class-card[data-accent="c10"] { --accent: var(--c10); }
+  .class-card[data-accent="c11"] { --accent: var(--c11); }
+  .class-card[data-accent="c12"] { --accent: var(--c12); }
+  .class-card[data-accent="c13"] { --accent: var(--c13); }
+  .class-card[data-accent="c14"] { --accent: var(--c14); }
+
   .class-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
+    --accent: var(--muted);
+    background:
+      linear-gradient(165deg,
+        color-mix(in srgb, var(--accent) 20%, var(--surface)) 0%,
+        color-mix(in srgb, var(--accent) 7%, var(--surface)) 55%,
+        var(--surface) 100%);
+    border: 1px solid color-mix(in srgb, var(--accent) 38%, var(--border));
     border-radius: 8px;
     margin-bottom: 16px;
     overflow: hidden;
+    transition: border-color .25s ease, box-shadow .25s ease, transform .25s ease;
   }
   .class-header {
     padding: 16px 20px;
@@ -74,7 +94,8 @@
     align-items: center;
     gap: 14px;
     cursor: pointer;
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid color-mix(in srgb, var(--accent) 28%, var(--border));
+    background: color-mix(in srgb, var(--accent) 5%, transparent);
   }
   .class-badge {
     font-size: 10px;
@@ -99,8 +120,8 @@
   .class-topics { font-size: 11px; color: var(--muted); margin-left: auto; }
   .class-modes { padding: 12px 20px 16px; display: flex; flex-wrap: wrap; gap: 10px; }
   .mode-btn {
-    background: var(--surface2);
-    border: 1px solid var(--border);
+    background: color-mix(in srgb, var(--accent) 12%, var(--surface2));
+    border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--border));
     color: var(--text);
     padding: 8px 16px;
     border-radius: 6px;
@@ -109,18 +130,7 @@
     cursor: pointer;
     transition: all 0.15s;
   }
-  .mode-btn:hover { border-color: var(--muted); transform: translateY(-1px); }
-  .mode-btn.c4:hover { border-color: var(--c4); color: var(--c4); }
-  .mode-btn.c5:hover { border-color: var(--c5); color: var(--c5); }
-  .mode-btn.c6:hover { border-color: var(--c6); color: var(--c6); }
-  .mode-btn.c7:hover { border-color: var(--c7); color: var(--c7); }
-  .mode-btn.c8:hover { border-color: var(--c8); color: var(--c8); }
-  .mode-btn.c9:hover { border-color: var(--c9); color: var(--c9); }
-  .mode-btn.c10:hover { border-color: var(--c10); color: var(--c10); }
-  .mode-btn.c11:hover { border-color: var(--c11); color: var(--c11); }
-  .mode-btn.c12:hover { border-color: var(--c12); color: var(--c12); }
-  .mode-btn.c13:hover { border-color: var(--c13); color: var(--c13); }
-  .mode-btn.c14:hover { border-color: var(--c14); color: var(--c14); }
+  .mode-btn:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-1px); }
   .mode-icon { margin-right: 6px; }
 
   /* ── SCREEN ── */
@@ -361,9 +371,160 @@
     color: var(--red);
     letter-spacing: 1px;
   }
+
+  /* ══════════════════════════════════════════════════════════
+     AMBIENT LIGHTING — server room after hours
+     Drifting glow drawn from the same per-class accent tokens
+     already used for badges/buttons, so the light means the
+     same thing the color already meant.
+     ══════════════════════════════════════════════════════════ */
+  html { background: var(--bg); }
+  body { position: relative; isolation: isolate; }
+  .header, #menu, .screen { position: relative; z-index: 1; }
+
+  .ambient-lighting { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+  .orb {
+    position: absolute;
+    width: 44vw; height: 44vw; max-width: 600px; max-height: 600px;
+    border-radius: 50%;
+    filter: blur(90px);
+    opacity: .2;
+    mix-blend-mode: screen;
+    will-change: transform;
+  }
+  .orb-a { background: var(--c4); top: -14%; left: -10%; animation: driftA 32s ease-in-out infinite; }
+  .orb-b { background: var(--c8); top: 38%; right: -16%; opacity: .16; animation: driftB 38s ease-in-out infinite; }
+  .orb-c { background: var(--c9); bottom: -20%; left: 20%; opacity: .17; animation: driftC 44s ease-in-out infinite; }
+  .orb-d { background: var(--c5); top: 6%; right: 22%; width: 30vw; height: 30vw; opacity: .12; animation: driftD 36s ease-in-out infinite; }
+
+  @keyframes driftA { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(6vw,7vh) scale(1.1); } }
+  @keyframes driftB { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(-7vw,-4vh) scale(0.9); } }
+  @keyframes driftC { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(4vw,-8vh) scale(1.08); } }
+  @keyframes driftD { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(-5vw,6vh) scale(0.94); } }
+
+  .grid-overlay {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background-image:
+      linear-gradient(rgba(255,255,255,.028) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.028) 1px, transparent 1px);
+    background-size: 46px 46px;
+    -webkit-mask-image: radial-gradient(circle at 50% 0%, rgba(0,0,0,.85), transparent 70%);
+    mask-image: radial-gradient(circle at 50% 0%, rgba(0,0,0,.85), transparent 70%);
+  }
+
+  /* floating cursor light — an ambient source, not a pointer replacement */
+  .cursor-glow, .cursor-dot { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 60; border-radius: 50%; transform: translate(-50%,-50%); }
+  .cursor-glow {
+    width: 360px; height: 360px;
+    background: radial-gradient(circle, rgba(56,189,248,.15), transparent 68%);
+    transition: background .3s ease, width .3s ease, height .3s ease;
+  }
+  .cursor-dot {
+    width: 6px; height: 6px;
+    background: var(--c4);
+    box-shadow: 0 0 8px 2px var(--c4);
+    transition: background .2s, box-shadow .2s, width .15s, height .15s;
+  }
+  .cursor-dot.is-hover { width: 10px; height: 10px; }
+  @media (hover: none), (pointer: coarse) { .cursor-glow, .cursor-dot { display: none; } }
+
+  .spark {
+    position: fixed; z-index: 61; border-radius: 50%; pointer-events: none;
+    animation: sparkFly .7s ease-out forwards;
+  }
+  @keyframes sparkFly {
+    0% { opacity: 1; transform: translate(0,0) scale(1); }
+    100% { opacity: 0; transform: translate(var(--sx), var(--sy)) scale(.3); }
+  }
+
+  /* boot-in sequence for the class menu */
+  #menu .class-card {
+    opacity: 0;
+    transform: translateY(14px);
+    animation: cardIn .55s cubic-bezier(.2,.7,.2,1) forwards;
+  }
+  @keyframes cardIn { to { opacity: 1; transform: translateY(0); } }
+  #menu .class-card:nth-of-type(1)  { animation-delay: .02s; }
+  #menu .class-card:nth-of-type(2)  { animation-delay: .06s; }
+  #menu .class-card:nth-of-type(3)  { animation-delay: .10s; }
+  #menu .class-card:nth-of-type(4)  { animation-delay: .14s; }
+  #menu .class-card:nth-of-type(5)  { animation-delay: .18s; }
+  #menu .class-card:nth-of-type(6)  { animation-delay: .22s; }
+  #menu .class-card:nth-of-type(7)  { animation-delay: .26s; }
+  #menu .class-card:nth-of-type(8)  { animation-delay: .30s; }
+  #menu .class-card:nth-of-type(9)  { animation-delay: .34s; }
+  #menu .class-card:nth-of-type(10) { animation-delay: .38s; }
+  #menu .class-card:nth-of-type(11) { animation-delay: .42s; }
+
+  /* card glass + mouse-tracked spotlight, colored per class */
+  .class-card {
+    position: relative;
+    isolation: isolate;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+  .class-card::before {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    background: radial-gradient(240px circle at var(--mx,50%) var(--my,50%), color-mix(in srgb, var(--accent) 55%, transparent), transparent 72%);
+    opacity: 0;
+    transition: opacity .35s ease;
+    z-index: -1;
+    pointer-events: none;
+  }
+  .class-card:hover::before { opacity: .6; }
+  .class-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--accent);
+    box-shadow: 0 16px 36px -16px color-mix(in srgb, var(--accent) 45%, transparent);
+  }
+
+  .mode-btn { position: relative; }
+  .mode-btn:hover { box-shadow: 0 6px 18px -8px currentColor; }
+
+  .logo span { animation: logoPulse 3.4s ease-in-out infinite; }
+  @keyframes logoPulse {
+    0%,100% { text-shadow: 0 0 5px rgba(56,189,248,.3); }
+    50%     { text-shadow: 0 0 15px rgba(56,189,248,.85); }
+  }
+
+  .xp-fill { position: relative; overflow: hidden; }
+  .xp-fill::after {
+    content: "";
+    position: absolute; inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,.65), transparent);
+    transform: translateX(-100%);
+    animation: shimmer 2.4s ease-in-out infinite;
+  }
+  @keyframes shimmer { to { transform: translateX(220%); } }
+
+  .q-card, .result-card, .flashcard {
+    background: rgba(17,19,24,.72);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .orb, .logo span, .xp-fill::after, #menu .class-card { animation: none !important; }
+    #menu .class-card { opacity: 1; transform: none; }
+    .cursor-glow, .cursor-dot, .spark { display: none !important; }
+    .class-card, .class-card::before { transition: none !important; }
+  }
 </style>
 </head>
 <body>
+
+<div class="ambient-lighting" aria-hidden="true">
+  <div class="orb orb-a"></div>
+  <div class="orb orb-b"></div>
+  <div class="orb orb-c"></div>
+  <div class="orb orb-d"></div>
+</div>
+<div class="grid-overlay" aria-hidden="true"></div>
+<div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div>
+<div class="cursor-dot" id="cursorDot" aria-hidden="true"></div>
 
 <div class="header">
   <div class="logo"><span>312</span> SCHOOL · DEVOPS</div>
@@ -379,7 +540,7 @@
   <p class="menu-title">// challenge arena — pick a class &amp; mode</p>
 
   <!-- CLASS 4 -->
-  <div class="class-card">
+  <div class="class-card" data-accent="c4">
     <div class="class-header">
       <span class="class-badge c4">Class 4</span>
       <span class="class-name">Linux Text Tools</span>
@@ -393,7 +554,7 @@
   </div>
 
   <!-- CLASS 5 -->
-  <div class="class-card">
+  <div class="class-card" data-accent="c5">
     <div class="class-header">
       <span class="class-badge c5">Class 5</span>
       <span class="class-name">Linux Permissions</span>
@@ -407,7 +568,7 @@
   </div>
 
   <!-- CLASS 6 -->
-  <div class="class-card">
+  <div class="class-card" data-accent="c6">
     <div class="class-header">
       <span class="class-badge c6">Class 6</span>
       <span class="class-name">Git &amp; GitHub</span>
@@ -421,7 +582,7 @@
   </div>
 
   <!-- CLASS 7 -->
-  <div class="class-card">
+  <div class="class-card" data-accent="c7">
     <div class="class-header">
       <span class="class-badge c7">Class 7</span>
       <span class="class-name">AWS &amp; Cloud Fundamentals</span>
@@ -435,7 +596,7 @@
   </div>
 
   <!-- CLASS 8 -->
-  <div class="class-card">
+  <div class="class-card" data-accent="c8">
     <div class="class-header">
       <span class="class-badge c8">Class 8</span>
       <span class="class-name">EC2 Networking &amp; SSH</span>
@@ -449,7 +610,7 @@
   </div>
 
   <!-- CLASS 9 -->
-  <div class="class-card">
+  <div class="class-card" data-accent="c9">
     <div class="class-header">
       <span class="class-badge c9">Class 9</span>
       <span class="class-name">DNS &amp; Web Hosting</span>
@@ -463,7 +624,7 @@
   </div>
 
   <!-- CLASS 10 -->
-  <div class="class-card">
+  <div class="class-card" data-accent="c10">
     <div class="class-header">
       <span class="class-badge c10">Class 10</span>
       <span class="class-name">HTTPS, TLS &amp; Certbot</span>
@@ -477,7 +638,7 @@
   </div>
 
   <!-- CLASS 11 -->
-  <div class="class-card">
+  <div class="class-card" data-accent="c11">
     <div class="class-header">
       <span class="class-badge c11">Class 11</span>
       <span class="class-name">Nginx Logs, Env Vars &amp; AI Bots</span>
@@ -492,7 +653,7 @@
   </div>
 
   <!-- CLASS 12 -->
-  <div class="class-card">
+  <div class="class-card" data-accent="c12">
     <div class="class-header">
       <span class="class-badge c12">Class 12</span>
       <span class="class-name">AWS Secrets Manager &amp; IAM</span>
@@ -507,7 +668,7 @@
   </div>
 
   <!-- CLASS 13 -->
-  <div class="class-card">
+  <div class="class-card" data-accent="c13">
     <div class="class-header">
       <span class="class-badge c13">Class 13</span>
       <span class="class-name">Git Clone, Bash Scripting &amp; Quiz Bot</span>
@@ -522,7 +683,7 @@
   </div>
 
   <!-- CLASS 14 -->
-  <div class="class-card">
+  <div class="class-card" data-accent="c14">
     <div class="class-header">
       <span class="class-badge c14">Class 14</span>
       <span class="class-name">Python Intro — Variables, Types, Lists &amp; Loops</span>
@@ -650,15 +811,19 @@ function goMenu() {
 // QUIZ ENGINE
 // ═══════════════════════════════════════════════════════
 function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
+// quiz/flashcard/scenario content is plain text that often contains < > (Python type
+// output, HTML/Nginx snippets, <placeholder> syntax) — escape before inserting via
+// innerHTML so the browser renders it as text instead of swallowing it as a tag.
+function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
 
 function buildQuiz(containerId, questions, cls, title) {
   const qs = shuffle(questions);
-  let idx = 0, score = 0;
+  let idx = 0, score = 0, q, opts;
   const color = {c4:'var(--c4)',c5:'var(--c5)',c6:'var(--c6)',c7:'var(--c7)',c8:'var(--c8)',c9:'var(--c9)',c10:'var(--c10)',c11:'var(--c11)',c12:'var(--c12)',c13:'var(--c13)',c14:'var(--c14)'}[cls];
   function render() {
     if (idx >= qs.length) { showResult(containerId, score, qs.length, cls, title, () => buildQuiz(containerId, questions, cls, title)); return; }
-    const q = qs[idx];
-    const opts = shuffle(q.options);
+    q = qs[idx];
+    opts = shuffle(q.options);
     const pct = (idx / qs.length * 100).toFixed(0);
     document.getElementById(containerId).innerHTML = `
       <div class="screen-header">
@@ -669,21 +834,19 @@ function buildQuiz(containerId, questions, cls, title) {
       <div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:${color}"></div></div>
       <div class="q-card">
         <div class="q-num">QUESTION ${idx+1} <span class="diff-badge">HARD</span></div>
-        ${q.code ? `<div class="q-text">${q.q}</div><div class="q-code">${q.code}</div>` : `<div class="q-text">${q.q}</div>`}
+        ${q.code ? `<div class="q-text">${esc(q.q)}</div><div class="q-code">${esc(q.code)}</div>` : `<div class="q-text">${esc(q.q)}</div>`}
         <div class="options" id="opts-${idx}">
-          ${opts.map((o,i) => `<button class="opt" id="opt-${i}" onclick="pickOpt(${i},'${o.replace(/'/g,"\\'")}','${q.a.replace(/'/g,"\\'")}','${containerId}',${idx})">${o}</button>`).join('')}
+          ${opts.map((o,i) => `<button class="opt" id="opt-${i}" onclick="pickOpt(${i},${idx})">${esc(o)}</button>`).join('')}
         </div>
-        <div class="explanation" id="exp-${idx}">${q.exp}</div>
+        <div class="explanation" id="exp-${idx}">${esc(q.exp)}</div>
         <button class="next-btn" id="nxt-${idx}" onclick="nextQ()">Next →</button>
       </div>`;
     window._nextQ = () => { idx++; render(); };
-    window._pickOpt = (chosen, correct) => {
-      if (chosen === correct) { score++; addXP(15); addStreak(); } else { resetStreak(); }
-    };
   }
   window.nextQ = () => window._nextQ();
-  window.pickOpt = (i, chosen, correct, cid, qidx) => {
-    window._pickOpt(chosen, correct);
+  window.pickOpt = (i, qidx) => {
+    const chosen = opts[i], correct = q.a;
+    if (chosen === correct) { score++; addXP(15); addStreak(); } else { resetStreak(); }
     document.querySelectorAll(`#opts-${qidx} .opt`).forEach(b => {
       b.disabled = true;
       if (b.textContent.trim() === correct) b.classList.add('correct');
@@ -736,11 +899,11 @@ function buildType(containerId, questions, cls, title) {
       <div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:${color}"></div></div>
       <div class="q-card">
         <div class="q-num">TYPE THE COMMAND <span class="diff-badge">HARD</span></div>
-        <div class="q-text">${q.prompt}</div>
-        ${q.hint ? `<div class="type-prompt">💡 ${q.hint}</div>` : ''}
+        <div class="q-text">${esc(q.prompt)}</div>
+        ${q.hint ? `<div class="type-prompt">💡 ${esc(q.hint)}</div>` : ''}
         <input class="type-input" id="type-inp" placeholder="Type exact command..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
         <br><button class="submit-btn" onclick="checkType()">Check ↵</button>
-        <div class="explanation" id="type-exp">${q.exp}</div>
+        <div class="explanation" id="type-exp">${esc(q.exp)}</div>
         <button class="next-btn" id="type-nxt" onclick="nextTypeQ()">Next →</button>
       </div>`;
     document.getElementById('type-inp').addEventListener('keydown', e => { if (e.key === 'Enter') checkType(); });
@@ -772,7 +935,7 @@ function buildFlash(containerId, cards, cls, title) {
       <div class="screen-header"><button class="back-btn" onclick="goMenu()">← Menu</button><span class="screen-title">${title}</span><span style="font-size:12px;color:var(--muted);margin-left:auto">${idx+1}/${qs.length}</span></div>
       <div class="flashcard" id="fc" onclick="flipCard()">
         <div class="flashcard-label">${flipped ? 'ANSWER' : 'CONCEPT'}</div>
-        <div class="flashcard-text ${flipped ? 'fc-answer' : ''}">${flipped ? c.a : c.q}</div>
+        <div class="flashcard-text ${flipped ? 'fc-answer' : ''}">${esc(flipped ? c.a : c.q)}</div>
         <div class="flashcard-hint">${flipped ? '' : 'click to reveal →'}</div>
       </div>
       <div class="fc-nav">
@@ -850,15 +1013,15 @@ function buildDragDrop(containerId, scenarios, title, label, excludeIdx) {
   function render() {
     document.getElementById(containerId).innerHTML = `
       <div class="screen-header"><button class="back-btn" onclick="goMenu()">← Menu</button><span class="screen-title">${title}</span></div>
-      <div class="builder-scenario">${label}<br><br><strong>${sc.scenario}</strong></div>
+      <div class="builder-scenario">${label}<br><br><strong>${esc(sc.scenario)}</strong></div>
       <div class="drag-zone-label">YOUR ANSWER — drag tokens here in order:</div>
       <div class="drag-zone" id="drop-zone" ondragover="event.preventDefault();this.classList.add('dragover')" ondragleave="this.classList.remove('dragover')" ondrop="dropOnAnswer(event)">
-        ${placed.map((t,i) => `<div class="drag-token" draggable="true" data-src="placed" data-idx="${i}" ondragstart="dragStart(event,'placed',${i})" ondragend="dragEnd(event)">${t}</div>`).join('')}
+        ${placed.map((t,i) => `<div class="drag-token" draggable="true" data-src="placed" data-idx="${i}" ondragstart="dragStart(event,'placed',${i})" ondragend="dragEnd(event)">${esc(t)}</div>`).join('')}
         ${placed.length === 0 ? '<span style="color:var(--muted);font-size:12px;padding:6px">← drop tokens here</span>' : ''}
       </div>
       <div class="drag-zone-label">AVAILABLE TOKENS:</div>
       <div class="drag-zone" id="avail-zone" ondragover="event.preventDefault();this.classList.add('dragover')" ondragleave="this.classList.remove('dragover')" ondrop="dropOnAvail(event)">
-        ${available.map((t,i) => `<div class="drag-token" draggable="true" data-src="avail" data-idx="${i}" ondragstart="dragStart(event,'avail',${i})" ondragend="dragEnd(event)">${t}</div>`).join('')}
+        ${available.map((t,i) => `<div class="drag-token" draggable="true" data-src="avail" data-idx="${i}" ondragstart="dragStart(event,'avail',${i})" ondragend="dragEnd(event)">${esc(t)}</div>`).join('')}
       </div>
       <button class="check-btn" onclick="checkDrop()">✓ Check Answer</button>
       <button class="check-btn" onclick="buildDragDrop('${containerId}',${containerId.includes('c4')?'PIPE_SCENARIOS':containerId.includes('c5')?'CHMOD_SCENARIOS':containerId.includes('c6')?'WORKFLOW_SCENARIOS':containerId.includes('c14')?'C14_SCENARIOS':containerId.includes('c13')?'C13_SCENARIOS':containerId.includes('c12')?'C12_SCENARIOS':containerId.includes('c11')?'C11_SCENARIOS':'EC2_SCENARIOS'},'${title}','${label}',${scIdx})">↺ New Scenario</button>
@@ -1404,6 +1567,72 @@ const C14_SCENARIOS = [
   { scenario: "Set up and run your first Python script in VS Code — correct sequence.", tokens: ["Install VS Code and enable autosave (File > Autosave)", "Install the Python extension from the VS Code marketplace", "Create script.py and write: print('hello devops')", "Open terminal in VS Code and run python3 script.py"], answer: ["Install VS Code and enable autosave (File > Autosave)", "Install the Python extension from the VS Code marketplace", "Create script.py and write: print('hello devops')", "Open terminal in VS Code and run python3 script.py"] },
   { scenario: "Fix an IndexError: list index out of range — diagnostic steps in order.", tokens: ["Print the list to see how many items it has", "Check the index you used — remember indexing starts at 0", "Use len(classes) to find the last valid index (len - 1)", "Fix the index or use classes[-1] for the last item"], answer: ["Print the list to see how many items it has", "Check the index you used — remember indexing starts at 0", "Use len(classes) to find the last valid index (len - 1)", "Fix the index or use classes[-1] for the last item"] },
 ];
+</script>
+
+<script>
+(function () {
+  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var isCoarse = window.matchMedia && window.matchMedia('(hover: none), (pointer: coarse)').matches;
+
+  // mouse-tracked spotlight position within each card (color comes from
+  // --accent, already bound per card in CSS via [data-accent])
+  document.querySelectorAll('.class-card').forEach(function (card) {
+    card.addEventListener('mousemove', function (e) {
+      var r = card.getBoundingClientRect();
+      card.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 100) + '%');
+      card.style.setProperty('--my', ((e.clientY - r.top) / r.height * 100) + '%');
+    });
+  });
+
+  if (reduceMotion || isCoarse) return;
+
+  // ambient floating cursor light — trails the pointer with a soft spring
+  var glow = document.getElementById('cursorGlow');
+  var dot = document.getElementById('cursorDot');
+  var tx = window.innerWidth / 2, ty = window.innerHeight / 2;
+  var gx = tx, gy = ty;
+
+  window.addEventListener('mousemove', function (e) {
+    tx = e.clientX; ty = e.clientY;
+    dot.style.left = tx + 'px';
+    dot.style.top = ty + 'px';
+
+    var hoverCard = e.target.closest && e.target.closest('.class-card');
+    var accentVar = 'var(--' + (hoverCard ? hoverCard.dataset.accent : 'c4') + ')';
+    var isInteractive = e.target.closest && e.target.closest('button, .mode-btn, .class-header, .opt, .flashcard, a');
+    dot.classList.toggle('is-hover', !!isInteractive);
+    glow.style.background = 'radial-gradient(circle, color-mix(in srgb, ' + accentVar + ' 16%, transparent), transparent 68%)';
+    dot.style.background = accentVar;
+    dot.style.boxShadow = '0 0 10px 3px color-mix(in srgb, ' + accentVar + ' 80%, transparent)';
+  });
+
+  function raf() {
+    gx += (tx - gx) * 0.08;
+    gy += (ty - gy) * 0.08;
+    glow.style.left = gx + 'px';
+    glow.style.top = gy + 'px';
+    requestAnimationFrame(raf);
+  }
+  requestAnimationFrame(raf);
+
+  // click sparks — a little delight, cleaned up after they finish
+  document.addEventListener('click', function (e) {
+    for (var i = 0; i < 6; i++) {
+      var s = document.createElement('div');
+      s.className = 'spark';
+      var angle = Math.PI * 2 * (i / 6) + Math.random() * 0.6;
+      var dist = 24 + Math.random() * 26;
+      s.style.setProperty('--sx', Math.cos(angle) * dist + 'px');
+      s.style.setProperty('--sy', Math.sin(angle) * dist + 'px');
+      s.style.left = e.clientX + 'px';
+      s.style.top = e.clientY + 'px';
+      s.style.width = s.style.height = (3 + Math.random() * 3) + 'px';
+      s.style.background = dot.style.background || 'var(--c4)';
+      document.body.appendChild(s);
+      s.addEventListener('animationend', function () { this.remove(); });
+    }
+  });
+})();
 </script>
 </body>
 </html>
