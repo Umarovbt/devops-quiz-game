@@ -23,6 +23,7 @@
     --c12: #f87171;
     --c13: #e879f9;
     --c14: #60a5fa;
+    --c15: #818cf8;
     --green: #22c55e;
     --red: #ef4444;
     --yellow: #eab308;
@@ -74,6 +75,7 @@
   .class-card[data-accent="c12"] { --accent: var(--c12); }
   .class-card[data-accent="c13"] { --accent: var(--c13); }
   .class-card[data-accent="c14"] { --accent: var(--c14); }
+  .class-card[data-accent="c15"] { --accent: var(--c15); }
 
   .class-card {
     --accent: var(--muted);
@@ -116,6 +118,7 @@
   .c12 { background: rgba(248,113,113,.15); color: var(--c12); }
   .c13 { background: rgba(232,121,249,.15); color: var(--c13); }
   .c14 { background: rgba(96,165,250,.15); color: var(--c14); }
+  .c15 { background: rgba(129,140,248,.15); color: var(--c15); }
   .class-name { font-size: 14px; font-weight: bold; }
   .class-topics { font-size: 11px; color: var(--muted); margin-left: auto; }
   .class-modes { padding: 12px 20px 16px; display: flex; flex-wrap: wrap; gap: 10px; }
@@ -696,6 +699,21 @@
       <button class="mode-btn c14" onclick="startMode('c14-scenario')"><span class="mode-icon">🐍</span>Scenario Builder</button>
     </div>
   </div>
+
+  <!-- CLASS 15 -->
+  <div class="class-card" data-accent="c15">
+    <div class="class-header">
+      <span class="class-badge c15">Class 15</span>
+      <span class="class-name">Deploying with AI — Paper Trading App</span>
+      <span class="class-topics">Flask · PostgreSQL · Nginx · Gunicorn · systemd · Finnhub API · webhooks · VPC</span>
+    </div>
+    <div class="class-modes">
+      <button class="mode-btn c15" onclick="startMode('c15-quiz')"><span class="mode-icon">⚡</span>Hard Quiz (20q)</button>
+      <button class="mode-btn c15" onclick="startMode('c15-type')"><span class="mode-icon">⌨️</span>Type the Command</button>
+      <button class="mode-btn c15" onclick="startMode('c15-flash')"><span class="mode-icon">🃏</span>Flashcards</button>
+      <button class="mode-btn c15" onclick="startMode('c15-scenario')"><span class="mode-icon">🚀</span>Scenario Builder</button>
+    </div>
+  </div>
 </div>
 
 <!-- ═══════════════════════ SCREENS ═══════════════════════ -->
@@ -736,6 +754,10 @@
 <div id="c14-type" class="screen"></div>
 <div id="c14-flash" class="screen"></div>
 <div id="c14-scenario" class="screen"></div>
+<div id="c15-quiz" class="screen"></div>
+<div id="c15-type" class="screen"></div>
+<div id="c15-flash" class="screen"></div>
+<div id="c15-scenario" class="screen"></div>
 
 <script>
 // ═══════════════════════════════════════════════════════
@@ -801,6 +823,10 @@ function startMode(id) {
   if (id === 'c14-type')     buildType('c14-type', C14_TYPE, 'c14', 'Python Intro');
   if (id === 'c14-flash')    buildFlash('c14-flash', C14_FLASH, 'c14', 'Python Flashcards');
   if (id === 'c14-scenario') buildC14Scenario('c14-scenario');
+  if (id === 'c15-quiz')     buildQuiz('c15-quiz', C15_QUIZ, 'c15', 'Deploying with AI');
+  if (id === 'c15-type')     buildType('c15-type', C15_TYPE, 'c15', 'Deploying with AI');
+  if (id === 'c15-flash')    buildFlash('c15-flash', C15_FLASH, 'c15', 'Deployment Flashcards');
+  if (id === 'c15-scenario') buildC15Scenario('c15-scenario');
 }
 function goMenu() {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -819,7 +845,7 @@ function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').
 function buildQuiz(containerId, questions, cls, title) {
   const qs = shuffle(questions);
   let idx = 0, score = 0, q, opts;
-  const color = {c4:'var(--c4)',c5:'var(--c5)',c6:'var(--c6)',c7:'var(--c7)',c8:'var(--c8)',c9:'var(--c9)',c10:'var(--c10)',c11:'var(--c11)',c12:'var(--c12)',c13:'var(--c13)',c14:'var(--c14)'}[cls];
+  const color = {c4:'var(--c4)',c5:'var(--c5)',c6:'var(--c6)',c7:'var(--c7)',c8:'var(--c8)',c9:'var(--c9)',c10:'var(--c10)',c11:'var(--c11)',c12:'var(--c12)',c13:'var(--c13)',c14:'var(--c14)',c15:'var(--c15)'}[cls];
   function render() {
     if (idx >= qs.length) { showResult(containerId, score, qs.length, cls, title, () => buildQuiz(containerId, questions, cls, title)); return; }
     q = qs[idx];
@@ -861,7 +887,7 @@ function buildQuiz(containerId, questions, cls, title) {
 
 function showResult(containerId, score, total, cls, title, replay) {
   const pct = Math.round(score/total*100);
-  const color = {c4:'var(--c4)',c5:'var(--c5)',c6:'var(--c6)',c7:'var(--c7)',c8:'var(--c8)',c9:'var(--c9)',c10:'var(--c10)',c11:'var(--c11)',c12:'var(--c12)',c13:'var(--c13)',c14:'var(--c14)'}[cls];
+  const color = {c4:'var(--c4)',c5:'var(--c5)',c6:'var(--c6)',c7:'var(--c7)',c8:'var(--c8)',c9:'var(--c9)',c10:'var(--c10)',c11:'var(--c11)',c12:'var(--c12)',c13:'var(--c13)',c14:'var(--c14)',c15:'var(--c15)'}[cls];
   const emoji = pct >= 85 ? '🏆' : pct >= 65 ? '💪' : '📚';
   const msg = pct >= 85 ? 'Elite. You know this cold.' : pct >= 65 ? 'Solid — keep drilling the misses.' : 'Review the notes and try again.';
   document.getElementById(containerId).innerHTML = `
@@ -885,7 +911,7 @@ function showResult(containerId, score, total, cls, title, replay) {
 function buildType(containerId, questions, cls, title) {
   const qs = shuffle(questions);
   let idx = 0, score = 0;
-  const color = {c4:'var(--c4)',c5:'var(--c5)',c6:'var(--c6)',c7:'var(--c7)',c8:'var(--c8)',c9:'var(--c9)',c10:'var(--c10)',c11:'var(--c11)',c12:'var(--c12)',c13:'var(--c13)',c14:'var(--c14)'}[cls];
+  const color = {c4:'var(--c4)',c5:'var(--c5)',c6:'var(--c6)',c7:'var(--c7)',c8:'var(--c8)',c9:'var(--c9)',c10:'var(--c10)',c11:'var(--c11)',c12:'var(--c12)',c13:'var(--c13)',c14:'var(--c14)',c15:'var(--c15)'}[cls];
   function render() {
     if (idx >= qs.length) { showResult(containerId, score, qs.length, cls, title, () => buildType(containerId, questions, cls, title)); return; }
     const q = qs[idx];
@@ -1001,6 +1027,7 @@ function buildC11Scenario(containerId) { buildDragDrop(containerId, C11_SCENARIO
 function buildC12Scenario(containerId) { buildDragDrop(containerId, C12_SCENARIOS, 'Secrets Manager & IAM — Scenario Builder', 'Arrange the steps in the correct order:'); }
 function buildC13Scenario(containerId) { buildDragDrop(containerId, C13_SCENARIOS, 'Bash Scripting & Quiz Bot — Scenario Builder', 'Arrange the steps in the correct order:'); }
 function buildC14Scenario(containerId) { buildDragDrop(containerId, C14_SCENARIOS, 'Python Intro — Scenario Builder', 'Arrange the steps in the correct order:'); }
+function buildC15Scenario(containerId) { buildDragDrop(containerId, C15_SCENARIOS, 'Deploying with AI — Scenario Builder', 'Arrange the steps in the correct order:'); }
 
 function buildDragDrop(containerId, scenarios, title, label, excludeIdx) {
   let scIdx;
@@ -1024,7 +1051,7 @@ function buildDragDrop(containerId, scenarios, title, label, excludeIdx) {
         ${available.map((t,i) => `<div class="drag-token" draggable="true" data-src="avail" data-idx="${i}" ondragstart="dragStart(event,'avail',${i})" ondragend="dragEnd(event)">${esc(t)}</div>`).join('')}
       </div>
       <button class="check-btn" onclick="checkDrop()">✓ Check Answer</button>
-      <button class="check-btn" onclick="buildDragDrop('${containerId}',${containerId.includes('c4')?'PIPE_SCENARIOS':containerId.includes('c5')?'CHMOD_SCENARIOS':containerId.includes('c6')?'WORKFLOW_SCENARIOS':containerId.includes('c14')?'C14_SCENARIOS':containerId.includes('c13')?'C13_SCENARIOS':containerId.includes('c12')?'C12_SCENARIOS':containerId.includes('c11')?'C11_SCENARIOS':'EC2_SCENARIOS'},'${title}','${label}',${scIdx})">↺ New Scenario</button>
+      <button class="check-btn" onclick="buildDragDrop('${containerId}',${containerId.includes('c4')?'PIPE_SCENARIOS':containerId.includes('c5')?'CHMOD_SCENARIOS':containerId.includes('c6')?'WORKFLOW_SCENARIOS':containerId.includes('c15')?'C15_SCENARIOS':containerId.includes('c14')?'C14_SCENARIOS':containerId.includes('c13')?'C13_SCENARIOS':containerId.includes('c12')?'C12_SCENARIOS':containerId.includes('c11')?'C11_SCENARIOS':'EC2_SCENARIOS'},'${title}','${label}',${scIdx})">↺ New Scenario</button>
       <div class="builder-feedback" id="bfeed"></div>`;
 
     window.dragStart = (e, src, i) => { dragging = {src, i}; e.target.classList.add('dragging'); };
@@ -1566,6 +1593,63 @@ const C14_SCENARIOS = [
   { scenario: "Debug why print(topic) prints the word 'topic' instead of 'git' — steps in order.", tokens: ["Check: is topic wrapped in quotes inside print()?", "If print(\"topic\") — remove the quotes to get the variable value", "Change to print(topic) without quotes", "Save the file and run python3 script.py again"], answer: ["Check: is topic wrapped in quotes inside print()?", "If print(\"topic\") — remove the quotes to get the variable value", "Change to print(topic) without quotes", "Save the file and run python3 script.py again"] },
   { scenario: "Set up and run your first Python script in VS Code — correct sequence.", tokens: ["Install VS Code and enable autosave (File > Autosave)", "Install the Python extension from the VS Code marketplace", "Create script.py and write: print('hello devops')", "Open terminal in VS Code and run python3 script.py"], answer: ["Install VS Code and enable autosave (File > Autosave)", "Install the Python extension from the VS Code marketplace", "Create script.py and write: print('hello devops')", "Open terminal in VS Code and run python3 script.py"] },
   { scenario: "Fix an IndexError: list index out of range — diagnostic steps in order.", tokens: ["Print the list to see how many items it has", "Check the index you used — remember indexing starts at 0", "Use len(classes) to find the last valid index (len - 1)", "Fix the index or use classes[-1] for the last item"], answer: ["Print the list to see how many items it has", "Check the index you used — remember indexing starts at 0", "Use len(classes) to find the last valid index (len - 1)", "Fix the index or use classes[-1] for the last item"] },
+];
+
+// ── CLASS 15: DEPLOYING WITH AI — PAPER TRADING APP ──
+const C15_QUIZ = [
+  { q: "What is Gunicorn's role in this stack?", options: ["A WSGI server that sits between Nginx and Flask, managing worker processes","A database migration tool for PostgreSQL","A DNS resolver for the EC2 instance","A monitoring dashboard for Nginx logs"], a: "A WSGI server that sits between Nginx and Flask, managing worker processes", exp: "Gunicorn translates raw HTTP requests from Nginx into Python calls Flask understands, and runs multiple worker processes so one slow request can't freeze the whole app." },
+  { q: "Why not just run 'flask run' directly in production?", options: ["Flask's built-in server is single-threaded and not built to handle concurrent production traffic","Flask cannot connect to PostgreSQL without Gunicorn","flask run requires root permissions on Ubuntu","Nginx refuses to proxy to the Flask dev server"], a: "Flask's built-in server is single-threaded and not built to handle concurrent production traffic", exp: "The Flask dev server is meant for local development only. Gunicorn manages a pool of worker processes so multiple requests are handled at once, and restarts a worker if it crashes." },
+  { q: "What does WSGI stand for and what problem does it solve?", options: ["Web Server Gateway Interface — a standard interface between Python web apps and web servers","Web Socket Gateway Init — sets up WebSocket connections","Wide-Scale Gateway Integration — load balances across regions","Web Security Governance Interface — enforces auth policies"], a: "Web Server Gateway Interface — a standard interface between Python web apps and web servers", exp: "WSGI is the standard contract that lets any WSGI-compliant server (like Gunicorn) talk to any WSGI-compliant Python framework (like Flask) without custom glue code." },
+  { q: "You launch an EC2 instance from an Ubuntu AMI instead of Amazon Linux. What changes for SSH?", options: ["The default SSH user is ubuntu, not ec2-user","You must use FTP instead of SSH","Port 22 is closed by default on Ubuntu AMIs","SSH keys are not supported on Ubuntu AMIs"], a: "The default SSH user is ubuntu, not ec2-user", exp: "Amazon Linux's default user is ec2-user; Ubuntu AMIs default to ubuntu. Using the wrong username causes 'Permission denied (publickey)' even with the correct key." },
+  { q: "What does a systemd service give you that manually running gunicorn app:app in a terminal does not?", options: ["The app restarts automatically on crash and survives instance reboots","Faster response times for API requests","Automatic HTTPS certificate provisioning","Direct access to the PostgreSQL database"], a: "The app restarts automatically on crash and survives instance reboots", exp: "A systemd unit is managed by systemctl — enable it and it starts at boot, and if the process dies, systemd can restart it. A terminal-launched process dies when the SSH session ends." },
+  { q: "What is the core difference between a webhook and polling?", options: ["A webhook pushes data to you when an event happens; polling repeatedly asks 'anything new?' on a schedule","A webhook is faster because it uses UDP instead of TCP","Polling only works over HTTPS; webhooks work over any protocol","A webhook requires a database; polling does not"], a: "A webhook pushes data to you when an event happens; polling repeatedly asks 'anything new?' on a schedule", exp: "Polling wastes requests checking when nothing has changed. A webhook flips the direction — the sender calls you the moment something happens, like Stripe notifying Amazon the instant a payment clears." },
+  { q: "In the Stripe → Amazon example used in class, what triggers the webhook?", options: ["A payment clearing, which then triggers the shipment process","A customer browsing a product page","Amazon requesting a price update from Stripe","A scheduled nightly batch job"], a: "A payment clearing, which then triggers the shipment process", exp: "The webhook fires the moment the payment event happens — Amazon doesn't have to keep asking Stripe 'is it paid yet?' every few seconds." },
+  { q: "What does the Finnhub API key actually authenticate?", options: ["Requests from your app to Finnhub's real-time stock data service","Your EC2 instance's connection to AWS","SSH access to the EC2 server","The Nginx reverse proxy to Gunicorn"], a: "Requests from your app to Finnhub's real-time stock data service", exp: "The API key proves to Finnhub which account is making the request, similar to any third-party API — it has nothing to do with AWS or SSH auth." },
+  { q: "During the demo, NVDA's price stopped updating after 3 PM Central. Why?", options: ["The US stock market had closed for the day, so Finnhub returns the last traded price until the next session opens","The Finnhub API key expired","The EC2 instance lost internet connectivity","PostgreSQL stopped accepting writes"], a: "The US stock market had closed for the day, so Finnhub returns the last traded price until the next session opens", exp: "Stock prices are only live during market hours. Outside that window, real-time APIs like Finnhub return the last traded price, which looks 'stuck' until trading resumes." },
+  { q: "What is a VPC?", options: ["An isolated networking layer in AWS containing subnets, route tables, and gateways that you control","A virtual CPU allocation for EC2 instances","AWS's managed PostgreSQL service","A billing construct for grouping EC2 costs"], a: "An isolated networking layer in AWS containing subnets, route tables, and gateways that you control", exp: "Virtual Private Cloud is your own private slice of AWS networking — you define IP ranges, subnets, and how traffic is allowed to flow in and out." },
+  { q: "Why is using the AWS default VPC acceptable for this class demo but discouraged for production?", options: ["The default VPC's subnets are all public with no network isolation between tiers","The default VPC is more expensive per hour than a custom VPC","The default VPC cannot host a PostgreSQL database","The default VPC only supports one EC2 instance at a time"], a: "The default VPC's subnets are all public with no network isolation between tiers", exp: "Production setups isolate the database and internal services in private subnets. The default VPC gives every subnet a route to the internet, so there's no separation between public-facing and internal resources." },
+  { q: "What does a route table do inside a VPC?", options: ["Defines which traffic goes where — e.g., to the internet gateway versus staying inside the VPC","Encrypts traffic between subnets","Assigns public IPs to EC2 instances","Stores DNS records for the VPC's domain"], a: "Defines which traffic goes where — e.g., to the internet gateway versus staying inside the VPC", exp: "Route tables are like the 'roads' connecting subnets to gateways. A public subnet's route table sends 0.0.0.0/0 traffic to an internet gateway; a private subnet's table does not." },
+  { q: "This demo runs the Flask app, Nginx, and PostgreSQL all on one EC2 instance. What's the tradeoff versus a real-world setup?", options: ["It's simpler to learn from but has no isolation — a real setup would move the database to a managed service like RDS","There is no tradeoff — this is exactly how production apps are deployed","Self-managed PostgreSQL is always faster than RDS","Running everything on one instance is required for Gunicorn to work"], a: "It's simpler to learn from but has no isolation — a real setup would move the database to a managed service like RDS", exp: "Separating the database (e.g., onto RDS) means the app and database can scale, fail, and be patched independently — a crash in one doesn't take down the other." },
+  { q: "What are the two modes of using Claude Code described in class?", options: ["Tutor mode (ask questions, get answers) and Agent mode (give a goal, it executes autonomously)","Free mode and Paid mode","Local mode and Cloud mode","Read-only mode and Write-only mode"], a: "Tutor mode (ask questions, get answers) and Agent mode (give a goal, it executes autonomously)", exp: "Tutor mode is conversational — you're learning. Agent mode hands over a goal and lets Claude Code plan and execute the steps itself, like a junior developer." },
+  { q: "What is the 'Direct → Verify' workflow recommended for AI agents?", options: ["Give the agent a clear goal, then review and approve each write/delete action before it executes","Let the agent run fully autonomously with no review, to save time","Only use Direct → Verify for read-only commands","Have a second AI agent verify the first agent's work instead of a human"], a: "Give the agent a clear goal, then review and approve each write/delete action before it executes", exp: "Direct → Verify means a human stays in the loop: the agent proposes an action, you review it, then approve. It prevents a bad autonomous decision from executing unchecked." },
+  { q: "What actually happened in the real incident described in class?", options: ["A DevOps engineer let an AI agent auto-approve a 'cleanup' action, which wiped a production Kubernetes cluster","An AI agent leaked a company's SSH keys publicly","A vibe-coded app charged customers twice due to a webhook bug","An AI agent ignored the Direct → Verify loop and deployed to the wrong region"], a: "A DevOps engineer let an AI agent auto-approve a 'cleanup' action, which wiped a production Kubernetes cluster", exp: "Auto-approving destructive commands removes the one safeguard that would have caught the mistake before it ran. This is exactly why every write/delete action should be reviewed first." },
+  { q: "When is it acceptable to give an AI agent your SSH keys or other secrets, per the instructor's guidance?", options: ["Only in demo or throwaway environments — never in production without security team approval","Anytime, as long as the AI agent is from a reputable company","Only if the secrets are rotated within 24 hours afterward","Only when working with Opus, never with Sonnet or Haiku"], a: "Only in demo or throwaway environments — never in production without security team approval", exp: "Demo/throwaway environments have no real blast radius if something goes wrong. Production secrets require a security review before any AI agent gets access to them." },
+  { q: "Per the instructor's model guidance, which tier should high-stakes work use versus routine tasks?", options: ["Opus for high-stakes work; Sonnet or Haiku for routine tasks","Haiku for everything, since it's the fastest","Sonnet for high-stakes work; Opus is reserved for research only","The model choice makes no practical difference"], a: "Opus for high-stakes work; Sonnet or Haiku for routine tasks", exp: "Higher-capability models cost more compute/quota — reserve them for judgment-heavy or high-stakes work, and use faster, cheaper models for routine, well-defined tasks." },
+  { q: "What do Ubuntu, Fedora, CentOS, Red Hat, and Debian have in common?", options: ["They are all distributions ('flavors') of Linux, built on the same underlying kernel","They are all cloud providers competing with AWS","They are all AWS-specific AMI types with no relation to each other","Only Ubuntu and Debian are Linux; the others are Unix variants"], a: "They are all distributions ('flavors') of Linux, built on the same underlying kernel", exp: "Each distro packages the Linux kernel with its own package manager and defaults (apt for Ubuntu/Debian, dnf for Fedora/Amazon Linux/CentOS/Red Hat), but they share the same kernel foundation." },
+  { q: "How did the instructor frame the evolution of AI coding tools?", options: ["1999: basic autocomplete → later: line-by-line suggestions → 2024+: fully autonomous agents that plan, write, run, and fix code","AI coding tools appeared suddenly in 2024 with no earlier history","Autocomplete and AI agents are the same technology, just rebranded","Line-by-line suggestions came before autocomplete"], a: "1999: basic autocomplete → later: line-by-line suggestions → 2024+: fully autonomous agents that plan, write, run, and fix code", exp: "The framing traces a real progression: simple autocomplete, then AI-assisted suggestions, and now agents that can independently plan and execute multi-step engineering work — like this class's live deployment." },
+];
+
+const C15_TYPE = [
+  { prompt: "Install Nginx and PostgreSQL on a fresh Ubuntu EC2 instance in one command.", hint: "sudo apt update, then apt install with both package names", answers: ["sudo apt update && sudo apt install -y nginx postgresql postgresql-contrib", "sudo apt update && sudo apt install -y nginx postgresql"], exp: "Ubuntu uses apt, not dnf/yum like Amazon Linux. -y skips the confirmation prompt so it can run non-interactively." },
+  { prompt: "SSH into a fresh Ubuntu EC2 instance at IP 3.15.22.9 using key trading.pem.", hint: "Ubuntu's default user is not ec2-user", answers: ["ssh -i trading.pem ubuntu@3.15.22.9"], exp: "Ubuntu AMIs default to the 'ubuntu' user. Using ec2-user here would fail with a publickey error even with the correct key." },
+  { prompt: "Create and activate a Python virtual environment named venv in the current directory.", hint: "python3 -m venv, then source the activate script", answers: ["python3 -m venv venv && source venv/bin/activate"], exp: "A venv isolates this project's Python packages from the system Python. 'source' runs the activate script in the current shell so it actually takes effect." },
+  { prompt: "Inside an active virtual environment, install Flask, Gunicorn, and the PostgreSQL driver for Python.", hint: "pip install with all three package names", answers: ["pip install flask gunicorn psycopg2-binary"], exp: "psycopg2-binary lets Flask talk to PostgreSQL. Gunicorn is the WSGI server that will run the Flask app in production." },
+  { prompt: "Test-run a Flask app object called app in app.py with Gunicorn, using 3 worker processes.", hint: "gunicorn with --workers flag, then module:variable", answers: ["gunicorn --workers 3 app:app"], exp: "app:app means 'in the file app.py, use the object named app'. --workers 3 spins up 3 processes to handle concurrent requests." },
+  { prompt: "Reload systemd after adding a new service file, then immediately enable and start the gunicorn service.", hint: "daemon-reload, then enable with --now", answers: ["sudo systemctl daemon-reload && sudo systemctl enable --now gunicorn"], exp: "daemon-reload makes systemd notice the new unit file. enable --now both enables it for boot AND starts it immediately, in one step." },
+  { prompt: "Test the Nginx configuration for syntax errors, then reload it without dropping active connections.", hint: "nginx -t, then reload (not restart)", answers: ["sudo nginx -t && sudo systemctl reload nginx"], exp: "nginx -t catches typos before they take the site down. reload re-reads the config gracefully; restart would briefly drop connections." },
+  { prompt: "Check the last 50 lines of logs for a systemd service called gunicorn to debug why it won't start.", hint: "journalctl scoped to the unit, with -n", answers: ["sudo journalctl -u gunicorn -n 50", "journalctl -u gunicorn -n 50"], exp: "-u filters logs to just that unit. -n 50 shows the last 50 lines — usually enough to see the actual startup error." },
+];
+
+const C15_FLASH = [
+  { q: "What is Gunicorn?", a: "A WSGI server that sits between Nginx and a Python web app like Flask. It manages multiple worker processes, translates raw HTTP into Python calls, and keeps one bad request from crashing the whole app." },
+  { q: "What is WSGI?", a: "Web Server Gateway Interface — the standard contract that lets any compliant web server (Gunicorn) talk to any compliant Python framework (Flask) without custom glue code." },
+  { q: "Webhook vs polling — what's the difference?", a: "Polling repeatedly asks 'anything new?' on a timer, wasting requests when nothing changed. A webhook pushes data to you the instant an event happens — like Stripe notifying Amazon the moment a payment clears." },
+  { q: "What is a VPC?", a: "Virtual Private Cloud — your own isolated networking layer in AWS. You define IP ranges, subnets, route tables, and gateways instead of sharing AWS's default network." },
+  { q: "Public subnet vs private subnet?", a: "A public subnet's route table sends internet-bound traffic to an internet gateway. A private subnet has no such route — nothing inside can be reached directly from, or reach out to, the public internet." },
+  { q: "What does a route table do?", a: "Acts as the 'roads' inside a VPC — it decides where traffic from a subnet is allowed to go, e.g., to an internet gateway, a NAT gateway, or just staying inside the VPC." },
+  { q: "What is a systemd service used for here?", a: "Manages the Gunicorn process as a background service: starts it at boot, restarts it if it crashes, and lets you control it with systemctl start/stop/status/restart." },
+  { q: "What is a Python virtual environment (venv)?", a: "An isolated set of installed packages for one project, separate from the system-wide Python. Prevents version conflicts between projects sharing the same machine." },
+  { q: "What is Finnhub in this project?", a: "A third-party API providing real-time stock prices. The app calls it with an API key to pull live prices like NVDA's, which power the paper trading simulation." },
+  { q: "What is 'paper trading'?", a: "Simulated stock trading with fake money (e.g., a $10,000 starting balance) using real, live market prices — lets you practice trading strategy without real financial risk." },
+  { q: "What is 'vibe coding'?", a: "Giving an AI agent a high-level goal and letting it plan, write, and execute the implementation — as opposed to writing every line yourself. Still requires review, not blind trust." },
+  { q: "What is the 'Direct → Verify' loop for AI agents?", a: "Give the agent clear direction on the goal, then review and approve each write or delete action before it runs. Prevents a bad autonomous decision (like the K8s cluster wipe incident) from executing unchecked." },
+];
+
+const C15_SCENARIOS = [
+  { scenario: "Deploy a Flask app behind Gunicorn and Nginx on a fresh Ubuntu EC2 instance — in the correct order.", tokens: ["sudo apt update && sudo apt install -y nginx python3-venv postgresql", "python3 -m venv venv && source venv/bin/activate && pip install flask gunicorn psycopg2-binary", "Create a systemd service file that runs gunicorn --workers 3 app:app", "sudo systemctl daemon-reload && sudo systemctl enable --now gunicorn", "Configure Nginx to reverse proxy to 127.0.0.1:8000, then sudo systemctl restart nginx"], answer: ["sudo apt update && sudo apt install -y nginx python3-venv postgresql", "python3 -m venv venv && source venv/bin/activate && pip install flask gunicorn psycopg2-binary", "Create a systemd service file that runs gunicorn --workers 3 app:app", "sudo systemctl daemon-reload && sudo systemctl enable --now gunicorn", "Configure Nginx to reverse proxy to 127.0.0.1:8000, then sudo systemctl restart nginx"] },
+  { scenario: "Connect to a fresh Ubuntu EC2 instance and confirm it's ready for deployment — correct sequence.", tokens: ["chmod 400 trading.pem", "ssh -i trading.pem ubuntu@<EC2-IP>", "sudo apt update && sudo apt upgrade -y", "python3 --version to confirm Python is installed"], answer: ["chmod 400 trading.pem", "ssh -i trading.pem ubuntu@<EC2-IP>", "sudo apt update && sudo apt upgrade -y", "python3 --version to confirm Python is installed"] },
+  { scenario: "A freshly deployed site returns 502 Bad Gateway. Troubleshoot in the correct order.", tokens: ["sudo systemctl status gunicorn to check if the app process is running", "sudo journalctl -u gunicorn -n 50 to read recent error logs", "Check that Nginx's proxy_pass address matches Gunicorn's actual bind address", "sudo nginx -t && sudo systemctl restart nginx after fixing the config"], answer: ["sudo systemctl status gunicorn to check if the app process is running", "sudo journalctl -u gunicorn -n 50 to read recent error logs", "Check that Nginx's proxy_pass address matches Gunicorn's actual bind address", "sudo nginx -t && sudo systemctl restart nginx after fixing the config"] },
+  { scenario: "Hand an AI coding agent SSH access to deploy an app safely — correct workflow.", tokens: ["Confirm this is a demo/throwaway environment, not production", "Provide the SSH key path, server IP, and API key as prompt variables", "Let the agent execute one step at a time, reviewing each write/delete command before approving", "Run an end-to-end test — e.g., confirm a live price pulls correctly — before trusting the deploy"], answer: ["Confirm this is a demo/throwaway environment, not production", "Provide the SSH key path, server IP, and API key as prompt variables", "Let the agent execute one step at a time, reviewing each write/delete command before approving", "Run an end-to-end test — e.g., confirm a live price pulls correctly — before trusting the deploy"] },
 ];
 </script>
 
